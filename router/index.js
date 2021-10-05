@@ -13,14 +13,18 @@ const {
   validAge,
   validName,
   setTalker,
+  setEditTalker,
 } = require('../middlewares/validation');
 
 router.get('/talker', getAllTalkers);
 router.get('/talker/:id', getTalkerById);
 router.post('/login', validPassword, validEmail, getToken);
-router.post('/talker', validToken, validTalk, validRate, validWatchedAt,
+router.post('/talker', validTalk, validRate, validWatchedAt,
 validAge,
 validName,
 setTalker);
+router.put('/talker/:id', validTalk, validRate, validWatchedAt,
+validAge,
+validName, validToken, setEditTalker);
 
 module.exports = router;

@@ -3,6 +3,7 @@ const crypto = require('crypto');
 
 const messages = 'Pessoa palestrante não encontrada';
 const HTTP_OK_STATUS = 200;
+const path = './talker.json';
 
 const loginToken = crypto.randomBytes(8).toString('hex');
 
@@ -14,7 +15,7 @@ const getToken = (req, res) => {
 
 const getAllTalkers = async (req, res) => {
   try {
-    const response = await fs.readFile('./talker.json', 'utf8');
+    const response = await fs.readFile(path, 'utf8');
     if (!response) return res.status(HTTP_OK_STATUS).json([]);
 
     res.status(HTTP_OK_STATUS).json(JSON.parse(response));
@@ -27,7 +28,7 @@ const getTalkerById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const talker = await fs.readFile('./talker.json', 'utf8');
+    const talker = await fs.readFile(path, 'utf8');
     const result = JSON.parse(talker);
     const response = result.find((value) => value.id === Number(id));
 
@@ -118,7 +119,8 @@ const validAge = (req, res, next) => {
 
 const validTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+
+  if (!talk || !talk.watchedAt) {
     return res.status(400).send({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -146,6 +148,11 @@ const validRate = (req, res, next) => {
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
+  if (!talk.rate) {
+    return res.status(400).send({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
  
   next();
 };
@@ -153,7 +160,7 @@ const validRate = (req, res, next) => {
 const setTalker = async (req, res) => {
   const { name, age, talk: { rate, watchedAt } } = req.body;
 
-  const talker = await fs.readFile('./talker.json', 'utf8');
+  const talker = await fs.readFile(path, 'utf8');
   const result = JSON.parse(talker);
 
   const newTalker = {
@@ -166,8 +173,28 @@ const setTalker = async (req, res) => {
     },
   };
   result.push(newTalker);
-  await fs.writeFile('./talker.json', JSON.stringify(result));
+  await fs.writeFile(path, JSON.stringify(result));
   res.status(201).send(newTalker);
+};
+
+const setEditTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { rate, watchedAt } } = req.body;
+  const talker = await fs.readFile(path, 'utf8');
+  const result = JSON.parse(talker);
+  const talk = {
+    name,
+    age,
+    id: Number(id),
+    talk: {
+      rate,
+      watchedAt,
+    },
+  };
+  const talkIndex = result.findIndex((value) => value.id === Number(id));
+  result[talkIndex] = talk;
+  await fs.writeFile(path, JSON.stringify(result));
+  res.status(200).send(talk);
 };
 
 module.exports = { 
@@ -183,4 +210,5 @@ module.exports = {
   validAge,
   validName,
   setTalker,
+  setEditTalker,
 };

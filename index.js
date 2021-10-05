@@ -84,6 +84,20 @@ validateAge, validateTalk, validateRate, validateWatchedAt, async (req, res) => 
     return res.status(200).json({ id: 5, name, age, talk });
 });
 
+app.delete('/talker/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+  fs.readFile(talkerJSON, 'utf8')
+    .then((data) => JSON.parse(data))
+    .then((talkers) => {
+      const talkerIndex = talkers.findIndex((r) => r.id === parseInt(id, 10));
+      if (talkerIndex === -1) return res.status(404).json({ message: 'Talker not found!' });
+      const newTalkers = talkers;
+      newTalkers.splice(talkerIndex, 1);
+      fs.writeFile(talkerJSON, JSON.stringify(newTalkers));
+    });
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

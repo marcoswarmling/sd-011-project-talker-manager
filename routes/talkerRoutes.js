@@ -20,4 +20,25 @@ router.get(
   },
 );
 
+router.get(
+  '/:id',
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      const talkers = await readFile('./talker.json');
+  
+      const findTalker = talkers.find((talker) => talker.id === Number(id));
+  
+      if (!findTalker) {
+        return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+      }
+  
+      res.status(200).json(findTalker);
+    } catch (err) {
+      return res.status(404).json({ code: err.code, message: err.message });
+    }
+  },
+);
+
 module.exports = router;

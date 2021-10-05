@@ -73,4 +73,17 @@ isValidRate, async (req, res) => {
   res.status(200).json(talkers[index]);
 });
 
+router.delete('/:id',
+isValidToken,
+async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readContentFile(PATH);
+  const index = talkers.findIndex((people) => people.id === parseInt(id, 10));
+  if (index <= -1) return res.status(404).json({ message: 'Id não encontrado' });
+  const newTalkers = talkers;
+  newTalkers.splice(index, 1);
+  await updateContentFile(PATH, newTalkers);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

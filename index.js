@@ -66,6 +66,32 @@ app.post(
   validatePassword, (_req, res) => { res.status(200).json({ token: getToken() }); },
 );
 
+// REQUISITO 4
+app.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkKeys,
+  async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  
+  const talkerList = await fs.readFile(talkerJsonFile, 'utf-8');
+  const talkerListJson = JSON.parse(talkerList);
+  const id = talkerListJson.length + 1;
+  
+  const newTalker = { name, age, id, talk: { watchedAt, rate } };
+  
+  talkerListJson.push(newTalker);
+  console.log(talkerListJson);
+  const newTalkerList = JSON.stringify(talkerListJson);
+  await fs.writeFile(talkerJsonFile, newTalkerList);
+
+  return res.status(201).json(newTalker);
+  },
+);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

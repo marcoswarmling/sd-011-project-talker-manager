@@ -24,25 +24,23 @@ function validatePassword(req, res, next) {
 }
 
 function validateToken(req, res, next) {
-  const { token } = req.headers;
-  const tokenFormat = /[A-Za-z0-9]{16}/;
+  const token = req.headers.authorization;
   
   if (!token) return res.status(401).json({ message: 'Token não encontrado' });
   
-  if (!tokenFormat.test(token)) return res.status(401).json({ message: 'Token inválido' });
+  if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
 
   next();
 }
 
 function validateName(req, res, next) {
   const { name } = req.body;
-  const nameFormat = /[A-z]{3,}/;
 
   if (!name || name === '') {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
-  if (!nameFormat.test(name)) {
-    res.status(400).json({ message: 'O "nome" deve ter pelo menos 3 caracteres' });
+  if (name.length < 3) {
+    res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 }
@@ -69,16 +67,16 @@ function validateTalk(req, res, next) {
 }
 
 function validateTalkKeys(req, res, next) {
-  const { talk: watchedAt, rate } = req.body;
+  const { talk: { watchedAt, rate } } = req.body;
 
   const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
-  const rateFormat = /[1-5]/;
+  // const rateFormat = /[1-5]/;
 
   if (!dateFormat.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (!Number.isInteger(rate) || !rateFormat.test(rate)) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 a 5' });
+  if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 }

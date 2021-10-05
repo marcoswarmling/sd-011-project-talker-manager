@@ -62,6 +62,17 @@ app.put('/talker/:id', validToken, validName, validAge, validTalk, validWatchAt,
     fs.writeFile(talker, JSON.stringify(mapTalker));
 });
 
+app.delete('/talker/:id', validToken,
+  async (req, res) => {
+    const response = JSON.parse(await fs.readFile(talker, 'utf8'));
+
+    const findTalker = response.findIndex(({ id }) => Number(id) === Number(req.params.id));
+
+    response.splice(findTalker, 1);
+    fs.writeFile(talker, JSON.stringify(response));
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();

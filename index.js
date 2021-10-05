@@ -19,7 +19,7 @@ app.get('/', (_request, response) => {
 app.use('/talker', talkerRouter);
 
 // Requisito 02
-app.use('/talker/:id', TalkerIdRouter);
+app.use('/talker', TalkerIdRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

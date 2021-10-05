@@ -45,8 +45,46 @@ const addTalker = (details) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+// lint de 20 linhas? ...
+
+const getTalkersAfterEditingSpecificTalker = (allTalkers, id, details) => {
+  let editedTalker = {};
+
+  const newTalkerArray = allTalkers.map((talker) => {
+    if (talker.id !== id) {
+      return talker;
+    }
+    editedTalker = { ...talker, ...details };
+    return editedTalker;
+  });
+
+  return [newTalkerArray, editedTalker];
+};
+
+const editTalker = (id, details) => new Promise((resolve, reject) => {
+  try {
+    validate(addTalkerSchema, details);
+  } catch (err) {
+    return reject(err);
+  }
+
+  getTalkerFile()
+  .then((allTalkers) => {
+    const [
+      newTalkerArray,
+      editedTalker] = getTalkersAfterEditingSpecificTalker(allTalkers, parseInt(id, 10), details);
+    
+    return Promise.all([Promise.resolve(editedTalker), saveTalkerFile(newTalkerArray)]);
+  })
+  .then(([editedTalker]) => {
+    resolve(editedTalker);
+  })
+  .catch(reject);
+});
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
   addTalker,
+  editTalker,
 };

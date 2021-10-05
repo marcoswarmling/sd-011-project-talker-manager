@@ -1,7 +1,7 @@
 const express = require('express');
 
 const validateToken = require('../middlewares/validateToken');
-const { getAllTalkers, getTalkerById, addTalker } = require('../controllers/talker');
+const { getAllTalkers, getTalkerById, addTalker, editTalker } = require('../controllers/talker');
 
 const router = express.Router();
 
@@ -23,6 +23,14 @@ router.post('/', validateToken, (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
   getTalkerById(req.params.id)
+    .then((talker) => {
+      res.status(200).json(talker);
+    })
+    .catch(next);
+});
+
+router.put('/:id', validateToken, (req, res, next) => {
+  editTalker(req.params.id, req.body)
     .then((talker) => {
       res.status(200).json(talker);
     })

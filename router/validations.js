@@ -14,9 +14,11 @@ watchedAtValidation,
 rateValidation, 
 postTalker, 
 putTalker, 
-deleteTalker } = require('../middlewares/validations');
+deleteTalker,
+querySearchTalker } = require('../middlewares/validations');
 
 router.get('/talker', getTalkers);
+router.get('/talker/search', tokenValidation, querySearchTalker);
 router.get('/talker/:id', getTalkerById);
 router.post('/login', emailValidation, passwordValidation, getToken);
 router.post('/talker', 

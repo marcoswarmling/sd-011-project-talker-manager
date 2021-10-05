@@ -81,6 +81,24 @@ const deleteTalker = async (req, res) => {
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const querySearchTalker = async (req, res) => {
+  const { q } = req.query;
+  const response = await fs.readFile(jsonFile, 'utf-8');
+  const responseConvert = JSON.parse(response);
+
+  if (!q || q === '') {
+    return res.status(200).json(JSON.parse(response));
+  }
+
+  const filterTalkerName = responseConvert.filter((talker) => talker.name.includes(q));
+
+  if (!filterTalkerName) {
+    return res.status(200).json([]);
+  }
+  
+  res.status(200).json(filterTalkerName);
+};
+
 // vvvvvvvvvvvv Validations vvvvvvvvvvvv
 
 const emailValidation = (req, res, next) => {
@@ -205,4 +223,5 @@ watchedAtValidation,
 rateValidation, 
 postTalker, 
 putTalker,
-deleteTalker };
+deleteTalker, 
+querySearchTalker };

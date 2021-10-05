@@ -58,7 +58,7 @@ app.get('/talker', (_request, response) => {
   if (talker) {
     response.status(HTTP_OK_STATUS).send(talker);
   } 
-  if (!talker) {
+  if (talker.length === 0) {
     response.status(HTTP_OK_STATUS).send([]);
   }
 });
@@ -80,14 +80,14 @@ const validateEmail = (req, res, next) => {
   const { email } = req.body;
   const reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
   if (!email) {
-    res.status(404).send({
-      message: 'O campo \'email\' é obrigatório',
+    res.status(400).send({
+      message: 'O campo "email" é obrigatório',
     });
   }
   if (!reg.test(email)) {
     console.log(reg.test(email));
     res.status(400).send({ 
-      message: 'O \'email\' deve ter o formato \'email@email.com\'',
+      message: 'O "email" deve ter o formato "email@email.com"',
   });
   }
   next();
@@ -97,12 +97,12 @@ const validatePassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
     res.status(400).send({ 
-      message: 'O campo \'password\' é obrigatório',
+      message: 'O campo "password" é obrigatório',
   });
   }
   if (password.length < 6) {
     res.status(400).send({ 
-      message: 'O \'password\' deve ter pelo menos 6 caracteres',
+      message: 'O "password" deve ter pelo menos 6 caracteres',
   });
   }
   next();

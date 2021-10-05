@@ -18,6 +18,7 @@
     "crypto-js": "4.0.0",
     "express": "4.17.1",
     "express-rescue": "1.1.30",
+    "moment": "^2.29.1",
     "random-token": "0.0.8"
   },
   "devDependencies": {

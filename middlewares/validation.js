@@ -87,6 +87,82 @@ const generateToken = (req, res, next) => {
   next();
 };
 
+const setValidName = (req, res, next) => {
+  const { name } = req.body;
+
+  if (!name || name === '') {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  }
+
+  if (name.length < 3) {
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+
+  next();
+};
+
+const setValidAge = (req, res, next) => {
+  const { age } = req.body;
+
+  if (!age || age === '') {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+
+  next();
+};
+
+const setValidTalk = (req, res, next) => {
+  const { talk } = req.body;
+
+  const regex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+  
+  if (!talk || [!talk.watchedAt, !talk.rate].includes(true)) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+   });
+  }
+
+  if (!regex.test(talk.watchedAt)) {
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+
+  next();
+};
+
+const setValidLength = (req, res, next) => {
+  const { talk } = req.body;
+
+  if (talk.rate > 5 || talk.rate < 1) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  next();
+};
+
+const postPalestrante = async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+
+  const result = await readFile();
+  
+  const id = result.length + 1;
+
+  const talker = {
+    id,
+    name,
+    age,
+    talk: {
+      watchedAt,
+      rate,
+    },
+  };
+  await fs.writeFile('./talker.json', JSON.stringify([...result, talker]));
+  res.status(201).json(talker);
+};
+
 module.exports = {
   getTalkers,
   getTalkerId,
@@ -94,4 +170,9 @@ module.exports = {
   setValidEmail,
   createToken,
   generateToken,
+  setValidAge,
+  setValidName,
+  setValidTalk,
+  setValidLength,
+  postPalestrante,
 };

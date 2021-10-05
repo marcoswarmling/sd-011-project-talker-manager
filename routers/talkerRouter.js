@@ -4,6 +4,15 @@ const { auth } = require('../middlewares/auth.js');
 const { getTalkers, setTalkers } = require('../fs-utils');
 const { nameVal, ageVal, talkVal1, talkVal2 } = require('../middlewares/validations');
 
+router.get('/search', auth, rescue(async (req, res) => {
+  const talkers = await getTalkers();
+  const seachTerm = req.query.q;
+
+  const talker = talkers.filter(({ name }) => name.includes(seachTerm));
+
+  return res.status(200).json(talker);
+}));
+
 router.get('/:id', rescue(async (req, res) => {
   const talkers = await getTalkers();
   const talker = talkers.find(({ id }) => id === Number(req.params.id));

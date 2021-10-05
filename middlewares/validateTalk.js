@@ -12,7 +12,7 @@ const rateValidator = (rate) => {
 };
 
 const checkFields = (talk) => {
-  if (!talk || !talk.rate || !talk.watchedAt) {
+  if (!talk || talk === '' || !talk.rate || !talk.watchedAt) {
     return false;
   }
   return true;
@@ -20,6 +20,11 @@ const checkFields = (talk) => {
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
+  const fieldsCheck = checkFields(talk);
+  if (!fieldsCheck) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
   const validDate = dataValidator(talk.watchedAt);
   if (!validDate) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -27,11 +32,6 @@ const validateTalk = (req, res, next) => {
   const validRate = rateValidator(talk.rate);
   if (!validRate) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-  const fieldsCheck = checkFields(talk);
-  if (!fieldsCheck) {
-    return res.status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
 };

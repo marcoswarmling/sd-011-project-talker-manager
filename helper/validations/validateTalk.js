@@ -1,13 +1,21 @@
-const validateRate = (rate, res) => {
-  if (!Number.isInteger(rate) && rate < 1 && rate > 5) {
+const validateRate = (req, res, next) => {
+  const { talk } = req.body;
+
+  const watchedAtFormat = /^[\d]{2}\/[\d]{2}\/[\d]{4}$/;
+
+  if (talk.rate < 1 || talk.rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
+  if (!watchedAtFormat.test(talk.watchedAt)) {
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+
+  next();
 };
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
-
-  const watchedAtFormat = /^[\d]{2}\/[\d]{2}\/[\d]{4}$/;
 
   if (!talk || !talk.rate || !talk.watchedAt) {
     return res.status(400).json({ 
@@ -15,13 +23,7 @@ const validateTalk = (req, res, next) => {
     });
   }
 
-  if (!watchedAtFormat.test(talk.watchedAT)) {
-    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
-
-  validateRate(talk.rate, res);
-
   next();
 };
 
-module.exports = validateTalk;
+module.exports = { validateTalk, validateRate };

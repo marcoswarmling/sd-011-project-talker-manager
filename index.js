@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const rescue = require('express-rescue');
-// const utils = require('./fs-utils');
 const talker = require('./routers/talker');
 
 const app = express();
@@ -14,20 +12,6 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
-
-// app.get('/talker', rescue(async (req, res) => {
-//   try {
-//     const talkers = await utils.getTalkers();
-
-//     if (!talkers) {
-//       return res.status(200).json([]);
-//     }
-  
-//     res.status(200).json(talkers);
-//   } catch (e) {
-//     res.status(400).json(e);
-//   }
-// }));
 
 app.use('/talker', talker);
 

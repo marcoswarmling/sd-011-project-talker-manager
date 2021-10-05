@@ -18,10 +18,6 @@ app.get('/', (_request, response) => {
 // app.use('/login', loginRouter);
 app.use('/talker', talkerRouter);
 
-app.get('/ping', (_request, response) => {
-  response.status(HTTP_OK_STATUS).json('teste');
-});
-
 app.listen(PORT, () => {
   console.log('Online');
 });

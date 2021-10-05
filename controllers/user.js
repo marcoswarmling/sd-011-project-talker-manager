@@ -1,5 +1,7 @@
 const Ajv = require('ajv');
 const ajvErrors = require('ajv-errors');
+const crypto = require('crypto');
+
 const { ValidationError } = require('../classes/Errors');
 
 const ajv = new Ajv({ allErrors: true });
@@ -31,7 +33,9 @@ const login = ({ email, password }) => new Promise((resolve, reject) => {
   if (!valid) {
     return reject(new ValidationError(validate.errors));
   }
-  return resolve({ message: 'ugabvuga' });
+  const token = crypto.randomBytes(8).toString('hex');
+
+  return resolve({ token });
 });
 
 module.exports = {

@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.post('/login', (req, res, next) => {
   login(req.body)
-    .then(res.status(200).json)
+    .then(({ token }) => {
+      res.status(200).json({ token });
+    })
     .catch(next);
 });
 

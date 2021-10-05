@@ -9,10 +9,12 @@ const readContentFile = async (path) => {
   }
 };
 
-const writeContentFile = async (path, newItem) => {
+const writeContentFile = async (path, talker) => {
   const content = await readContentFile(path) || [];
-  content.push(newItem);
+  const newTalker = { ...talker, id: content.length + 1 };
+  content.push(newTalker);
   await fs.writeFile(path, JSON.stringify(content));
+  return newTalker;
 };
 
 const removeContentFile = async (path, id) => {

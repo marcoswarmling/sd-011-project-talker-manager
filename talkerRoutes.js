@@ -35,16 +35,16 @@ router.post('/', validateUpdate, async (req, res) => {
   res.status(201).json(obj);
 });
 
-router.put('/:id', (_req, _res) => {
+// router.put('/:id', (_req, _res) => {
 
-});
+// });
 
-router.delete('/:id', (_req, _res) => {
+// router.delete('/:id', (_req, _res) => {
 
-});
+// });
 
-router.get('/search', (_req, _res) => {
+// router.get('/search', (_req, _res) => {
 
-});
+// });
 
 module.exports = router;

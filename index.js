@@ -19,10 +19,11 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', rescue(async (_req, res) => {
   const talkersAsync = await talkers.getTalkers();
+  const emptyArray = [];
 
   res.status(200).json(talkersAsync);
 
-  if (talkersAsync === '') return res.status(200).send([]);
+  if (talkersAsync === '') return res.status(200).json({ emptyArray });
 }));
 
 // Requisito 2 - Crie o endpoint GET /talker/:id

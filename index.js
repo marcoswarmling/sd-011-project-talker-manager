@@ -35,16 +35,16 @@ function getTalkers() {
   }
 }
 
-function getLastId(){
-  let talkers = getTalkers();
-  let lastElement = talkers[talkers.length -1]
+function getLastId() {
+  const talkers = getTalkers();
+  const lastElement = talkers[talkers.length - 1];
   return lastElement.id;
 }
 
 function insertTalker(newTalker) {
   let currentTalkers = getTalkers();
   currentTalkers = [...currentTalkers, newTalker];
-  let response = JSON.stringify(currentTalkers);
+  const response = JSON.stringify(currentTalkers);
   try {
     fs.writeFileSync('./talker.json', response);
   } catch (err) {
@@ -58,7 +58,7 @@ function isEmailValid(email) {
 }
 
 function isDateValid(date) {
-  console.log(`validando data ${date}`)
+  console.log(`validando data ${date}`);
   const regex = /^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
   return regex.test(date);
 }
@@ -107,40 +107,40 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/talker', function(req, res) {
+app.post('/talker', (req, res) => {
   const { name, age, talk } = req.body;
   const token = req.headers.authorization;
-  if(!token){
-    return res.status(401).json({ "message": "Token não encontrado" });
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if(token.length !== 16){
-    return res.status(401).json({ "message": "Token inválido" });
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
   }
-  if(!name){
-    return res.status(400).json({ "message": "O campo \"name\" é obrigatório" });
+  if (!name) {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
-  if(name.length <= 2){
+  if (name.length <= 2) {
     return res.status(400)
-      .json({ "message": "O \"name\" deve ter pelo menos 3 caracteres" });
+      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
-  if(typeof age !== "number" || !age){
-    return res.status(400).json({ "message": "O campo \"age\" é obrigatório" });
+  if (typeof age !== 'number' || !age) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
-  if(age < 18){
-    return res.status(400).json({ "message": "A pessoa palestrante deve ser maior de idade" });
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
-  if(!talk || !talk.rate || !talk.watchedAt) {
+  if (!talk || !talk.rate || !talk.watchedAt) {
     return res.status(400)
-      .json({   "message": "O campo \"talk\" é obrigatório e \"watchedAt\" e \"rate\" não podem ser vazios"});
+      .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  if(!isDateValid(talk.watchedAt)){
+  if (!isDateValid(talk.watchedAt)) {
     return res.status(400)
-      .json({ "message": "O campo \"watchedAt\" deve ter o formato \"dd/mm/aaaa\"" });
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if(typeof talk.rate !== "number" || talk.rate < 1 || talk.rate > 5){
-    return res.status(400).json({ "message": "O campo \"rate\" deve ser um inteiro de 1 à 5" });
+  if (typeof talk.rate !== 'number' || talk.rate < 1 || talk.rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  let newTalker = { id: getLastId() + 1, name, age, talk };
-  insertTalker(newTalker)
+  const newTalker = { id: getLastId() + 1, name, age, talk };
+  insertTalker(newTalker);
   return res.status(201).json(newTalker);
-})
+});

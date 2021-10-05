@@ -1,5 +1,10 @@
 const router = require('express').Router();
 
-const { getTalkers } = require('../router/validation');
+const {
+  getTalkers,
+  getTalkerId,
+ } = require('../router/validation');
 
 router.get('/talker', getTalkers);
+
+router.get('/talker/:id', getTalkerId);

@@ -1,52 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const talker = [
-  {
-    name: 'Henrique Albuquerque',
-    age: 62,
-    id: 1,
-    talk: {
-      watchedAt: '23/10/2020',
-      rate: 5,
-    },
-  },
-  {
-    name: 'Heloísa Albuquerque',
-    age: 67,
-    id: 2,
-    talk: {
-      watchedAt: '23/10/2020',
-      rate: 5,
-    },
-  },
-  {
-    name: 'Ricardo Xavier Filho',
-    age: 33,
-    id: 3,
-    talk: {
-      watchedAt: '23/10/2020',
-      rate: 5,
-    },
-  },
-  {
-    name: 'Marcos Costa',
-    age: 24,
-    id: 4,
-    talk: {
-      watchedAt: '23/10/2020',
-      rate: 5,
-    },
-  },
-];
-
-// const talker = [];
+const fs = require('fs');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+function readTalker() {
+  const filedata = fs.readFile('./talker.json', 'utf8');
+  return filedata;
+}
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -55,18 +20,14 @@ app.get('/', (_request, response) => {
 
 // Crie o endpoint GET /talker
 app.get('/talker', (_request, response) => {
-  if (talker) {
-    response.status(HTTP_OK_STATUS).send(talker);
-  } 
-  if (talker.length === 0) {
-    response.status(HTTP_OK_STATUS).send([]);
-  }
+    response.status(HTTP_OK_STATUS).send(readTalker());
 });
 
 // Crie o endpoint GET /talker/:id
 app.get('/talker/:id', (req, response) => {
   const { id } = req.params;
-  const people = talker.find((p) => p.id === Number(id));
+  const filedata = readTalker();
+  const people = filedata.find((p) => p.id === Number(id));
   if (people) {
     response.status(HTTP_OK_STATUS).send(people);
   } else {

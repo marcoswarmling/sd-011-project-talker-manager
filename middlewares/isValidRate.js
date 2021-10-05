@@ -10,7 +10,7 @@ const isValidRate = (req, res, next) => {
 
   if (rate < 1 || rate > 5) {
     return res.status(HTTP_BAD_REQUEST_STATUS)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5"' });
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   next();

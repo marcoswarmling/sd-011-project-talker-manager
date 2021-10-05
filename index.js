@@ -15,13 +15,17 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', rescue(async (req, res) => {
-  const talkers = await utils.getTalkers();
+  try {
+    const talkers = await utils.getTalkers();
 
-  if (!talkers) {
-    return res.status(200).json([]);
+    if (!talkers) {
+      return res.status(200).json([]);
+    }
+  
+    res.status(200).json(talkers);
+  } catch (e) {
+    res.status(400).json(e);
   }
-
-  res.status(200).json(talkers);
 }));
 
 app.listen(PORT, () => {

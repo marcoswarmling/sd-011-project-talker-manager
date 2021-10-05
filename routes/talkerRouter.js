@@ -1,13 +1,15 @@
 const express = require('express');
 const fs = require('fs');
-const newTalkerValidator = require('../middlewares/newTalkerValidator');
+const talkerValidator = require('../middlewares/talkerValidator');
 const authValidator = require('../middlewares/authValidator');
 
 const talkerRouter = express.Router();
 
+const TALKER_FILE_PATH = './talker.json';
+
 talkerRouter.get('/', (_req, res) => {
   try {
-    const talkers = fs.readFileSync('./talker.json', 'utf-8');
+    const talkers = fs.readFileSync(TALKER_FILE_PATH, 'utf-8');
 
     return res.status(200).json(JSON.parse(talkers));
   } catch (error) {
@@ -19,7 +21,7 @@ talkerRouter.get('/:id', (req, res) => {
   const { id } = req.params;
 
   try {
-    const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+    const talkers = JSON.parse(fs.readFileSync(TALKER_FILE_PATH, 'utf-8'));
 
     const foundTalker = talkers.find((talker) => talker.id === Number(id));
 
@@ -34,20 +36,46 @@ talkerRouter.get('/:id', (req, res) => {
 talkerRouter.post(
   '/',
   authValidator,
-  newTalkerValidator,
+  talkerValidator,
   (req, res) => {
     const { body } = req;
 
     try {
-      const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+      const talkers = JSON.parse(fs.readFileSync(TALKER_FILE_PATH, 'utf-8'));
 
       const newTalker = { id: talkers[talkers.length - 1].id + 1, ...body };
 
       const updatedTalkers = [...talkers, newTalker];
 
-      fs.writeFileSync('./talker.json', JSON.stringify(updatedTalkers));
+      fs.writeFileSync(TALKER_FILE_PATH, JSON.stringify(updatedTalkers));
 
       return res.status(201).json({ ...newTalker });
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  },
+);
+
+talkerRouter.put(
+  '/:id',
+  authValidator,
+  talkerValidator,
+  (req, res) => {
+    const { body, params: { id } } = req;
+
+    try {
+      const talkers = JSON.parse(fs.readFileSync(TALKER_FILE_PATH, 'utf-8'));
+
+      const filteredTalkers = talkers.filter((talker) => talker.id !== Number(id));
+
+      const updatedTalker = { id: Number(id), ...body };
+
+      const updatedTalkers = [...filteredTalkers, updatedTalker]
+        .sort((first, second) => first.id - second.id);
+
+      fs.writeFileSync(TALKER_FILE_PATH, JSON.stringify(updatedTalkers));
+
+      return res.status(200).json({ ...updatedTalker });
     } catch (error) {
       return res.status(500).json({ error });
     }

@@ -1,6 +1,6 @@
 const { isValid, getInvalidMessage } = require('../helpers/utils');
 
-const newTalkerValidator = (req, res, next) => {
+const talkerValidator = (req, res, next) => {
   const { name, age, talk } = req.body;
   if (!talk) {
     return res.status(400).json({
@@ -19,4 +19,4 @@ const newTalkerValidator = (req, res, next) => {
   next();
 };
 
-module.exports = newTalkerValidator;
+module.exports = talkerValidator;

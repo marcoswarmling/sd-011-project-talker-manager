@@ -34,8 +34,10 @@ const invalidMessages = {
   rate: 'O campo "rate" deve ser um inteiro de 1 à 5',
 };
 
-const getInvalidMessage = (type, value) => (value
+const getInvalidMessage = (type, value) => (
+  typeof value !== 'undefined'
     ? invalidMessages[type]
-    : emptyMessages[type]);
+    : emptyMessages[type]
+);
 
 module.exports = { generateToken, isValid, getInvalidMessage };

@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (req, res) => {
-  const talker = await fs.readFile('./talker.json', 'utf8');
+  const talker = await fs.readFile('./talker.json', 'utf-8');
   if (!talker) return res.status(HTTP_OK_STATUS).json([]);
   res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
 });

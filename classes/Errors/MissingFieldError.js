@@ -1,8 +1,8 @@
-import HttpError from './HttpError';
+const HttpError = require('./HttpError');
 
-export default class MissingFieldError extends HttpError {
+module.exports = class MissingFieldError extends HttpError {
   constructor(field) {
     const message = `O campo "${field}" é obrigatório`;
     super({ message, status: 400 });
   }
-}
+};

@@ -1,4 +1,11 @@
-export { default as HttpError } from './HttpError';
-export { default as ServerError } from './ServerError';
-export { default as InvalidFieldError } from './InvalidFieldError';
-export { default as MissingFieldError } from './MissingFieldError'; 
+const HttpEror = require('./HttpError');
+const ServerError = require('./ServerError');
+const InvalidFieldError = require('./InvalidFieldError');
+const MissingFieldError = require('./MissingFieldError');
+
+module.exports = {
+  HttpEror,
+  ServerError,
+  InvalidFieldError,
+  MissingFieldError,
+};

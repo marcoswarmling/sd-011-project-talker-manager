@@ -1,7 +1,7 @@
-import HttpError from './HttpError';
+const HttpError = require('./HttpError');
 
-export default class InvalidFieldError extends HttpError {
+module.exports = class InvalidFieldError extends HttpError {
   constructor(message) {
     super({ message, status: 400 });
   }
-}
+};

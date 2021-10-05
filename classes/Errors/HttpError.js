@@ -1,8 +1,8 @@
-import SelfNamedError from './SelfNamedError';
+const SelfNamedError = require('./SelfNamedError');
 
-export default class HttpError extends SelfNamedError {
+module.exports = class HttpError extends SelfNamedError {
   constructor({ status, message }) {
     super(message);
     this.status = status;
   }
-}
+};

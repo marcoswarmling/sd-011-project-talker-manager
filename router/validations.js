@@ -13,7 +13,8 @@ talkValidation,
 watchedAtValidation, 
 rateValidation, 
 postTalker, 
-putTalker } = require('../middlewares/validations');
+putTalker, 
+deleteTalker } = require('../middlewares/validations');
 
 router.get('/talker', getTalkers);
 router.get('/talker/:id', getTalkerById);
@@ -34,5 +35,6 @@ router.put('/talker/:id',
   watchedAtValidation, 
   rateValidation, 
   putTalker);
+router.delete('/talker/:id', tokenValidation, deleteTalker);
 
 module.exports = router;

@@ -3,6 +3,8 @@ const crypto = require('crypto');
 
 const jsonFile = './talker.json';
 
+// vvvvvvvvvvvv Middlewares vvvvvvvvvvvv
+
 const getTalkers = async (req, res) => {
   try {
     const response = await fs.readFile(jsonFile, 'utf-8');
@@ -64,6 +66,19 @@ const putTalker = async (req, res) => {
     talk: { watchedAt, rate } };
   await fs.writeFile(jsonFile, JSON.stringify(responseConvert));
   res.status(200).json(responseConvert[updateTalker]);
+};
+
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  const response = await fs.readFile(jsonFile, 'utf-8');
+  const responseConvert = JSON.parse(response);
+
+  const findTalker = responseConvert.findIndex((talker) => talker.id === parseInt(id, 10));
+
+  responseConvert.splice(findTalker, 1);
+
+  await fs.writeFile(jsonFile, JSON.stringify(responseConvert));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
 // vvvvvvvvvvvv Validations vvvvvvvvvvvv
@@ -189,4 +204,5 @@ talkValidation,
 watchedAtValidation,
 rateValidation, 
 postTalker, 
-putTalker };
+putTalker,
+deleteTalker };

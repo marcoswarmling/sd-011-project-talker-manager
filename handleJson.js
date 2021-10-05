@@ -20,8 +20,15 @@ const editTalker = async (reqId, obj) => {
   return file[index];
 };
 
+const deleteTalker = async (id) => {
+  const file = await readFile();
+  const filtered = file.filter((el) => el.id !== Number(id));
+  await fs.writeFile('./talker.json', JSON.stringify(filtered));
+};
+
 module.exports = {
   readFile,
   writeFile,
   editTalker,
+  deleteTalker,
 };

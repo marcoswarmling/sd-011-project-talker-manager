@@ -1,6 +1,7 @@
 const express = require('express');
-const { readFile, writeFile, editTalker } = require('./handleJson');
-const validateUpdate = require('./validateUpdate');
+const { readFile, writeFile, editTalker, deleteTalker } = require('./handleJson');
+const { validateUpdate } = require('./validateUpdate');
+const validateDelete = require('./validateDelete');
 const getLastId = require('./retrieveLastId');
 
 const router = express.Router();
@@ -47,9 +48,11 @@ router.put('/:id', validateUpdate, async (req, res) => {
   res.status(200).json(edited);
 });
 
-// router.delete('/:id', (_req, _res) => {
-
-// });
+router.delete('/:id', validateDelete, (req, res) => {
+  const { id } = req.params;
+  deleteTalker(id);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
 
 // router.get('/search', (_req, _res) => {
 

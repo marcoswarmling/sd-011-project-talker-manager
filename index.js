@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const path = './talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -28,12 +29,12 @@ async function readOneFile(filePath) {
 }
 
 app.get('/talker', async (_req, res) => {
-  const talkers = await readOneFile('./talker.json');
+  const talkers = await readOneFile(path);
   return res.status(200).json(talkers);
 });
 
 app.get('/talker/:id', async (req, res) => {
-  const talkers = await readOneFile('./talker.json');
+  const talkers = await readOneFile(path);
   const { id } = req.params;
   const filteredTalker = talkers.find((talker) => Number(talker.id) === Number(id));
   if (!filteredTalker) {
@@ -84,7 +85,7 @@ const validateNameAge = (req, res, next) => {
 
 const validateExistTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
     );
@@ -106,8 +107,20 @@ function validateTalk(req, res, next) {
 app.post('/talker', validateToken, validateNameAge, validateExistTalk, validateTalk, 
 async (req, res) => {
   const { name, age, talk } = req.body;
-  const talkers = await readOneFile('./talker.json');
+  const talkers = await readOneFile(path);
   const newTalkers = [...talkers, { id: talkers.length + 1, name, age, talk }];
   await fs.writeFile('./talker.json', JSON.stringify(newTalkers));
   res.status(201).json({ id: talkers.length + 1, name, age, talk });
+});
+
+app.put('/talker/:id', validateToken, validateNameAge, validateExistTalk, validateTalk,
+async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const talkers = await readOneFile(path);
+  const indexFound = talkers.findIndex((talker) => Number(talker.id) === Number(id));
+  talkers[indexFound] = { id: Number(id), name, age, talk };
+  console.log(talkers);
+  await fs.writeFile(path, JSON.stringify(talkers));
+  res.status(200).json(talkers[indexFound]);
 });

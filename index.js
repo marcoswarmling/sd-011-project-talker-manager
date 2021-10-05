@@ -40,6 +40,8 @@ const talker = [
   },
 ];
 
+// const talker = [];
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -55,7 +57,8 @@ app.get('/', (_request, response) => {
 app.get('/talker', (_request, response) => {
   if (talker) {
     response.status(HTTP_OK_STATUS).send(talker);
-  } else {
+  } 
+  if (!talker) {
     response.status(HTTP_OK_STATUS).send([]);
   }
 });

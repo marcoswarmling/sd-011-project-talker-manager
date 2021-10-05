@@ -3,6 +3,10 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const authMiddleware = require('./authMiddleware');
 const generateToken = require('./generateToken');
+const authTokenMiddleware = require('./authTokenMiddleware');
+const newTalkerMiddleware = require('./newTalkerMiddleware');
+const validateKeyTalk = require('./validateKeyTalk');
+const validateTalk = require('./validateTalk');
 
 const app = express();
 app.use(bodyParser.json());
@@ -36,6 +40,26 @@ app.get('/talker/:id', (request, response) => {
 app.post('/login', authMiddleware, (_request, response) => {
   const token = generateToken(16);
   response.status(200).json({ token });
+});
+
+app.post('/talker', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, validateTalk,
+  (request, response) => {
+  const { name, age, talk } = request.body;
+  const { watchedAt, rate } = talk;
+  
+  const responseFile = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+  const newTalker = {
+    id: responseFile.length + 1,
+    name,
+    age,
+    talk: {
+      watchedAt,
+      rate,
+    },
+  };
+  responseFile.push(newTalker);
+  fs.writeFileSync('./talker.json', JSON.stringify(responseFile));
+  response.status(201).send(newTalker);
 });
 
 app.listen(PORT, () => {

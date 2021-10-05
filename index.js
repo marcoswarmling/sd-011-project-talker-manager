@@ -20,13 +20,13 @@ app.get('/', (_request, response) => {
 
 // Crie o endpoint GET /talker
 app.get('/talker', (_request, response) => {
-    response.status(HTTP_OK_STATUS).send(readTalker());
+    response.status(HTTP_OK_STATUS).send(readTalker);
 });
 
 // Crie o endpoint GET /talker/:id
 app.get('/talker/:id', (req, response) => {
   const { id } = req.params;
-  const filedata = readTalker();
+  const filedata = readTalker;
   const people = filedata.find((p) => p.id === Number(id));
   if (people) {
     response.status(HTTP_OK_STATUS).send(people);
@@ -81,7 +81,7 @@ const validateToken = (req, res, next) => {
   if (!token) {
     res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (token.length < 16) {
+  if (token && token.length < 16) {
     res.status(401).send({ message: 'Token inválido' });
   }
   next();

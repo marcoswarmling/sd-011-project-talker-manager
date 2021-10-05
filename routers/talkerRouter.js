@@ -49,4 +49,24 @@ router.post('/talker',
   res.status(201).json({ age, id: talker.length, name, talk });
 });
 
+router.put('/talker/:id', 
+  isValidToken, 
+  isValidName, 
+  isValidAge, 
+  isValidTalk, 
+  isValidRate, 
+  isValidWatchedAt, 
+  async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talker = await readFile(jsonTalker);
+  const updateTalker = talker
+    .map((e) => (Number(e.id) === Number(id) ? { name, age, id: Number(id), talk } : e));
+
+  await writeFile(jsonTalker, updateTalker);
+
+  const talkerById = updateTalker.find((e) => Number(e.id) === Number(id));
+  res.status(200).json(talkerById);
+});
+
 module.exports = router;

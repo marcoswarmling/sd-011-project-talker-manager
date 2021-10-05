@@ -27,7 +27,10 @@ router.get('/talker/:id', getTalkerId);
 router.post('/login', setValidPassword, setValidEmail, createToken);
 
 router.put(
-  '/talker/:id', setValidName, setValidAge, setValidTalk, generateToken, findPalestrantAndModify,
+  '/talker/:id',
+  setValidName,
+  setValidAge,
+  setValidTalk, setValidLength, regexForWatched, generateToken, findPalestrantAndModify,
   );
 
 router.post('/talker',

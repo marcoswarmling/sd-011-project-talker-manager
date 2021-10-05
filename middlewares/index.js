@@ -114,6 +114,14 @@ const alterTalker = async (req, res) => {
   res.status(200).json({ id: Number(id), name, age, talk });
 };
 
+const removeTalker = async (req, res) => {
+  const { id } = req.params;
+  const array = JSON.parse(await fs.readFile(talker, 'utf-8'));
+  const newArray = array.filter((t) => t.id !== Number(id));
+  fs.writeFile(talker, JSON.stringify(newArray));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   allSpeaker,
   findSpeaker,
@@ -125,4 +133,5 @@ module.exports = {
   verifyTalkHate,
   verifyTalk,
   alterTalker,
+  removeTalker,
 };

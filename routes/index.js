@@ -10,6 +10,7 @@ const {
   verifyTalkHate,
   verifyTalk,
   alterTalker,
+  removeTalker,
 } = require('../middlewares/index');
 
 router.get('/talker', allSpeaker);
@@ -22,5 +23,7 @@ router.post('/talker', verifyToken, verifyName, verifyAge, verifyTalk, verifyTal
 
 router.put('/talker/:id',
 verifyToken, verifyName, verifyAge, verifyTalk, verifyTalkHate, alterTalker);
+
+router.delete('/talker/:id', verifyToken, removeTalker);
 
 module.exports = router;

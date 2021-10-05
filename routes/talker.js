@@ -1,5 +1,4 @@
 const router = require('express').Router();
-
 const fs = require('fs').promises;
 
 router.get('/', async (_req, res) => {

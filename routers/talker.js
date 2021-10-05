@@ -1,6 +1,7 @@
 const express = require('express');
 
-const { getAllTalkers, getTalkerById } = require('../controllers/talker');
+const validateToken = require('../middlewares/validateToken');
+const { getAllTalkers, getTalkerById, addTalker } = require('../controllers/talker');
 
 const router = express.Router();
 
@@ -12,8 +13,12 @@ router.get('/', (_req, res, next) => {
     .catch(next);
 });
 
-router.post('/', (req, res, next) => {
-  
+router.post('/', validateToken, (req, res, next) => {
+  addTalker(req.body)
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch(next);
 });
 
 router.get('/:id', (req, res, next) => {

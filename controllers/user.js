@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
-const { validate } = require('../validator');
-const loginSchema = require('../validator/schemas/login.json');
+const { validate } = require('../validators');
+const loginSchema = require('../validators/schemas/login.json');
 
 const login = ({ email, password }) => new Promise((resolve, reject) => {
   try {

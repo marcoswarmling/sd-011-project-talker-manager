@@ -62,8 +62,6 @@ router.post(
       const talkers = await readFile();
       const lastId = talkers[talkers.length - 1].id;
 
-      console.log(lastId);
-
       const newTalkers = [...talkers, { name, age, id: lastId + 1, talk }];
 
       await writeFile(newTalkers);
@@ -98,6 +96,28 @@ router.put(
       await writeFile(updateTalkers);
 
       res.status(200).json({ id: Number(id), name, age, talk });
+    } catch (err) {
+      return res.status(404).json({ code: err.code, message: err.message });
+    }
+  },
+);
+
+router.delete(
+  '/:id',
+  validateToken,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const talkers = await readFile();
+      const findTalker = talkers.findIndex((talker) => talker.id === Number(id));
+  
+      if (findTalker === -1) return res.status(400).json({ message: 'Talker not found' });
+  
+      const updatedTalkers = talkers.filter((talker) => talker.id !== Number(id));
+  
+      await writeFile(updatedTalkers);
+  
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
     } catch (err) {
       return res.status(404).json({ code: err.code, message: err.message });
     }

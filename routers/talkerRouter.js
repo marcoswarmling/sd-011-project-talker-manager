@@ -17,6 +17,13 @@ router.get('/talker', async (_req, res) => {
   res.status(200).json(result);
 });
 
+router.get('/talker/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+  const talker = await readFile(jsonTalker);
+  const filteredTalker = talker.filter((e) => e.name.includes(q));
+  res.status(200).json(filteredTalker);
+});
+
 router.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const result = await readFile(jsonTalker);

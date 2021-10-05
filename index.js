@@ -5,6 +5,10 @@ const crypto = require('crypto');
 const {
   validateEmail,
   validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
 } = require('./validations');
 
 const app = express();
@@ -18,10 +22,13 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (req, res) => {
-  fs.readFile('talker.json', 'utf8')
-    .then((data) => res.status(200).send(data))
-    .catch((err) => console.log(err));
+app.get('/talker', async (req, res) => {
+  const data = await fs.readFile('talker.json', 'utf8');
+  const response = JSON.parse(data);
+  if (!response) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(response);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -39,6 +46,17 @@ app.post('/login', validateEmail, validatePassword, (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
 
   res.status(200).json({ token });
+});
+
+app.post('/talker', validateToken, validateName, validateAge, validateTalk, (req, res) => {
+  const { name, age, talk } = req.body;
+  res.status(201).json({ id: 1, name, age, talk });
+  // fs.readFile('talker.json', 'utf8')
+  //   .then((data) => JSON.parse(data))
+  //   .then((talkers) => {
+  //     const newTalkers = talkers.push({ name, age, talk });
+  //     return fs.writeFile('talker.json', JSON.stringify(newTalkers));
+  //   });
 });
 
 app.listen(PORT, () => {

@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const crypto = require('crypto');
 
 const messages = 'Pessoa palestrante não encontrada';
+const deleteT = 'Pessoa palestrante deletada com sucesso';
 const HTTP_OK_STATUS = 200;
 const path = './talker.json';
 
@@ -197,6 +198,16 @@ const setEditTalker = async (req, res) => {
   res.status(200).send(talk);
 };
 
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+
+  const talker = await fs.readFile(path, 'utf8');
+  const result = JSON.parse(talker);
+  const response = result.find((value) => value.id !== Number(id));
+  await fs.writeFile(path, JSON.stringify(response));
+  res.status(HTTP_OK_STATUS).send({ message: deleteT });
+};
+
 module.exports = { 
   getAllTalkers,
   getTalkerById,
@@ -211,4 +222,5 @@ module.exports = {
   validName,
   setTalker,
   setEditTalker,
+  deleteTalker,
 };

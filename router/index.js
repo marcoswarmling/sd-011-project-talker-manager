@@ -14,6 +14,7 @@ const {
   validName,
   setTalker,
   setEditTalker,
+  deleteTalker,
 } = require('../middlewares/validation');
 
 router.get('/talker', getAllTalkers);
@@ -26,5 +27,6 @@ setTalker);
 router.put('/talker/:id', validTalk, validRate, validWatchedAt,
 validAge,
 validName, validToken, setEditTalker);
+router.delete('/talker/:id', validToken, deleteTalker);
 
 module.exports = router;

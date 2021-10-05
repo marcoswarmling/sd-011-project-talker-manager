@@ -23,15 +23,15 @@ rescue(async (_req, res) => {
   res.status(200).json(read);
   }));
 
-  app.get('/talker/:id', async (req, res) => {
+  app.get('/talker/:id', rescue(async (req, res) => {
     const { id } = req.params;
     const sync = await functionsAsync.getReadFile();
     const filter = sync.find((i) => i.id === parseInt(id, 10));
     if (!filter) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
-    return res.status(202).json(filter);
-  });
+    return res.status(200).json(filter);
+  }));
 
   app.post('/login', validateEmail, validatePassword, (_req, res) => {
     const token = generatorToken();

@@ -54,4 +54,13 @@ router.put('/:id', auth,
   return res.status(200).json(updatedTalker);
 }));
 
+router.delete('/:id', auth,
+  rescue(async (req, res) => {
+  const currentTalkers = await getTalkers();
+  const tempTalkers = currentTalkers.filter(({ id }) => id !== Number(req.params.id));
+  await setTalkers(tempTalkers);
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}));
+
 module.exports = router;

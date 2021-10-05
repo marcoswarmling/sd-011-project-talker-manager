@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const talkerRoutes = require('./talkerRoutes');
-const validateLogin = require('./validateLogin');
-const generateToken = require('./generateToken');
+const talkerRoutes = require('./routes/talkerRoutes');
+const validateLogin = require('./middlewares/validateLogin');
+const generateToken = require('./helpers/generateToken');
 
 const app = express();
 app.use(bodyParser.json());

@@ -1,4 +1,4 @@
-const { readFile } = require('./handleJson');
+const { readFile } = require('../helpers/handleJson');
 
 const handleQuery = async (req, res) => {
   const { q } = req.query;

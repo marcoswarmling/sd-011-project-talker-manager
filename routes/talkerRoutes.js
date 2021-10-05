@@ -1,9 +1,9 @@
 const express = require('express');
-const { readFile, writeFile, editTalker, deleteTalker } = require('./handleJson');
-const { validateUpdate } = require('./validateUpdate');
-const validateMyToken = require('./validateMyToken');
-const handleQuery = require('./handleQuery');
-const getLastId = require('./retrieveLastId');
+const { readFile, writeFile, editTalker, deleteTalker } = require('../helpers/handleJson');
+const { validateUpdate } = require('../middlewares/validateUpdate');
+const validateMyToken = require('../middlewares/validateMyToken');
+const handleQuery = require('../middlewares/handleQuery');
+const getLastId = require('../helpers/retrieveLastId');
 
 const router = express.Router();
 

@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const fs = require('fs').promises;
+
+const allRouters = require('./router/allRouters');
 
 const app = express();
 app.use(bodyParser.json());
+app.use('/', allRouters);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -39,4 +41,4 @@ app.get('/talker', async (req, res) => {
   } catch (error) {
     res.status(400).json(error);
   }
-}); 
+});

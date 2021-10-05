@@ -21,9 +21,8 @@ app.get('/login',
 validateEmail,
 validatePassword,
 (_req, res) => {
-  res.status(200).json({ token: "7mqaVRXJSp886CGr"});
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 });
-
 
 app.use('/talker', talkerRouter);
 

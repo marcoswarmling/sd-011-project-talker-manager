@@ -13,6 +13,18 @@ function readTalker() {
   return fileData;
 }
 
+router.get('/:id', async (req, res) => {
+  const talkers = await readTalker();
+
+  const { id } = req.params;
+  const talker = talkers.find((t) => t.id === Number(id));
+
+  if (!talker) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(200).send(talker);
+});
+
 router.get('/', async (_req, res) => {
   const talkers = await readTalker();
 

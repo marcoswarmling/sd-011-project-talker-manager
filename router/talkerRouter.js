@@ -10,6 +10,8 @@ const talkValidation = require('../validation/talkValidation');
 const watchedAtValidation = require('../validation/watchedAtValidation');
 const rateValidation = require('../validation/rateValidation');
 
+const deleteValidations = [tokenValidation];
+
 const db = './talker.json';
 
 const registerOrEditValitations = [tokenValidation, nameValidation, 
@@ -55,6 +57,16 @@ router.put('/:id', registerOrEditValitations, async (req, res) => {
   registredTalkers[indexOfTalkerToEdit] = person;
   await fs.writeFile(db, JSON.stringify(registredTalkers));
   return res.status(200).json(person);
+});
+
+router.delete('/:id', deleteValidations, async (req, res) => {
+  const { id } = req.params;  
+  const response = await fs.readFile(db, 'utf-8');
+  const registredTalkers = JSON.parse(response);
+  const newRegistredTalkers = registredTalkers
+  .filter((talkers) => Number(talkers.id) !== Number(id));
+  await fs.writeFile(db, JSON.stringify(newRegistredTalkers));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

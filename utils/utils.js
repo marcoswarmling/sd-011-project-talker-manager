@@ -10,6 +10,18 @@ const readFileContent = async (path) => {
   }
 };
 
+const writeFileContent = async (path, newTalker) => {
+  try {
+    const currentContent = await readFileContent(path);
+    const newTalkerWithId = { ...newTalker, id: currentContent.length + 1 };
+    currentContent.push(newTalkerWithId);
+    await fs.writeFile(path, JSON.stringify(currentContent));
+    return newTalkerWithId;
+  } catch (err) {
+    return null;
+  }
+};
+
 const getTalkerById = async (id) => {
   try {
     const talkers = await readFileContent('./talker.json');
@@ -23,4 +35,9 @@ const getTalkerById = async (id) => {
 
 const generateToken = () => crypto.randomBytes(8).toString('hex');
 
-module.exports = { readFileContent, getTalkerById, generateToken };
+module.exports = { 
+  readFileContent, 
+  getTalkerById, 
+  generateToken, 
+  writeFileContent,
+};

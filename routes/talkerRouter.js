@@ -3,7 +3,17 @@ const router = require('express').Router();
 const { 
   readFileContent,
   getTalkerById,
+  writeFileContent,
 } = require('../utils/utils');
+
+const { 
+  tokenAuthentication, 
+  nameValidation, 
+  ageValidation, 
+  talkValidation,
+  rateValidation,
+  watchedAtValidation,
+} = require('../middlewares/middlewares');
 
 router.get('/', async (_req, res) => {
   const fileContent = await readFileContent('./talker.json') || [];
@@ -17,5 +27,20 @@ router.get('/:id', async (req, res) => {
 
   res.status(200).json(talkerById);
 });
+
+router.post(
+  '/',
+  tokenAuthentication,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  rateValidation,
+  watchedAtValidation,
+  async (req, res) => {
+    const newTalker = req.body;
+    const newTalkerWithId = await writeFileContent('./talker.json', newTalker);
+    return res.status(201).json(newTalkerWithId);
+  },
+);
 
 module.exports = router;

@@ -120,7 +120,16 @@ async (req, res) => {
   const talkers = await readOneFile(path);
   const indexFound = talkers.findIndex((talker) => Number(talker.id) === Number(id));
   talkers[indexFound] = { id: Number(id), name, age, talk };
-  console.log(talkers);
   await fs.writeFile(path, JSON.stringify(talkers));
   res.status(200).json(talkers[indexFound]);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readOneFile(path);
+  const indexFound = talkers.findIndex((talker) => Number(talker.id) === Number(id));
+  if (indexFound < 0) return res.status(404).json({ message: 'id inválido' });
+  talkers.splice(indexFound, 1);
+  await fs.writeFile(path, JSON.stringify(talkers));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });

@@ -30,11 +30,11 @@ function validate(email, password) {
 }
 
 router.post('/', (req, res) => {
-const {email, password} = req.body;
+const { email, password } = req.body;
 const returnedError = validate(email, password);
-const token = generateToken()
+const token = generateToken();
 if (!returnedError) {
-    return res.status(200).json({ token});
+    return res.status(200).json({ token });
 }
     return res.status(400).json(returnedError);
 });

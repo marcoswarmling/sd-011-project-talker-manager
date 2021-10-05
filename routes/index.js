@@ -11,9 +11,12 @@ const {
   verifyTalk,
   alterTalker,
   removeTalker,
+  searchTalker,
 } = require('../middlewares/index');
 
 router.get('/talker', allSpeaker);
+
+router.get('/talker/search', verifyToken, searchTalker);
 
 router.get('/talker/:id', findSpeaker);
 

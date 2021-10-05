@@ -122,6 +122,16 @@ const removeTalker = async (req, res) => {
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchTalker = async (req, res) => {
+  const { search } = req.params;
+  const array = JSON.parse(await fs.readFile(talker, 'utf-8'));
+  if (!search) return res.status(200).json(array);
+  const filtered = array.filter((t) => t.name.includes(search));
+  if (!filtered) return res.status(200).json([]);
+  fs.writeFile(talker, JSON.stringify(filtered));
+  res.status(200).json(filtered);
+};
+
 module.exports = {
   allSpeaker,
   findSpeaker,
@@ -134,4 +144,5 @@ module.exports = {
   verifyTalk,
   alterTalker,
   removeTalker,
+  searchTalker,
 };

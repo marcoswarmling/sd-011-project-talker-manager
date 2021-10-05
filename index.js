@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { getAllTalkers } = require('./services/talkers');
+const { getAllTalkers, getTalkerById } = require('./services/talkers');
+const { validNameAndEmail } = require('./middlewares/validLogin');
+
+const { generateToken } = require('./helpers/generateToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,13 +18,21 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  try {
     const data = await getAllTalkers();
-    return res.status(200).send(JSON.parse(data));
-  } catch (err) {
-    console.log(err);
-    return res.status(404).send({ message: 'Deu ruim' });
-  }
+    if (!data) res.status(200).json([]);
+    return res.status(200).send(data);
+  });
+
+  app.get('/talker/:id', async (req, res) => {
+    const { id } = req.params;
+      const data = await getTalkerById(id);
+      if (!data) res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+      return res.status(200).send(data);
+  });
+
+  app.post('/login', validNameAndEmail, (req, res) => {
+    const token = generateToken();
+    res.status(200).send({ token });
   });
 
 app.listen(PORT, () => {

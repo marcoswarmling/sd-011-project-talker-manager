@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -34,15 +35,15 @@ function getTalkers() {
   }
 }
 
-app.get('/talker', function (req, res) {
-  let talkers = getTalkers();
+app.get('/talker', (req, res) => {
+  const talkers = getTalkers();
   res.status(200).json(talkers);
 });
 
-app.get('/talker/:id', function (req, res) {
-  let talkers = getTalkers();
+app.get('/talker/:id', (req, res) => {
+  const talkers = getTalkers();
   const { id } = req.params;
-  const talker = talkers.find((t) => t.id === parseInt(id));
-  if(!talker) return res.status(404).json({ "message": "Pessoa palestrante não encontrada" });
+  const talker = talkers.find((t) => t.id === parseInt(id, 10));
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(talker);
 });

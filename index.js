@@ -48,15 +48,24 @@ app.post('/login', validateEmail, validatePassword, (req, res) => {
   res.status(200).json({ token });
 });
 
-app.post('/talker', validateToken, validateName, validateAge, validateTalk, (req, res) => {
+app.post('/talker', validateToken, validateTalk, validateName, validateAge, (req, res) => {
   const { name, age, talk } = req.body;
-  res.status(201).json({ id: 1, name, age, talk });
-  // fs.readFile('talker.json', 'utf8')
-  //   .then((data) => JSON.parse(data))
-  //   .then((talkers) => {
-  //     const newTalkers = talkers.push({ name, age, talk });
-  //     return fs.writeFile('talker.json', JSON.stringify(newTalkers));
-  //   });
+  const { talk: { rate } } = req.body;
+  if (!rate) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  if (rate < 1 || rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  fs.readFile('talker.json', 'utf8')
+    .then((data) => JSON.parse(data))
+    .then((talkers) => {
+      const newTalker = { name, id: talkers.length + 1, age, talk };
+      const newTalkersArr = [...talkers, newTalker];
+      fs.writeFile('talker.json', JSON.stringify(newTalkersArr));
+    });
+    return res.status(201).json({ id: 5, name, age, talk });
 });
 
 app.listen(PORT, () => {

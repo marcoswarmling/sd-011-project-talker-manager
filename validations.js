@@ -15,19 +15,19 @@ function validatePassword(req, res, next) {
   if (!password) {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
-  if (password.length < 6) {
+  if (password.toString().length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   next();
 }
 
 function validateToken(req, res, next) {
-  const { token } = req.headers;
-  if (!token) {
-    return res.status(400).json({ message: 'Token não encontrado' });
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token.length !== 16) {
-    return res.status(400).json({ message: 'Token inválido' });
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
   }
   next();
 }
@@ -54,17 +54,25 @@ function validateAge(req, res, next) {
   next();
 }
 
-function validateRate(req, res, next) {
-  const { talk: { rate } } = req.body;
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-  next();
-}
+// function validateRate(req, res, next) {
+//   const { talk: { rate } } = req.body;
+//   if (!rate) {
+//     return res.status(400)
+//     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+//   }
+//   if (rate < 1 || rate > 5) {
+//     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+//   }
+//   next();
+// }
 
 function validateWatchedAt(req, res, next) {
   const { talk: { watchedAt } } = req.body;
   const regex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
+  if (!watchedAt) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
   if (!regex.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
@@ -77,8 +85,8 @@ function validateTalk(req, res, next) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  validateRate(req, res, next);
   validateWatchedAt(req, res, next);
+  // validateRate(req, res, next);
   next();
 }
 

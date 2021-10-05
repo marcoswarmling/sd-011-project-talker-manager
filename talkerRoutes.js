@@ -1,5 +1,7 @@
 const express = require('express');
-const { readFile } = require('./handleJson');
+const { readFile, writeFile } = require('./handleJson');
+const validateUpdate = require('./validateUpdate');
+const getLastId = require('./retrieveLastId');
 
 const router = express.Router();
 
@@ -20,8 +22,17 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(readJson[findPerson]);
 });
 
-router.post('/', (_req, _res) => {
-
+router.post('/', validateUpdate, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const lastId = await getLastId();
+  const obj = {
+    id: lastId,
+    name,
+    age,
+    talk,
+  };
+  writeFile(obj);
+  res.status(201).json(obj);
 });
 
 router.put('/:id', (_req, _res) => {

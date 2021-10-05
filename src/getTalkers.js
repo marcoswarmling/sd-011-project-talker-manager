@@ -5,4 +5,8 @@ function read() {
     return JSON.parse(fileContent);
 }
 
-module.exports = { read };
+function findId(id) {
+    return read().find((talker) => talker.id === +id);
+}
+
+module.exports = { read, findId };

@@ -1,8 +1,6 @@
 module.exports = function validateToken(req, res, next) {
   const { authorization } = req.headers;
 
-  console.log(req.headers);
-
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }

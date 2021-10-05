@@ -15,9 +15,9 @@ const validateAge = (age) => {
 
 const validateDate = (date) => /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g.test(date);
 
-const valdidateRate = (rate) => Number(rate) >= 1 && Number(rate) <= 5;
+const valdidateRate = (rate) => rate >= 1 && rate <= 5;
 
-const checkFields = (talk) => !talk || !talk.rate || !talk.watchedAt;
+const checkFields = (talk) => !talk || talk.rate === undefined || !talk.watchedAt;
 
 const validateTalk = (talk) => {
   if (checkFields(talk)) {
@@ -29,7 +29,9 @@ const validateTalk = (talk) => {
   if (!validateDate(watchedAt)) {
     return { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
   }
-  if (!valdidateRate(rate)) return { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
+  if (!valdidateRate(Number(rate))) {
+    return { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
+  } 
 };
 
 const validateUpdate = (req, res, next) => {

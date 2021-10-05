@@ -11,7 +11,17 @@ const writeFile = async (content) => {
   await fs.writeFile('./talker.json', JSON.stringify(newArray));
 };
 
+const editTalker = async (reqId, obj) => {
+  const file = await readFile();
+  const index = file.findIndex((el) => el.id === Number(reqId));
+  file[index] = { ...file[index], ...obj };
+  file.sort((a, b) => a.id - b.id);
+  await fs.writeFile('./talker.json', JSON.stringify(file));
+  return file[index];
+};
+
 module.exports = {
   readFile,
   writeFile,
+  editTalker,
 };

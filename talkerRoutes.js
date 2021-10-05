@@ -1,5 +1,5 @@
 const express = require('express');
-const { readFile, writeFile } = require('./handleJson');
+const { readFile, writeFile, editTalker } = require('./handleJson');
 const validateUpdate = require('./validateUpdate');
 const getLastId = require('./retrieveLastId');
 
@@ -35,9 +35,17 @@ router.post('/', validateUpdate, async (req, res) => {
   res.status(201).json(obj);
 });
 
-// router.put('/:id', (_req, _res) => {
-
-// });
+router.put('/:id', validateUpdate, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const obj = {
+    name,
+    age,
+    talk,
+  };
+  const edited = await editTalker(id, obj);
+  res.status(200).json(edited);
+});
 
 // router.delete('/:id', (_req, _res) => {
 

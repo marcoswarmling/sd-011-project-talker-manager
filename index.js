@@ -17,7 +17,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/login',
+app.post('/login',
 validateEmail,
 validatePassword,
 (_req, res) => {

@@ -14,7 +14,7 @@ module.exports = app.get('/talker/:id', async (req, res) => {
   const result = parseJson.find((element) => element.id === Number(id));
 
   if (result === undefined) {
-    return res.status(200).json({
+    return res.status(404).json({
       message: 'Pessoa palestrante não encontrada',
     });
   }

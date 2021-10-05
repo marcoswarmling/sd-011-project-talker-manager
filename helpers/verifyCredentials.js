@@ -3,7 +3,6 @@ function verifyEmail(email) {
    * para verificação de email abaixo:
    * Source: https://forum.blip.ai/t/resolvido-regex-para-validacao-de-email/1635 */
   const emailPattern = /^([\w.-]+)@([\w-]+)((\.(\w){2,3})+)$/;
-  console.log(emailPattern.test(email));
   return emailPattern.test(email);
 }
 

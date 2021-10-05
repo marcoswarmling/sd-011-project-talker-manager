@@ -3,6 +3,15 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
 const { verifyEmail, verifyPassword } = require('./helpers/verifyCredentials');
+const {
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  verifyExistsTalk,
+  rateValidation,
+  talkValidation,
+  propertiesVerify,
+} = require('./middlewares/verifyUser');
 
 const app = express();
 app.use(bodyParser.json());
@@ -58,6 +67,32 @@ app.post('/login', (req, res) => {
 
   // O endpoint deverá retornar um código de status 200 com o token gerado.
   res.status(200).json({ token });
+});
+
+// 4 - Crie o endpoint POST /talker
+app.post('/talker',
+tokenValidation,
+nameValidation,
+ageValidation,
+verifyExistsTalk,
+rateValidation,
+talkValidation,
+propertiesVerify,
+ (req, res) => {
+   const { name, age, talk } = req.body;
+   const data = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+   const newId = data[data.length - 1].id + 1;
+
+   const newTalker = {
+     id: newId,
+     name,
+     age,
+     talk,
+   };
+
+  data.push(newTalker);
+  fs.writeFileSync('./talker.json', JSON.stringify(data));
+  res.status(201).json(newTalker);
 });
 
 app.listen(PORT, () => {

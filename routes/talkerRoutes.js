@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { readTalkerFile } = require('./helper');
+const { readTalkerFile } = require('../helper');
 
 router.get('/', async (_req, res) => {
   readTalkerFile()

@@ -28,11 +28,6 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).send(talker);
-  // fs.readFile('talker.json', 'utf8')
-  //   .then((data) => JSON.parse(data))
-  //   .then((response) => response.find((e) => e.id === parseInt(id, 10)))
-  //   .then((talker) => res.status(200).send(talker))
-  //   .catch((err) => console.log(err));
 });
 
 app.listen(PORT, () => {

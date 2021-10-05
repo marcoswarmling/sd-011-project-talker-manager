@@ -6,7 +6,7 @@ const router = express.Router();
 
 const loginValidations = require('../validations/login');
 
-// 1
+// 1 - Crie o endpoint GET /talker
 router.get('/talker', (_req, res) => {
   const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
 
@@ -17,7 +17,7 @@ router.get('/talker', (_req, res) => {
   res.status(200).json(response);
 });
 
-// 2
+// 2 - Crie o endpoint GET /talker/:id
 router.get('/talker/:id', (req, res) => {
   const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
   const { id } = req.params;
@@ -32,14 +32,14 @@ router.get('/talker/:id', (req, res) => {
   res.status(200).json(findTalker);
 });
 
-// 3
+// 3 - Crie o endpoint POST /login
 router.post(
   '/login',
   loginValidations.validateEmail,
   loginValidations.validatePassword,
   (_req, res) => {
     const token = crypto.randomBytes(8).toString('hex');
-    
+
     res.status(200).json({ token });
   },
 );

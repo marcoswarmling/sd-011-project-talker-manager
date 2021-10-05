@@ -28,9 +28,26 @@ async function readOneFile(filePath) {
   }
 }
 
+const validateToken = (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  next();
+};
+
 app.get('/talker', async (_req, res) => {
   const talkers = await readOneFile(path);
   return res.status(200).json(talkers);
+});
+
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readOneFile(path);
+  const filteredByQuery = talkers.filter(
+    (talker) => talker.name.toLowerCase().includes(q.toLocaleLowerCase()),
+  );
+  console.log(filteredByQuery);
+  res.status(200).json(filteredByQuery);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -62,13 +79,6 @@ app.post('/login', validateLogin, (_req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   return res.status(200).json({ token });
   });
-
-const validateToken = (req, res, next) => {
-  const { authorization } = req.headers;
-  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
-  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
-  next();
-};
 
 const validateNameAge = (req, res, next) => {
   const { name, age } = req.body;

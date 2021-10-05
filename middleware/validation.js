@@ -164,6 +164,19 @@ const deleteTalker = async (req, res) => {
   fs.writeFileSync(path, JSON.stringify(filterTalkers));
 };
 
+const searchTalker = async (req, res) => {
+  const { q } = req.query;
+  const talker = JSON.parse(fs.readFileSync(path, 'utf8'));
+  
+  if (!q) {
+    return res.status(200).json(talker);
+  }
+  
+  const filterTalkers = talker.filter((val) => val.name.includes(q));
+
+  res.status(200).json(filterTalkers);
+};
+
 module.exports = {
   getTalker,
   getTalkerId,
@@ -175,4 +188,5 @@ module.exports = {
   postTalker,
   putTalker,
   deleteTalker,
+  searchTalker,
 };

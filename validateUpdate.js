@@ -17,8 +17,10 @@ const validateDate = (date) => /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g.test(da
 
 const valdidateRate = (rate) => Number(rate) >= 1 && Number(rate) <= 5;
 
+const checkFields = (talk) => !talk || !talk.rate || !talk.watchedAt;
+
 const validateTalk = (talk) => {
-  if (!talk || !talk.watchedAt) {
+  if (checkFields(talk)) {
     return {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     };
@@ -33,11 +35,14 @@ const validateTalk = (talk) => {
 const validateUpdate = (req, res, next) => {
   const { name, age, talk } = req.body;
   const { authorization } = req.headers;
-  validateToken(authorization);
-  validateName(name);
-  validateAge(age);
-  validateTalk(talk);
-
+  const checkToken = validateToken(authorization);
+  const checkName = validateName(name);
+  const checkAge = validateAge(age);
+  const checkTalk = validateTalk(talk);
+  if (checkToken) return res.status(401).json(checkToken);
+  if (checkName) return res.status(400).json(checkName);
+  if (checkAge) return res.status(400).json(checkAge);
+  if (checkTalk) return res.status(400).json(checkTalk);
   next();
 };
 

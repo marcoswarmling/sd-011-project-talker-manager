@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', validateAge, validateName, validateTalk, validateToken, (req, res) => {
-  console.log('teste');
+  console.log(`${req}, ${res}`);
 });
 
 module.exports = router;

@@ -14,6 +14,7 @@ const {
   generateToken,
   findPalestrantAndModify,
   deletePalestrant,
+  regexForWatched,
  } = require('../middlewares/validation');
 
 router.get('/talker', getTalkers);
@@ -30,6 +31,7 @@ router.post('/talker',
 generateToken, 
 setValidTalk, 
 setValidLength,
+regexForWatched,
 setValidName, 
 setValidAge, 
 postPalestrante);

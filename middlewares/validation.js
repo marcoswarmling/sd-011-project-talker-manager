@@ -117,27 +117,38 @@ const setValidAge = (req, res, next) => {
 
 const setValidTalk = (req, res, next) => {
   const { talk } = req.body;
-
-  const regex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
   
-  if (!talk || [!talk.watchedAt, !talk.rate].includes(true)) {
+  if (!talk || !talk.watchedAt) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
    });
   }
 
+  next();
+};
+
+const regexForWatched = (req, res, next) => {
+  const { talk } = req.body;
+
+  const regex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+
   if (!regex.test(talk.watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-
   next();
 };
 
 const setValidLength = (req, res, next) => {
   const { talk } = req.body;
 
-  if (talk.rate > 5 || talk.rate < 1) {
+  if (parseInt(talk.rate, 10) > 5 || parseInt(talk.rate, 10) < 1) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  if (!talk.rate) {
+    return res
+    .status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 
   next();
@@ -209,6 +220,7 @@ module.exports = {
   setValidName,
   setValidTalk,
   setValidLength,
+  regexForWatched,
   postPalestrante,
   findPalestrantAndModify,
   deletePalestrant,

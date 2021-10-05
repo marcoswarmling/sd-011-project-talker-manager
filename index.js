@@ -1,4 +1,5 @@
 const express = require('express');
+const loginRouter = require('./routers/loginRouter');
 const talkerRouter = require('./routers/talkerRouter');
 
 const app = express();
@@ -12,6 +13,8 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.use('/login', loginRouter);
 
 app.use('/talker', talkerRouter);
 

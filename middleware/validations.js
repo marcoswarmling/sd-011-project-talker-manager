@@ -17,11 +17,13 @@ const getRandomToken = (req, res) => {
 
 const validateToken = (req, res, next) => {
   const { authorize } = req.headers;
-  if (!authorize) res.status(400).json({ message: 'Token não encontrado' });
-
+  if (!authorize) {
+    return res.status(400).json({ message: 'Token não encontrado' });
+  }
   const magicNumber = 16;
-  if (authorize.length !== magicNumber) res.status(400).json({ message: 'Token inválido' });
-
+  if (authorize.length !== magicNumber) {
+    return res.status(400).json({ message: 'Token inválido' });
+  }
   next();
 };
 
@@ -39,10 +41,10 @@ const validateEmail = (req, res, next) => {
 
 const validatePassword = (req, res, next) => {
   const { password } = req.body;
-  const magicNumber = 6;
   if (!password) {
     return res.status(400).send({ message: 'O campo "password" é obrigatório' });
   }
+  const magicNumber = 6;
   if (password.length < magicNumber) {
     return res.status(400).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
@@ -51,7 +53,7 @@ const validatePassword = (req, res, next) => {
 
 module.exports = {
   getRandomToken,
+  validateToken,
   validateEmail,
   validatePassword,
-  validateToken,
 };

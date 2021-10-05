@@ -7,6 +7,7 @@ const {
   addTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
 } = require('../controllers/talker');
 
 const router = express.Router();
@@ -23,6 +24,16 @@ router.post('/', validateToken, (req, res, next) => {
   addTalker(req.body)
     .then((result) => {
       res.status(201).json(result);
+    })
+    .catch(next);
+});
+
+router.get('/search', validateToken, (req, res, next) => {
+  const { q = '' } = req.query;
+
+  searchTalker(q)
+    .then((foundTalkers) => {
+      res.status(200).json(foundTalkers);
     })
     .catch(next);
 });

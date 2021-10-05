@@ -105,10 +105,22 @@ const deleteTalker = (id) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const searchTalker = (query) => new Promise((resolve, reject) => {
+  getTalkerFile()
+    .then((allTalkers) => {
+      const matchingTalkers = allTalkers
+        .filter((talker) => new RegExp(query, 'i').test(talker.name));
+      
+      resolve(matchingTalkers);
+    })
+    .catch(reject);
+});
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
   addTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
 };

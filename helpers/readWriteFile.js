@@ -9,4 +9,16 @@ const readContentFile = async (path) => {
   }
 };
 
-module.exports = { readContentFile };
+const writeContentFile = async (path, newItem) => {
+  const content = await readContentFile(path) || [];
+  content.push(newItem);
+  await fs.writeFile(path, JSON.stringify(content));
+};
+
+const removeContentFile = async (path, id) => {
+  const oldContent = await readContentFile(path) || [];
+  const newContent = oldContent.filter((item) => item.id !== Number(id));
+  await fs.writeFile(path, JSON.stringify(newContent));
+};
+
+module.exports = { readContentFile, writeContentFile, removeContentFile };

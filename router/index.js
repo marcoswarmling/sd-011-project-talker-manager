@@ -22,7 +22,7 @@ router.get('/talker', getAllTalkers);
 router.get('/talker/search', validToken, searchTalk);
 router.get('/talker/:id', getTalkerById);
 router.post('/login', validPassword, validEmail, getToken);
-router.post('/talker', validTalk, validRate, validWatchedAt,
+router.post('/talker', validToken, validTalk, validRate, validWatchedAt,
 validAge,
 validName,
 setTalker);

@@ -15,8 +15,22 @@ function validateEmail(email) {
 }
 
 function validatePassword(password) {
-  const validPassword = /[\w]{6,}/;
+  const validPassword = /^[\w]{6,}$/;
   return validPassword.test(password);
+}
+
+function validateName(name) {
+  return name.length >= 3;
+}
+
+function validateWatchedAt(watchedAt) {
+  const validWatchedAt = /^[\d]{2}\/[\d]{2}\/[\d]{4}$/;
+  return validWatchedAt.test(watchedAt);
+}
+
+function validateRate(rate) {
+  const validRate = /^[1-5]$/;
+  return validRate.test(rate);
 }
 
 module.exports = {
@@ -24,4 +38,7 @@ module.exports = {
   token,
   validateEmail,
   validatePassword,
+  validateName,
+  validateWatchedAt,
+  validateRate,
 };

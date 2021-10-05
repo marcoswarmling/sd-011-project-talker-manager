@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+// const { isValidToken, isValidEmail, isValidPassword } = require('./middlewares/validations');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+const userRouter = require('./routers/useRouters');
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -27,6 +30,12 @@ app.get('/talker/:id', async (req, res) => {
   if (!findId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
   res.status(HTTP_OK_STATUS).json(findId);
 });
+
+// app.post('/login', isValidEmail, isValidPassword, isValidToken, (req, res) => {
+//   res.status(201).json({ message: 'user created' });
+// });
+
+app.use('/', userRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

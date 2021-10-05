@@ -1,6 +1,10 @@
 const router = require('express').Router();
 
 const talkersJson = require('../helper/fs');
+const validateToken = require('../helper/validations/validateToken');
+const validateName = require('../helper/validations/validateName');
+const validateAge = require('../helper/validations/validateAge');
+const validateTalk = require('../helper/validations/validateTalk');
 
 router.get('/', async (req, res) => {
   const data = await talkersJson();
@@ -18,6 +22,10 @@ router.get('/:id', async (req, res) => {
   if (!findTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
   res.status(200).json(findTalker);
+});
+
+router.post('/', validateAge, validateName, validateTalk, validateToken, (req, res) => {
+  console.log('teste');
 });
 
 module.exports = router;

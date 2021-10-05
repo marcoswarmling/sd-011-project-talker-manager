@@ -17,6 +17,20 @@ talkerRouter.get('/', (_req, res) => {
   }
 });
 
+talkerRouter.get('/search', authValidator, (req, res) => {
+  const { q = '' } = req.query;
+
+  try {
+    const talkers = JSON.parse(fs.readFileSync(TALKER_FILE_PATH, 'utf-8'));
+
+    const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+
+    return res.status(200).json(filteredTalkers);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
 talkerRouter.get('/:id', (req, res) => {
   const { id } = req.params;
 

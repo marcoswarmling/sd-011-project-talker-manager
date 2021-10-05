@@ -18,7 +18,9 @@
     "crypto-js": "4.0.0",
     "email-validator": "^2.0.4",
     "express": "4.17.1",
-    "express-rescue": "1.1.30"
+    "express-rescue": "1.1.30",
+    "rand-token": "^1.0.1",
+    "validate-date": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "6.8.0",

@@ -1,7 +1,8 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const validator = require('email-validator');
- 
+const randtoken = require('rand-token');
+
 const loginRouter = express();
 loginRouter.use(express.json());
 
@@ -28,13 +29,14 @@ function validateEmail(email) {
 
 function validatePassword(password) {
   const { emptyPassword, wrongPassword } = loginErrorMessages;
+  const token = randtoken.generate(16);
   if (!password || password === '') {
     return { status: HTTP_BAD_REQUEST_STATUS, message: { message: emptyPassword } };
   }
   if (password.length < 6) {
     return { status: HTTP_BAD_REQUEST_STATUS, message: { message: wrongPassword } };
   }
-  return { status: HTTP_OK_STATUS, message: { token: '7mqaVRXJSp886CGr' } };
+  return { status: HTTP_OK_STATUS, message: { token } };
 }
 
 loginRouter.post('/', rescue((request, response) => {

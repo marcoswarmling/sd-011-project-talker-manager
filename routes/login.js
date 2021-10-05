@@ -24,5 +24,5 @@ function validCredencies(req, res, next) {
 
 module.exports = app.post('/login', validCredencies, (_req, res) =>
   res.status(200).json({
-    message: '7mqaVRXJSp886CGr',
+    token: '7mqaVRXJSp886CGr',
   }));

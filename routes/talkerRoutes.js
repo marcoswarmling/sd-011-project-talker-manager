@@ -75,4 +75,33 @@ router.post(
   },
 );
 
+router.put(
+  '/:id',
+  validateToken,
+  validateTalkerName,
+  validateTalkerAge,
+  validateTalkBody,
+  validateTalkeBodyInfos,
+  async (req, res) => {
+    try {
+      const { name, age, talk } = req.body;
+      const { id } = req.params;
+      const talkers = await readFile();
+      const findTalker = talkers.find((talker) => talker.id === Number(id));
+
+      if (!findTalker) return res.status(400).json({ message: 'Talker not found' });
+      const updateTalkers = talkers.map((talker) => {
+        if (talker.id === Number(id)) return { id: Number(id), name, age, talk };
+        return talker;
+      });
+
+      await writeFile(updateTalkers);
+
+      res.status(200).json({ id: Number(id), name, age, talk });
+    } catch (err) {
+      return res.status(404).json({ code: err.code, message: err.message });
+    }
+  },
+);
+
 module.exports = router;

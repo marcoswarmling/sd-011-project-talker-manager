@@ -12,7 +12,7 @@ const rateValidation = require('../validation/rateValidation');
 
 const db = './talker.json';
 
-const registerValitations = [tokenValidation, nameValidation, 
+const registerOrEditValitations = [tokenValidation, nameValidation, 
   ageValidation, talkValidation, watchedAtValidation, rateValidation];
 
 router.get('/', async (_req, res) => {
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json(result);
 });
 
-router.post('/', registerValitations, async (req, res) => {
+router.post('/', registerOrEditValitations, async (req, res) => {
   const { name, age, talk } = req.body;
   const { watchedAt, rate } = talk;
   const response = await fs.readFile(db, 'utf-8');
@@ -41,6 +41,20 @@ router.post('/', registerValitations, async (req, res) => {
   registredTalkers.push(person);
   await fs.writeFile(db, JSON.stringify(registredTalkers));
   return res.status(201).json(person);
+});
+
+router.put('/:id', registerOrEditValitations, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const { watchedAt, rate } = talk;
+  const person = { id: Number(id), name, age, talk: { watchedAt, rate } };
+  const response = await fs.readFile(db, 'utf-8');
+  const registredTalkers = JSON.parse(response);
+  const indexOfTalkerToEdit = registredTalkers
+  .findIndex((talker) => Number(talker.id) === Number(id));
+  registredTalkers[indexOfTalkerToEdit] = person;
+  await fs.writeFile(db, JSON.stringify(registredTalkers));
+  return res.status(200).json(person);
 });
 
 module.exports = router;

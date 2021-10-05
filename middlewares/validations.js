@@ -82,7 +82,7 @@ const isValidAge = (req, res, next) => {
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || talk === {}) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -91,10 +91,14 @@ const isValidTalk = (req, res, next) => {
   next();
 };
 
+// Regex retirado de https://stackoverflow.com/questions/5465375/javascript-date-regex-dd-mm-yyyy
 const isValidWatchedAt = (req, res, next) => {
   const { talk } = req.body;
   const regexDate = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
-
+  if (!talk.watchedAt) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
   if (!regexDate.test(talk.watchedAt)) {
     return res.status(400).json({
       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
@@ -111,6 +115,10 @@ const isValidRate = (req, res, next) => {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
+  }
+  if (!talk.rate) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   
   next();

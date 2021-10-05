@@ -48,4 +48,4 @@ const validateUpdate = (req, res, next) => {
   next();
 };
 
-module.exports = { validateUpdate, validateToken};
+module.exports = { validateUpdate, validateToken };

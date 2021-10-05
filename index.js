@@ -5,6 +5,8 @@ const fs = require('fs').promises;
 const app = express();
 app.use(bodyParser.json());
 
+const userRouter = require('./routers/useRouter');
+
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
@@ -27,6 +29,8 @@ app.get('/talker/:id', async (req, res) => {
   if (!data) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(HTTP_OK_STATUS).json(data);
 });
+
+app.use('/', userRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

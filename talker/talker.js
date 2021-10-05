@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const router = express.Router();
 
 const loginValidations = require('../validations/login');
+const talkerValidations = require('../validations/talker');
 
 // 1 - Crie o endpoint GET /talker
 router.get('/talker', (_req, res) => {
@@ -41,6 +42,26 @@ router.post(
     const token = crypto.randomBytes(8).toString('hex');
 
     res.status(200).json({ token });
+  },
+);
+
+// 4 - Crie o endpoint POST /talker
+router.post(
+  '/talker',
+  talkerValidations.validateToken,
+  talkerValidations.validateAge,
+  talkerValidations.validateName,
+  talkerValidations.validateTalk,
+  (req, res) => {
+    const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+    const { name, age, talk } = req.body;
+
+    const newId = Math.max(...response.map((talker) => talker.id)) + 1;
+    response.push({ id: newId, name, age, talk });
+
+    fs.writeFileSync('./talker.json', JSON.stringify(response));
+
+    res.status(201).json({ id: newId, name, age, talk });
   },
 );
 

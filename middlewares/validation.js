@@ -209,6 +209,24 @@ const deletePalestrant = async (req, res) => {
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchPalestrantByName = async (req, res) => {
+  const { q } = req.query;
+
+  const response = await readFile();
+
+  if (!q || q === '') {
+    return res.status(200).json(response);
+  }
+
+  const filterPalestrantName = response.filter((palestrant) => palestrant.name.includes(q));
+
+  if (!filterPalestrantName) {
+    return res.status(200).json([]);
+  }
+
+  res.status(200).json(filterPalestrantName);
+};
+
 module.exports = {
   getTalkers,
   getTalkerId,
@@ -224,4 +242,5 @@ module.exports = {
   postPalestrante,
   findPalestrantAndModify,
   deletePalestrant,
+  searchPalestrantByName,
 };

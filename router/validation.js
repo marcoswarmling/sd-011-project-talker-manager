@@ -15,9 +15,12 @@ const {
   findPalestrantAndModify,
   deletePalestrant,
   regexForWatched,
+  searchPalestrantByName,
  } = require('../middlewares/validation');
 
 router.get('/talker', getTalkers);
+
+router.get('/talker/search', generateToken, searchPalestrantByName);
 
 router.get('/talker/:id', getTalkerId);
 

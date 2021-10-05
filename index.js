@@ -3,7 +3,11 @@ const bodyParser = require('body-parser');
 const { readFile, writeFile } = require('./data/accessFile');
 const getToken = require('./util/tokenGenerate');
 const authLogin = require('./middlewares/authLogin');
-const authCreateTalker = require('./middlewares/authCreateTalker');
+const authToken = require('./middlewares/authToken');
+const authName = require('./middlewares/authName');
+const authAge = require('./middlewares/authAge');
+const authTalk = require('./middlewares/authTalk');
+const authDoRage = require('./middlewares/authDoRage');
 
 const app = express();
 app.use(bodyParser.json());
@@ -34,14 +38,17 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(talker);
 });
 
-app.post('/talker', authCreateTalker, async (req, res) => {
-  const data = await readFile();
-  const id = data[data.length - 1].id + 1;
-  req.body.id = id;
-  data.push(req.body);
-  await writeFile(data);
-  res.status(201).json(req.body);
-});
+app.post(
+  '/talker', authToken, authName, authAge, authTalk, authDoRage,
+  async (req, res) => {
+    const data = await readFile();
+    const id = data[data.length - 1].id + 1;
+    req.body.id = id;
+    data.push(req.body);
+    await writeFile(data);
+    res.status(201).json(req.body);
+  },
+);
 
 app.post('/login', authLogin, (_req, res) => {
   res.status(200).json({

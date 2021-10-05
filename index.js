@@ -41,6 +41,35 @@ function getLastId() {
   return lastElement.id;
 }
 
+function updateTalker(id, newTalker) {
+  const currentTalkers = getTalkers();
+  const talker = currentTalkers.find((t) => t.id === id);
+  talker.name = newTalker.name;
+  talker.age = newTalker.age;
+  talker.talk.watchedAt = newTalker.talk.watchedAt;
+  talker.talk.rate = newTalker.talk.rate;
+  try {
+    fs.writeFileSync('./talker.json', JSON.stringify(currentTalkers));
+  } catch (err) {
+    console.log(`Erro ao inserir no arquivo: ${err}`);
+  }
+}
+
+function deleteTalker(id){
+  const currentTalkers = getTalkers();
+  let newTalkers = [];
+  for(let i = 0; i < currentTalkers; i+=1) {
+    if(currentTalkers[i].id !== id){
+      newTalkers.push(currentTalkers[i])
+    }
+  }
+  try {
+    fs.writeFileSync('./talker.json', JSON.stringify(newTalkers));
+  } catch (err) {
+    console.log(`Erro ao inserir no arquivo: ${err}`);
+  }
+}
+
 function insertTalker(newTalker) {
   let currentTalkers = getTalkers();
   currentTalkers = [...currentTalkers, newTalker];
@@ -58,7 +87,6 @@ function isEmailValid(email) {
 }
 
 function isDateValid(date) {
-  console.log(`validando data ${date}`);
   const regex = /^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
   return regex.test(date);
 }
@@ -107,7 +135,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/talker', (req, res) => {
+app.post('/talker', function (req, res){
   const { name, age, talk } = req.body;
   const token = req.headers.authorization;
   if (!token) {
@@ -131,7 +159,9 @@ app.post('/talker', (req, res) => {
   }
   if (!talk || !talk.rate || !talk.watchedAt) {
     return res.status(400)
-      .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+      .json({ 
+        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
+      });
   }
   if (!isDateValid(talk.watchedAt)) {
     return res.status(400)
@@ -143,4 +173,60 @@ app.post('/talker', (req, res) => {
   const newTalker = { id: getLastId() + 1, name, age, talk };
   insertTalker(newTalker);
   return res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id', function (req, res){
+  const newTalker = req.body;
+  const { name, age, talk } = newTalker;
+  const { id } = req.params;
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  if (!name) {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name.length <= 2) {
+    return res.status(400)
+      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  if (typeof age !== 'number' || !age) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  if (!talk || talk.rate === undefined || !talk.watchedAt) {
+    return res.status(400)
+      .json({ 
+        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' 
+      });
+  }
+  if (!isDateValid(talk.watchedAt)) {
+    return res.status(400)
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (typeof talk.rate !== 'number' || talk.rate < 1 || talk.rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  const idNumber = parseInt(id, 10);
+  updateTalker(idNumber, newTalker);
+  res.status(200).json({ id: idNumber, ...newTalker });
+});
+
+app.delete('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  const idNumber = parseInt(id, 10);
+  deleteTalker(idNumber);
+  res.status(200).json({ "message": "Pessoa palestrante deletada com sucesso" })
 });

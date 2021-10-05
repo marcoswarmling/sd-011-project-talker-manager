@@ -21,6 +21,21 @@ router.get('/', (_req, res) => {
   }
 });
 
+router.get('/search', validateToken, (req, res) => {
+  const { q } = req.query;
+  try {
+    const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+    if (!q || q === '') return res.status(200).json(JSON.stringify(talkers));
+    const talker = talkers.filter((person) => person.name.includes(q));
+    return talker.length > 0
+      ? res.status(200).json(talkers)
+      : res.status(200).json([]);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+  res.status(200).end();
+});
+
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   try {

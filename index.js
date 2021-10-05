@@ -62,6 +62,25 @@ app.post('/talker', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, v
   response.status(201).send(newTalker);
 });
 
+app.put('/talker/:id', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, validateTalk, 
+(req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const { watchedAt, rate } = talk;
+  const responseFile = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+  const talkerIndex = responseFile.findIndex(({ id: idTalker }) => Number(idTalker) === Number(id));
+  if (talkerIndex === -1) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  responseFile[talkerIndex] = { 
+    ...responseFile[talkerIndex], 
+    name, 
+    age, 
+    talk: { watchedAt, rate } };
+  fs.writeFileSync('./talker.json', JSON.stringify(responseFile));
+  res.status(200).send(responseFile[talkerIndex]);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

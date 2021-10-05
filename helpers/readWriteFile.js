@@ -18,7 +18,7 @@ const writeContentFile = async (path, content) => {
     arrContent.push(content);
     await fs.writeFile(path, JSON.stringify(arrContent));
 
-    return content;
+    // return content;
   } catch (error) {
     return null;
   }

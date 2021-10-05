@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { readFile } = require('./data/accessFile');
+const getToken = require('./util/tokenGenerate');
+const authLogin = require('./middlewares/authLogin');
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,6 +32,12 @@ app.get('/talker/:id', async (req, res) => {
   if (!talker) return res.status(404).json(notFoundResponse);
 
   res.status(200).json(talker);
+});
+
+app.post('/login', authLogin, (_req, res) => {
+  res.status(200).json({
+    token: getToken(16),
+  });
 });
 
 app.listen(PORT, () => {

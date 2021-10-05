@@ -5,12 +5,12 @@ const isValidPassword = (req, res, next) => {
 
   if (!password) {
     return res.status(HTTP_BAD_REQUEST_STATUS)
-      .json({ message: 'o campo "password" é obrigatório' });
+      .json({ message: 'O campo "password" é obrigatório' });
   }
 
   if (password.length < 6) {
     return res.status(HTTP_BAD_REQUEST_STATUS)
-      .json({ message: 'o "password" deve ter pelo menos 6 caracteres' });
+      .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
   next();

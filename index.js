@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
 const talkers = require('./functionsAsync');
-// const { validateToken, validateUserInfo } = require('./auths');
+const { generateToken, validateToken, validateUserInfo } = require('./auths');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,11 +19,10 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', rescue(async (_req, res) => {
   const talkersAsync = await talkers.getTalkers();
-  const emptyArray = [];
+
+  if (talkersAsync === '') return res.status(200).json([]);
 
   res.status(200).json(talkersAsync);
-
-  if (talkersAsync === '') return res.status(200).json({ emptyArray });
 }));
 
 // Requisito 2 - Crie o endpoint GET /talker/:id
@@ -40,10 +39,10 @@ app.get('/talker/:id', rescue(async (req, res) => {
 
 // Requisito 3 -  Crie o endpoint POST /login
 
-// app.post('/login', (req, _res) => {
-//   const { email, password } = req.body;
-//   validateUserInfo(email, password);
-// });
+app.post('/login', validateUserInfo, (_req, res) => {
+  const token = generateToken();
+  res.status(200).json({ token: `${token}` });  
+});
 
 app.listen(PORT, () => {
   console.log('Online');

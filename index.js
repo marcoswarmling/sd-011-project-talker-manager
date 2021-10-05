@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
 const talkers = require('./functionsAsync');
-const { generateToken, validateUserInfo } = require('./auths');
+const { generateToken, validateEmail, validatePassword } = require('./auths');
 
 const app = express();
 app.use(bodyParser.json());
@@ -39,9 +39,9 @@ app.get('/talker/:id', rescue(async (req, res) => {
 
 // Requisito 3 -  Crie o endpoint POST /login
 
-app.post('/login', validateUserInfo, (_req, res) => {
+app.post('/login', validateEmail, validatePassword, (_req, res) => {
   const token = generateToken();
-  res.status(200).json({ token: `${token}` });  
+  res.status(200).json({ token });  
 });
 
 app.listen(PORT, () => {

@@ -1,9 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const fs = require('fs');
-const { talkerValidator } = require('./validations');
+// const { talkerValidator } = require('./validations');
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

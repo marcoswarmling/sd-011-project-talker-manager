@@ -12,9 +12,9 @@ router.get('/', async (_req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const result = await readFile(PATHNAME);
-  const talker = result.find((talker) => talker.id === parseInt(id));
+  const talker = result.find((item) => item.id === parseInt(id, 10));
 
-  if(!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
   res.status(200).json(talker);
 });

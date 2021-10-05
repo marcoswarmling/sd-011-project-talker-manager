@@ -5,8 +5,8 @@ const app = express();
 app.use(bodyParser.json());
 const rescue = require('express-rescue');
 
-const functionsAsync = require('./functionAsync.js');
-const { validateEmail, validatePassword, generatorToken } = require('./validate.js');
+const functionsAsync = require('./functionAsync');
+const { validateEmail, validatePassword, generatorToken } = require('./validate');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -20,12 +20,13 @@ app.get('/talker',
 rescue(async (_req, res) => {
   const read = await functionsAsync.getReadFile();
   if (!read) return res.status(200).json([]);
+  res.status(200).json(read);
   }));
 
   app.get('/talker/:id', async (req, res) => {
     const { id } = req.params;
     const sync = await functionsAsync.getReadFile();
-    const filter = sync.find((i) => i.id === id);
+    const filter = sync.find((i) => i.id === parseInt(id, 10));
     if (!filter) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }

@@ -3,9 +3,7 @@ const fs = require('fs').promises;
 const nomeDoArquivo = './talker.json';
 
 function getReadFile() {
-  return fs
-    .readFile(nomeDoArquivo, 'utf8')
-
+  return fs.readFile(nomeDoArquivo, 'utf8')
     .then((data) => JSON.parse(data));
 }
 

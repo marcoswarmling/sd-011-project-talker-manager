@@ -2,7 +2,9 @@ const router = require('express').Router();
 const fs = require('fs').promises;
 
 const { readTalkerFile, getTalker } = require('../helpers/validations');
+
 const { validateToken } = require('../helpers/validateToken');
+const validateTalker = require('../helpers/validateTalker');
 
 router.get('/', async (_req, res) => {
   readTalkerFile()
@@ -12,14 +14,21 @@ router.get('/', async (_req, res) => {
     .catch(({ message }) => res.status(500).json({ message }));
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const data = await readTalkerFile();
+  if (!q || q === '') return res.status(200).json(data);
+
+  const newData = data.filter((t) => t.name.includes(q));
+  res.status(200).json(newData);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await getTalker(id);
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(talker);
 });
-
-const validateTalker = require('../helpers/validateTalker');
 
 router.use(validateToken);
 

@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
+const {
+  validateEmail,
+  validatePassword,
+} = require('./validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,6 +33,12 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).send(talker);
+});
+
+app.post('/login', validateEmail, validatePassword, (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+
+  res.status(200).json({ token });
 });
 
 app.listen(PORT, () => {

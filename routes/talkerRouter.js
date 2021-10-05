@@ -1,6 +1,9 @@
 const router = require('express').Router();
 
-const { readFileContent, getTalkerById } = require('../utils/utils');
+const { 
+  readFileContent,
+  getTalkerById,
+} = require('../utils/utils');
 
 router.get('/', async (_req, res) => {
   const fileContent = await readFileContent('./talker.json') || [];

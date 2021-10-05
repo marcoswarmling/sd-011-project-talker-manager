@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const crypto = require('crypto');
 
 const readFileContent = async (path) => {
   try {
@@ -20,4 +21,6 @@ const getTalkerById = async (id) => {
   }
 };
 
-module.exports = { readFileContent, getTalkerById };
+const generateToken = () => crypto.randomBytes(8).toString('hex');
+
+module.exports = { readFileContent, getTalkerById, generateToken };

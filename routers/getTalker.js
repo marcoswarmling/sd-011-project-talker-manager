@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
 const response = req.params;
 const getTalker = await talkersFilteredByID(Number(response.id));
 if (!getTalker) {
-    res.status(404).send({ "message": 'Pessoa palestrante não encontrada' });
+    res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
 }
 
 res.status(200).send(getTalker);

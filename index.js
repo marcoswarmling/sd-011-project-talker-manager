@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const { validEmail, validPassword } = require('./validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -20,6 +21,9 @@ app.get('/talker/:id', async (req, res) => {
   if (!findTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(findTalker);
 });
+
+app.post('/login', validEmail, validPassword,
+  (_req, res) => res.status(200).json({ token: '7mqaVRXJSp886CGr' }));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

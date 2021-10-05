@@ -1,6 +1,8 @@
 const express = require('express');
+
 const router = express.Router();
 const fs = require('fs');
+
 const HTTP_OK_STATUS = 200;
 
 router.get('/talker', (req, res) => {

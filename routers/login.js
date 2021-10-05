@@ -6,7 +6,7 @@ const router = express.Router();
 function generateToken() {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let token = '';
-    for (let i = 0; i < 16; i + 1) {
+    for (let i = 0; i < 16; i += 1) {
         token += chars[Math.floor(Math.random() * chars.length)];
     }
     return token;
@@ -29,12 +29,14 @@ function validate(email, password) {
     }
 }
 
-router.post('/', ({ body: { email, password } }, res) => {
+router.post('/', (req, res) => {
+const {email, password} = req.body;
 const returnedError = validate(email, password);
+const token = generateToken()
 if (!returnedError) {
-    return res.status(200).json({ token: generateToken() });
+    return res.status(200).json({ token});
 }
-    res.status(400).json(returnedError);
+    return res.status(400).json(returnedError);
 });
 
 module.exports = router;

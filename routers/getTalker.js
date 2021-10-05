@@ -16,7 +16,7 @@ const router = express.Router();
      const filteredTalkers = parseTalkers.find(({ id }) => id === Number(IdResponse));
   
      if (!filteredTalkers) {
-      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
       return res.status(200).json(filteredTalkers);
   });

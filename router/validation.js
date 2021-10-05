@@ -13,6 +13,7 @@ const {
   postPalestrante,
   generateToken,
   findPalestrantAndModify,
+  deletePalestrant,
  } = require('../middlewares/validation');
 
 router.get('/talker', getTalkers);
@@ -32,5 +33,7 @@ setValidLength,
 setValidName, 
 setValidAge, 
 postPalestrante);
+
+router.delete('/talker/:id', generateToken, deletePalestrant);
 
 module.exports = router;

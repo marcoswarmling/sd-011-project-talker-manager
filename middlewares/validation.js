@@ -184,6 +184,20 @@ const findPalestrantAndModify = async (req, res) => {
   res.status(200).json(updatePalestrant);
 };
 
+const deletePalestrant = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await readFile();
+  
+  const findPalestrant = result.findIndex((response) => response.id === Number(id));
+  
+  result.splice(findPalestrant, 1);
+
+  await fs.writeFile('./talker.json', JSON.stringify(result));
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   getTalkers,
   getTalkerId,
@@ -197,4 +211,5 @@ module.exports = {
   setValidLength,
   postPalestrante,
   findPalestrantAndModify,
+  deletePalestrant,
 };

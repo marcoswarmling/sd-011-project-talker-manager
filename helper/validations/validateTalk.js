@@ -9,7 +9,7 @@ const validateTalk = (req, res, next) => {
 
   const watchedAtFormat = /^[\d]{2}\/[\d]{2}\/[\d]{4}$/;
 
-  if (!talk.watchedAT || !talk.rate || !talk) {
+  if (!talk || !talk.rate || !talk.watchedAt) {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });

@@ -24,8 +24,20 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(findTalker);
 });
 
-router.post('/', validateAge, validateName, validateTalk, validateToken, (req, res) => {
-  console.log(`${req}, ${res}`);
+router.post('/', validateName, validateAge, validateTalk, validateToken, (req, res) => {
+  const { name, age, talk } = req.body;
+  const { watchedAT, rate } = talk;
+  
+  const personCadastered = {
+    name,
+    age,
+    talk: {
+      watchedAT,
+      rate,
+    },
+  };
+
+  res.status(201).json(personCadastered);
 });
 
 module.exports = router;

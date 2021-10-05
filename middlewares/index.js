@@ -75,12 +75,16 @@ const verifyTalkHate = (req, res, next) => {
   if (req.body.talk.rate > 5 || req.body.talk.rate < 1) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+  if (!req.body.talk.rate) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
   next();
 };
 
 const verifyTalk = (req, res, next) => {
   const regex = /^\d{2}\/\d{2}\/\d{4}$/;
-  if (!req.body.talk || !req.body.talk.rate || !req.body.talk.watchedAt) {
+  if (!req.body.talk || !req.body.talk.watchedAt) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -100,6 +104,16 @@ const addTalker = async (req, res) => {
   res.status(201).json({ id: array.length, name, age, talk });
 };
 
+const alterTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const array = JSON.parse(await fs.readFile(talker, 'utf-8'));
+  const finded = array.findIndex((t) => t.id === Number(id));
+  array[finded] = { id: Number(id), name, age, talk };
+  fs.writeFile(talker, JSON.stringify(array));
+  res.status(200).json({ id: Number(id), name, age, talk });
+};
+
 module.exports = {
   allSpeaker,
   findSpeaker,
@@ -110,4 +124,5 @@ module.exports = {
   verifyAge,
   verifyTalkHate,
   verifyTalk,
+  alterTalker,
 };

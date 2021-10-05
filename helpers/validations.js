@@ -6,6 +6,12 @@ async function readTalkerFile() {
   return data;
 }
 
+async function getTalker(id) {
+  return readTalkerFile()
+    .then((data) => data.find((t) => Number(t.id) === Number(id)))
+    .catch((err) => err.message);
+}
+
 function validateEmail(email) {
   const validEmail = /^[A-Za-z0-9._]+@([A-Za-z]+\.)[A-Za-z]{2,3}(\.[A-Za-z]{2})?$/;
   return validEmail.test(email);
@@ -32,6 +38,7 @@ function validateRate(rate) {
 
 module.exports = {
   readTalkerFile,
+  getTalker,
   validateEmail,
   validatePassword,
   validateName,

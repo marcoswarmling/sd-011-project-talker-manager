@@ -38,4 +38,20 @@ router.post('/', auth,
   return res.status(201).json(newTalker);
 }));
 
+router.put('/:id', auth,
+  nameVal,
+  ageVal,
+  talkVal1,
+  talkVal2,
+  rescue(async (req, res) => {
+  const currentTalkers = await getTalkers();
+  const tempTalkers = currentTalkers.filter(({ id }) => id !== Number(req.params.id));
+  const { name, age, talk } = req.body;
+  const updatedTalker = { id: Number(req.params.id), name, age, talk };
+  const newTalkers = [...tempTalkers, updatedTalker];
+  await setTalkers(newTalkers);
+
+  return res.status(200).json(updatedTalker);
+}));
+
 module.exports = router;

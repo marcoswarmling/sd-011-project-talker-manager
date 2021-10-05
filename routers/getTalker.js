@@ -1,34 +1,24 @@
 const express = require('express');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 const router = express.Router();
 
-const talkersAll = async () => {
-    const talkerFile = './talker.json';
-    const talkers = await fs.readFile(talkerFile);
-    return JSON.parse(talkers);
-  };
+  router.get('/', (_req, res) => {
+      const talkers = fs.readFileSync('./talker.json', 'utf-8');
+      const parseTalkers = JSON.parse(talkers);
+      return res.status(200).json(parseTalkers);
+  });
 
-  const talkersFilteredByID = async (sId) => {
-    const talkerFile = './talker.json';
-    const talkers = await fs.readFile(talkerFile);
-    const talkerParse = JSON.parse(talkers);
-   return talkerParse.find(({ id }) => id === sId);
-  };
-
-router.get('/', async (_req, res) => {
-    const getTalker = await talkersAll();
-res.status(200).send(getTalker);
-});
-
-router.get('/:id', async (req, res) => {
-const response = req.params;
-const getTalker = await talkersFilteredByID(Number(response.id));
-if (!getTalker) {
-    res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
-}
-
-res.status(200).send(getTalker);
-});
+  router.get('/:id', (req, res) => {
+      const talkers = fs.readFileSync('./talker.json', 'utf-8');
+      const IdResponse = req.params.id;
+      const parseTalkers = JSON.parse(talkers);
+     const filteredTalkers = parseTalkers.find(({ id }) => id === Number(IdResponse));
+  
+     if (!filteredTalkers) {
+      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+      return res.status(200).json(filteredTalkers);
+  });
 
 module.exports = router;

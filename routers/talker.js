@@ -1,7 +1,13 @@
 const express = require('express');
 
 const validateToken = require('../middlewares/validateToken');
-const { getAllTalkers, getTalkerById, addTalker, editTalker } = require('../controllers/talker');
+const {
+  getAllTalkers,
+  getTalkerById,
+  addTalker,
+  editTalker,
+  deleteTalker,
+} = require('../controllers/talker');
 
 const router = express.Router();
 
@@ -33,6 +39,14 @@ router.put('/:id', validateToken, (req, res, next) => {
   editTalker(req.params.id, req.body)
     .then((talker) => {
       res.status(200).json(talker);
+    })
+    .catch(next);
+});
+
+router.delete('/:id', validateToken, (req, res, next) => {
+  deleteTalker(req.params.id)
+    .then((message) => {
+      res.status(200).json({ message });
     })
     .catch(next);
 });

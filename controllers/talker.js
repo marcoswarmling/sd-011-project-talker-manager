@@ -58,6 +58,10 @@ const getTalkersAfterEditingSpecificTalker = (allTalkers, id, details) => {
     return editedTalker;
   });
 
+  if (!editedTalker.id) {
+    throw new NotFoundError('Não foi possível encontrar a pessoa palestrante');
+  }
+
   return [newTalkerArray, editedTalker];
 };
 
@@ -82,9 +86,29 @@ const editTalker = (id, details) => new Promise((resolve, reject) => {
   .catch(reject);
 });
 
+const deleteTalker = (id) => new Promise((resolve, reject) => {
+  getTalkerFile()
+    .then((allTalkers) => {
+      const index = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
+
+      if (index < 0) {
+        throw new NotFoundError('Não foi possível encontrar a pessoa palestrante');
+      }
+
+      allTalkers.splice(index, 1);
+
+      return saveTalkerFile(allTalkers);
+    })
+    .then(() => {
+      resolve('Pessoa palestrante deletada com sucesso');
+    })
+    .catch(reject);
+});
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
   addTalker,
   editTalker,
+  deleteTalker,
 };

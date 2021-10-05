@@ -1,9 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 
-const router = express.Router();
+const talkerRouter = express.Router();
 
-router.get('/', (_req, res) => {
+talkerRouter.get('/', (_req, res) => {
   try {
     const talkers = fs.readFileSync('./talker.json', 'utf-8');
 
@@ -13,7 +13,7 @@ router.get('/', (_req, res) => {
   }
 });
 
-router.get('/:id', (req, res) => {
+talkerRouter.get('/:id', (req, res) => {
   const { id } = req.params;
 
   try {
@@ -29,4 +29,4 @@ router.get('/:id', (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = talkerRouter;

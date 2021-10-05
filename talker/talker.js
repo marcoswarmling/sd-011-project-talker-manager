@@ -7,9 +7,11 @@ const router = express.Router();
 const loginValidations = require('../validations/login');
 const talkerValidations = require('../validations/talker');
 
+const jsonTalker = './talker.json';
+
 // 1 - Crie o endpoint GET /talker
 router.get('/talker', (_req, res) => {
-  const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+  const response = JSON.parse(fs.readFileSync(jsonTalker, 'utf-8'));
 
   if (!response) {
     return res.status(200).json([]);
@@ -20,14 +22,12 @@ router.get('/talker', (_req, res) => {
 
 // 2 - Crie o endpoint GET /talker/:id
 router.get('/talker/:id', (req, res) => {
-  const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+  const response = JSON.parse(fs.readFileSync(jsonTalker, 'utf-8'));
   const { id } = req.params;
   const findTalker = response.find((talker) => talker.id === Number(id));
 
   if (!findTalker) {
-    return res
-      .status(404)
-      .json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
 
   res.status(200).json(findTalker);
@@ -53,15 +53,38 @@ router.post(
   talkerValidations.validateName,
   talkerValidations.validateTalk,
   (req, res) => {
-    const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+    const response = JSON.parse(fs.readFileSync(jsonTalker, 'utf-8'));
     const { name, age, talk } = req.body;
 
     const newId = Math.max(...response.map((talker) => talker.id)) + 1;
+
     response.push({ id: newId, name, age, talk });
 
-    fs.writeFileSync('./talker.json', JSON.stringify(response));
+    fs.writeFileSync(jsonTalker, JSON.stringify(response));
 
     res.status(201).json({ id: newId, name, age, talk });
+  },
+);
+
+// 5 - Crie o endpoint PUT /talker/:id
+router.put(
+  '/talker/:id',
+  talkerValidations.validateToken,
+  talkerValidations.validateAge,
+  talkerValidations.validateName,
+  talkerValidations.validateTalk,
+  (req, res) => {
+    const { id } = req.params;
+    const response = JSON.parse(fs.readFileSync(jsonTalker, 'utf-8'));
+    const { name, age, talk } = req.body;
+
+    const filteredResponse = response.filter((talker) => talker.id !== Number(id));
+
+    filteredResponse.push({ id: Number(id), name, age, talk });
+
+    fs.writeFileSync(jsonTalker, JSON.stringify(filteredResponse));
+
+    res.status(200).json({ id: Number(id), name, age, talk });
   },
 );
 

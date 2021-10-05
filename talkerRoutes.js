@@ -2,15 +2,11 @@ const router = require('express').Router();
 const rescue = require('express-rescue');
 const fs = require('fs').promises;
 
-router.get('/', async (req, res, next) => {
-  try {
+router.get('/', rescue(async (req, res) => {
     const fileContent = await fs.readFile('./talker.json');
     const talker = JSON.parse(fileContent);
     return res.status(200).json(talker);
-  } catch (error) {
-    next(error);
-  }
-});
+}));
 
 router.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;

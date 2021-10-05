@@ -44,18 +44,18 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', isValidTalker, async (req, res) => {
-  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const { name, age, talk: { rate, watchedAt } } = req.body;
 
   const response = await fs.readFile(data, 'utf-8');
   const talkers = JSON.parse(response);
   const id = talkers.length + 1;
 
-  const newTalker = { id, name, age, talk: { watchedAt, rate } };
+  const newTalker = { name, age, id, talk: { rate, watchedAt } };
 
   talkers.push(newTalker);
   await fs.writeFile(data, JSON.stringify(talkers));
 
-  return res.status(HTTP_CREATED_STATUS).json({ newTalker });
+  return res.status(HTTP_CREATED_STATUS).json(newTalker);
 });
 
 module.exports = router;

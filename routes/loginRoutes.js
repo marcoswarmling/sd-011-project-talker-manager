@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
-const { token, validateEmail, validatePassword } = require('../helper');
+const { validateEmail, validatePassword } = require('../helpers/validations');
+const { token } = require('../helpers/validateToken');
 
 router.post('/', async (req, res) => {
   const { email, password } = req.body;

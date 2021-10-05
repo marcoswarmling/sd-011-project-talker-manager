@@ -1,7 +1,4 @@
 const fs = require('fs').promises;
-const crypto = require('crypto');
-
-const token = crypto.randomBytes(8).toString('hex');
 
 async function readTalkerFile() {
   const rawData = await fs.readFile('./talker.json');
@@ -35,7 +32,6 @@ function validateRate(rate) {
 
 module.exports = {
   readTalkerFile,
-  token,
   validateEmail,
   validatePassword,
   validateName,

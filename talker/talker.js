@@ -20,6 +20,22 @@ router.get('/talker', (_req, res) => {
   res.status(200).json(response);
 });
 
+// 7 - Crie o endpoint GET /talker/search?q=searchTerm
+router.get('/talker/search',
+  talkerValidations.validateToken,
+  (req, res) => {
+  const { q } = req.query;
+  const response = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+
+  if (!q) {
+    return res.status(200).json(response);
+  }
+
+  const filtered = response.filter((talker) => talker.name.includes(q));
+
+  res.status(200).json(filtered);
+});
+
 // 2 - Crie o endpoint GET /talker/:id
 router.get('/talker/:id', (req, res) => {
   const response = JSON.parse(fs.readFileSync(jsonTalker, 'utf-8'));

@@ -1,5 +1,6 @@
 const express = require('express');
 const talkerRouter = require('./routers/talker');
+const rootRouter = require('./routers/root');
 const handleError = require('./middlewares/handleError');
 
 const app = express();
@@ -9,6 +10,7 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 app.use('/talker', talkerRouter);
+app.use('/', rootRouter);
 
 app.use(handleError);
 

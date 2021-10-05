@@ -15,7 +15,6 @@ router.get('/', (_req, res, next) => {
 router.get('/:id', (req, res, next) => {
   getTalkerById(req.params.id)
     .then((talker) => {
-      console.log(talker);
       res.status(200).json(talker);
     })
     .catch(next);

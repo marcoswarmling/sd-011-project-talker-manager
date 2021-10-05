@@ -163,6 +163,27 @@ const postPalestrante = async (req, res) => {
   res.status(201).json(talker);
 };
 
+const findPalestrantAndModify = async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+
+  const updatePalestrant = {
+    id: Number(req.params.id),
+    name,
+    age,
+    talk: {
+      watchedAt, rate,
+    },
+  };
+
+  const response = await readFile();
+
+  const talker = response.findIndex(({ id }) => id === Number(req.params.id));
+
+  response[talker] = updatePalestrant; 
+  await fs.writeFile('./talker.json', JSON.stringify(response));
+  res.status(200).json(updatePalestrant);
+};
+
 module.exports = {
   getTalkers,
   getTalkerId,
@@ -175,4 +196,5 @@ module.exports = {
   setValidTalk,
   setValidLength,
   postPalestrante,
+  findPalestrantAndModify,
 };

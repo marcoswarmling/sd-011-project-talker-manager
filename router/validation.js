@@ -12,6 +12,7 @@ const {
   setValidAge,
   postPalestrante,
   generateToken,
+  findPalestrantAndModify,
  } = require('../middlewares/validation');
 
 router.get('/talker', getTalkers);
@@ -19,6 +20,10 @@ router.get('/talker', getTalkers);
 router.get('/talker/:id', getTalkerId);
 
 router.post('/login', setValidPassword, setValidEmail, createToken);
+
+router.put(
+  '/talker/:id', setValidName, setValidAge, setValidTalk, generateToken, findPalestrantAndModify,
+  );
 
 router.post('/talker',
 generateToken, 

@@ -12,6 +12,10 @@ router.get('/', (_req, res, next) => {
     .catch(next);
 });
 
+router.post('/', (req, res, next) => {
+  
+});
+
 router.get('/:id', (req, res, next) => {
   getTalkerById(req.params.id)
     .then((talker) => {

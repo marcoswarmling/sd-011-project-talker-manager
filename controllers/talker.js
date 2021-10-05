@@ -19,6 +19,16 @@ const getTalkerById = (id) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const addTalker = (details) => new Promise((resolve, reject) => {
+
+  
+  getTalkerFile()
+    .then((allTalkers) => {
+
+    })
+    .catch(reject);
+});
+
 module.exports = {
   getAllTalkers,
   getTalkerById,

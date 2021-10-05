@@ -49,7 +49,6 @@ function validatePassword(req, res, next) {
   }
 
   next();
- 
 }
 
 module.exports = { validateToken, validateEmail, validatePassword, generatorToken };

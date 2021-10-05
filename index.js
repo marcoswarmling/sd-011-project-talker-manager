@@ -7,12 +7,15 @@ const authTokenMiddleware = require('./authTokenMiddleware');
 const newTalkerMiddleware = require('./newTalkerMiddleware');
 const validateKeyTalk = require('./validateKeyTalk');
 const validateTalk = require('./validateTalk');
+const validateRate = require('./validateRate');
+const validateWatchedAt = require('./validateWatchedAt');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const endPoint = './talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -20,7 +23,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', (_request, response) => {
-  const responseFile = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+  const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
   if (responseFile.length === 0) {
     return response.status(200).json([]);
   }
@@ -29,7 +32,7 @@ app.get('/talker', (_request, response) => {
 
 app.get('/talker/:id', (request, response) => {
   const { id } = request.params;
-  const responseFile = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+  const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
   const talker = responseFile.find(({ id: idTalker }) => Number(idTalker) === Number(id));
   if (!talker) {
     return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
@@ -47,7 +50,7 @@ app.post('/talker', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, v
   const { name, age, talk } = request.body;
   const { watchedAt, rate } = talk;
   
-  const responseFile = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+  const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
   const newTalker = {
     id: responseFile.length + 1,
     name,
@@ -58,26 +61,24 @@ app.post('/talker', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, v
     },
   };
   responseFile.push(newTalker);
-  fs.writeFileSync('./talker.json', JSON.stringify(responseFile));
+  fs.writeFileSync(endPoint, JSON.stringify(responseFile));
   response.status(201).send(newTalker);
 });
 
-app.put('/talker/:id', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, validateTalk, 
+app.put('/talker/:id', authTokenMiddleware, newTalkerMiddleware, validateRate, validateKeyTalk, validateTalk, validateWatchedAt,
 (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const { watchedAt, rate } = talk;
-  const responseFile = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+  const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
   const talkerIndex = responseFile.findIndex(({ id: idTalker }) => Number(idTalker) === Number(id));
-  if (talkerIndex === -1) {
-    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  }
+ 
   responseFile[talkerIndex] = { 
     ...responseFile[talkerIndex], 
     name, 
     age, 
     talk: { watchedAt, rate } };
-  fs.writeFileSync('./talker.json', JSON.stringify(responseFile));
+  fs.writeFileSync(endPoint, JSON.stringify(responseFile));
   res.status(200).send(responseFile[talkerIndex]);
 });
 

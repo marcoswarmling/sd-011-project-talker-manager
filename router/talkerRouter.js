@@ -14,7 +14,7 @@ const deleteValidations = [tokenValidation];
 
 const db = './talker.json';
 
-const registerOrEditValitations = [tokenValidation, nameValidation, 
+const registerOrEditValidations = [tokenValidation, nameValidation, 
   ageValidation, talkValidation, watchedAtValidation, rateValidation];
 
 router.get('/', async (_req, res) => {
@@ -43,7 +43,7 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json(result);
 });
 
-router.post('/', registerOrEditValitations, async (req, res) => {
+router.post('/', registerOrEditValidations, async (req, res) => {
   const { name, age, talk } = req.body;
   const { watchedAt, rate } = talk;
   const response = await fs.readFile(db, 'utf-8');
@@ -55,7 +55,7 @@ router.post('/', registerOrEditValitations, async (req, res) => {
   return res.status(201).json(person);
 });
 
-router.put('/:id', registerOrEditValitations, async (req, res) => {
+router.put('/:id', registerOrEditValidations, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const { watchedAt, rate } = talk;

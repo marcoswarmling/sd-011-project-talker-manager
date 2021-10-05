@@ -19,7 +19,7 @@ app.get('/', (_request, response) => {
 app.get('/talker', 
 rescue(async (_req, res) => {
   const read = await functionsAsync.getReadFile();
-  if (read === ' ') return res.status(200).json([]);
+  if (!read) return res.status(200).json([]);
   }));
 
   app.get('/talker/:id', async (req, res) => {
@@ -32,9 +32,10 @@ rescue(async (_req, res) => {
     return res.status(202).json(filter);
   });
 
-  app.post('/login', validateEmail, validatePassword, (_req, res) => res.status(200).json({
-    token: generatorToken(),
-  }));
+  app.post('/login', validateEmail, validatePassword, (_req, res) => {
+    const token = generatorToken();
+    res.status(200).json({ token });
+  });
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -19,38 +19,37 @@ function validateToken(req, res, next) {
 }
 
 function validateEmail(req, res, next) {
-  const { email } = req.headers;
-  const regex = email.match(/[a-z]+@[a-z]+.com/gi);
+  const { email } = req.body;
+  const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.([a-z]+))?$/i;
   if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 
-  if (email !== regex) {
+  if (!regex.test(email)) {
     return res
       .status(400)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
-   res.status(200).json({ email: `${email}` });
-
+ 
   next();
 }
 
 function validatePassword(req, res, next) {
-  const { password } = req.headers;
+  const { password } = req.body;
   if (!password) {
     return res
       .status(401)
       .json({ message: 'O campo "password" é obrigatório' });
   }
 
-  if (password > 6) {
+  if (password.length < 6) {
     return res
       .status(401)
       .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
   next();
-  res.status(200).json({ password: `${password}` });
+ 
 }
 
 module.exports = { validateToken, validateEmail, validatePassword, generatorToken };

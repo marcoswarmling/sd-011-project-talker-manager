@@ -82,4 +82,20 @@ talkerRouter.put(
   },
 );
 
+talkerRouter.delete('/:id', authValidator, (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const talkers = JSON.parse(fs.readFileSync(TALKER_FILE_PATH, 'utf-8'));
+
+    const filteredTalkers = talkers.filter((talker) => talker.id !== Number(id));
+
+    fs.writeFileSync(TALKER_FILE_PATH, JSON.stringify(filteredTalkers));
+
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
 module.exports = talkerRouter;

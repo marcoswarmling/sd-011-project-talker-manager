@@ -45,4 +45,8 @@ router.post('/', withOutName, tokenValid, ageValid, talkValid, async (req, res) 
   res.status(201).json({ name, age, talk, id });
 });
 
+// router.put('/:id', async (req, res) => {
+
+// });
+
 module.exports = router;

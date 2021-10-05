@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
+
+const talkerJSON = 'talker.json';
 const {
   validateEmail,
   validatePassword,
@@ -9,6 +11,8 @@ const {
   validateName,
   validateAge,
   validateTalk,
+  validateWatchedAt,
+  validateRate,
 } = require('./validations');
 
 const app = express();
@@ -23,7 +27,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (req, res) => {
-  const data = await fs.readFile('talker.json', 'utf8');
+  const data = await fs.readFile(talkerJSON, 'utf8');
   const response = JSON.parse(data);
   if (!response) {
     return res.status(200).json([]);
@@ -33,7 +37,7 @@ app.get('/talker', async (req, res) => {
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await fs.readFile('talker.json', 'utf8');
+  const data = await fs.readFile(talkerJSON, 'utf8');
   const response = JSON.parse(data);
   const talker = response.find((e) => e.id === parseInt(id, 10));
   if (!talker) {
@@ -48,24 +52,36 @@ app.post('/login', validateEmail, validatePassword, (req, res) => {
   res.status(200).json({ token });
 });
 
-app.post('/talker', validateToken, validateTalk, validateName, validateAge, (req, res) => {
+app.post('/talker',
+  validateToken,
+  validateTalk, validateWatchedAt, validateRate, validateName, validateAge, (req, res) => {
   const { name, age, talk } = req.body;
-  const { talk: { rate } } = req.body;
-  if (!rate) {
-    return res.status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
-  }
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-  fs.readFile('talker.json', 'utf8')
+  fs.readFile(talkerJSON, 'utf8')
     .then((data) => JSON.parse(data))
     .then((talkers) => {
       const newTalker = { name, id: talkers.length + 1, age, talk };
       const newTalkersArr = [...talkers, newTalker];
-      fs.writeFile('talker.json', JSON.stringify(newTalkersArr));
+      fs.writeFile(talkerJSON, JSON.stringify(newTalkersArr));
     });
     return res.status(201).json({ id: 5, name, age, talk });
+});
+
+app.put('/talker/:id',
+validateToken,
+validateName,
+validateAge, validateTalk, validateRate, validateWatchedAt, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  fs.readFile(talkerJSON, 'utf8')
+    .then((data) => JSON.parse(data))
+    .then((talkers) => {
+      const talkerIndex = talkers.findIndex((r) => r.id === parseInt(id, 10));
+      if (talkerIndex === -1) return res.status(404).json({ message: 'Talker not found!' });
+      const newTalkers = talkers;
+      newTalkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+      fs.writeFile(talkerJSON, JSON.stringify(newTalkers));
+    });
+    return res.status(200).json({ id: 5, name, age, talk });
 });
 
 app.listen(PORT, () => {

@@ -54,17 +54,17 @@ function validateAge(req, res, next) {
   next();
 }
 
-// function validateRate(req, res, next) {
-//   const { talk: { rate } } = req.body;
-//   if (!rate) {
-//     return res.status(400)
-//     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
-//   }
-//   if (rate < 1 || rate > 5) {
-//     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-//   }
-//   next();
-// }
+function validateRate(req, res, next) {
+  const { talk: { rate } } = req.body;
+  if (rate < 1 || rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  if (!rate) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  next();
+}
 
 function validateWatchedAt(req, res, next) {
   const { talk: { watchedAt } } = req.body;
@@ -85,8 +85,6 @@ function validateTalk(req, res, next) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  validateWatchedAt(req, res, next);
-  // validateRate(req, res, next);
   next();
 }
 
@@ -97,4 +95,6 @@ module.exports = {
   validateName,
   validateAge,
   validateTalk,
+  validateWatchedAt,
+  validateRate,
 };

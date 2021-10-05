@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 
-async function readAllTalkers(path) {
+async function readTalker(path) {
   try {
     const content = await fs.readFile(path, 'utf8');
     return JSON.parse(content);
@@ -9,4 +9,17 @@ async function readAllTalkers(path) {
   }
 }
 
-module.exports = readAllTalkers;
+async function writeTalker(path, content) {
+  try {
+    await fs.writeFile(path, JSON.stringify(content));
+
+    return content;
+  } catch (error) {
+    return null;    
+  }
+}
+
+module.exports = {
+  readTalker,
+  writeTalker,
+};

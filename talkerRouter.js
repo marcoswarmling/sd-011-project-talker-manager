@@ -5,6 +5,14 @@ const fs = require('fs');
 
 const HTTP_OK_STATUS = 200;
 
+// generate 16 token with crypto
+const crypto = require('crypto');
+
+const tokenLength = 8;
+const tokenValue = crypto.randomBytes(tokenLength).toString('hex');
+
+const { validEmail, validPassword } = require('./validations');
+
 router.get('/talker', (req, res) => {
   const data = fs.readFileSync('./talker.json');
   const talker = JSON.parse(data);
@@ -25,6 +33,11 @@ router.get('/talker/:id', async (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   res.status(HTTP_OK_STATUS).send(talkerId);
+});
+
+router.post('/login', validEmail, validPassword, (_req, res) => {
+  console.log(tokenValue);
+  return res.status(HTTP_OK_STATUS).json({ token: tokenValue });
 });
 
 module.exports = router;

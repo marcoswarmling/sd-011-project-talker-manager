@@ -12,14 +12,14 @@ const {
 const jsonTalker = 'talker.json';
 
 router.get('/talker', async (_req, res) => {
-  const result = JSON.parse(await readFile(jsonTalker));
+  const result = await readFile(jsonTalker);
   if (result.length < 1) return res.status(200).json([]);
   res.status(200).json(result);
 });
 
 router.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const result = JSON.parse(await readFile(jsonTalker));
+  const result = await readFile(jsonTalker);
 
   const talkerById = result.find((e) => Number(e.id) === Number(id));
 
@@ -67,6 +67,17 @@ router.put('/talker/:id',
 
   const talkerById = updateTalker.find((e) => Number(e.id) === Number(id));
   res.status(200).json(talkerById);
+});
+
+router.delete('/talker/:id', isValidToken, async (req, res) => {
+  const { id } = req.params;
+  const talker = await readFile(jsonTalker);
+  const indexOfTalker = talker.findIndex((e) => Number(e.id) === Number(id));
+
+  talker.splice(indexOfTalker, 1);
+  await writeFile(jsonTalker, talker);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

@@ -20,7 +20,7 @@ app.get('/', (_request, response) => {
 app.get('/talker', rescue(async (_req, res) => {
   const talkersAsync = await talkers.getTalkers();
 
-  if (talkersAsync === '') return res.status(200).json([]);
+  if (!talkersAsync) return res.status(200).json([]);
 
   res.status(200).json(talkersAsync);
 }));

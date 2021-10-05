@@ -30,6 +30,14 @@ app.get('/talker', (_request, response) => {
   response.status(200).send(responseFile);
 });
 
+app.get('/talker/search', authTokenMiddleware, (request, response) => {
+  const { q } = request.query;
+  const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
+  const talkers = responseFile.filter(({ name: nameTalker }) => nameTalker.includes(q));
+  
+  response.status(200).send(talkers);
+});
+
 app.get('/talker/:id', (request, response) => {
   const { id } = request.params;
   const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
@@ -65,7 +73,10 @@ app.post('/talker', authTokenMiddleware, newTalkerMiddleware, validateKeyTalk, v
   response.status(201).send(newTalker);
 });
 
-app.put('/talker/:id', authTokenMiddleware, newTalkerMiddleware, validateRate, validateKeyTalk, validateTalk, validateWatchedAt,
+app.put('/talker/:id', 
+authTokenMiddleware, 
+newTalkerMiddleware, 
+validateRate, validateKeyTalk, validateTalk, validateWatchedAt,
 (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
@@ -80,6 +91,15 @@ app.put('/talker/:id', authTokenMiddleware, newTalkerMiddleware, validateRate, v
     talk: { watchedAt, rate } };
   fs.writeFileSync(endPoint, JSON.stringify(responseFile));
   res.status(200).send(responseFile[talkerIndex]);
+});
+
+app.delete('/talker/:id', authTokenMiddleware, (request, response) => {
+  const { id } = request.params;
+  const responseFile = JSON.parse(fs.readFileSync(endPoint, 'utf8'));
+  const talkerIndex = responseFile.filter(({ id: idTalker }) => Number(idTalker) !== Number(id));
+  
+  fs.writeFileSync(endPoint, JSON.stringify(talkerIndex));
+  response.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {

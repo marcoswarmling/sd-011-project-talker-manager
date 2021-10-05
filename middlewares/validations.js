@@ -52,6 +52,22 @@ const postTalker = async (req, res) => {
   res.status(201).send(dataTalker);
 };
 
+const putTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const response = await fs.readFile(jsonFile, 'utf-8');
+  const responseConvert = JSON.parse(response);
+  const updateTalker = responseConvert.findIndex((talker) => talker.id === parseInt(id, 10));
+  responseConvert[updateTalker] = { ...responseConvert[updateTalker],
+    name,
+    age,
+    talk: { watchedAt, rate } };
+  await fs.writeFile(jsonFile, JSON.stringify(responseConvert));
+  res.status(200).json(responseConvert[updateTalker]);
+};
+
+// vvvvvvvvvvvv Validations vvvvvvvvvvvv
+
 const emailValidation = (req, res, next) => {
   const { email } = req.body;
 
@@ -172,4 +188,5 @@ ageValidation,
 talkValidation,
 watchedAtValidation,
 rateValidation, 
-postTalker };
+postTalker, 
+putTalker };

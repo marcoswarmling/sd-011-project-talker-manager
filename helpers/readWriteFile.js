@@ -11,10 +11,18 @@ const readContentFile = async (path) => {
 
 const writeContentFile = async (path, talker) => {
   const content = await readContentFile(path) || [];
-  const newTalker = { ...talker, id: content.length + 1 };
+  const newTalker = { id: content.length + 1, ...talker };
   content.push(newTalker);
   await fs.writeFile(path, JSON.stringify(content));
   return newTalker;
+};
+
+const editContentFile = async (path, id, talker) => {
+  const oldContent = await readContentFile(path) || [];
+  const editedTalker = { id: Number(id), ...talker };
+  const newContent = oldContent.map((item) => (item.id !== Number(id) ? item : editedTalker));
+  await fs.writeFile(path, JSON.stringify(newContent));
+  return editedTalker;
 };
 
 const removeContentFile = async (path, id) => {
@@ -23,4 +31,9 @@ const removeContentFile = async (path, id) => {
   await fs.writeFile(path, JSON.stringify(newContent));
 };
 
-module.exports = { readContentFile, writeContentFile, removeContentFile };
+module.exports = {
+  readContentFile,
+  writeContentFile,
+  editContentFile,
+  removeContentFile,
+};

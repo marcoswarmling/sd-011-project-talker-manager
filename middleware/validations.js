@@ -77,12 +77,14 @@ const validateRate = (req, res, next) => {
   next();
 };
 
+// eslint-disable-next-line complexity
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
   const message = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
   if (!talk) return res.status(400).json({ message });
   const { rate, watchedAt } = talk;
-  if (!rate || !watchedAt) return res.status(400).json({ message });
+  const validRateAndWatchedAt = (rate || rate === 0) && watchedAt;
+  if (!validRateAndWatchedAt) return res.status(400).json({ message });
   next();
 };
 

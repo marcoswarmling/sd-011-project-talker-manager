@@ -3,6 +3,7 @@ const {
   readContentFile,
   writeContentFile,
   removeContentFile,
+  editContentFile,
 } = require('../helpers/readWriteFile');
 const {
   validateToken,
@@ -40,8 +41,21 @@ async (req, res) => {
   res.status(201).json(talker);
 });
 
-router.delete('/:id', validateToken, async (req, res) => {
+router.put('/:id',
+validateToken,
+validateName,
+validateAge,
+validateTalk,
+validateRate,
+validateWatchedAt,
+async (req, res) => {
   const { id } = req.params;
+  const talker = await editContentFile('./talker.json', id, req.body);
+  res.status(200).json(talker);
+});
+
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;  
   await removeContentFile('./talker.json', id);
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });

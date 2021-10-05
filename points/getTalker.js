@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const router = express.Router();
 
 const talkersAll = async () => {
-    const talkerFile = '../talker.json';
+    const talkerFile = './talker.json';
     const talkers = await fs.readFile(talkerFile);
     return JSON.parse(talkers);
   };

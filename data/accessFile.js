@@ -8,14 +8,8 @@ const readFile = async () => {
   return response;
 };
 
-const writeFile = (newContent) => {
-  fs.writeFile(db, JSON.stringify(newContent))
-  .then(() => {
-    console.log('Arquivo salvo');
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+const writeFile = async (newContent) => {
+  fs.writeFile(db, JSON.stringify(newContent));
 };
 
 module.exports = { readFile, writeFile };

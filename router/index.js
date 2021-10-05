@@ -15,9 +15,11 @@ const {
   setTalker,
   setEditTalker,
   deleteTalker,
+  searchTalk,
 } = require('../middlewares/validation');
 
 router.get('/talker', getAllTalkers);
+router.get('/talker/search', validToken, searchTalk);
 router.get('/talker/:id', getTalkerById);
 router.post('/login', validPassword, validEmail, getToken);
 router.post('/talker', validTalk, validRate, validWatchedAt,

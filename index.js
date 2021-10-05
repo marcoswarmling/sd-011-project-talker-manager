@@ -21,7 +21,7 @@ app.get('/', (_request, response) => {
 app.get('/talker', rescue(async (_req, res) => {
   const talkersAsync = await talkers.getTalkers();
 
-  if (!talkersAsync.length) return res.status(200).json([]);
+  if (!talkersAsync) return res.status(200).json([]);
   
   res.status(200).json(talkersAsync);
 }));
@@ -33,7 +33,7 @@ app.get('/talker/:id', rescue(async (req, res) => {
   const { id } = req.params;
   
   const talkerID = talkersAsync.find((t) => t.id === parseInt(id, 10));
-
+  console.log(talkerID);
   if (!talkerID) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(talkerID);
 }));

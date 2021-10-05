@@ -19,6 +19,15 @@ app.get('/talker', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
 });
 
+app.get('/talker/:id', async (req, res) => {
+  const talker = await fs.readFile('./talker.json', 'utf-8');
+  const talkerParse = JSON.parse(talker);
+  const { id } = req.params;
+  const findId = talkerParse.find((item) => item.id === Number(id));
+  if (!findId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
+  res.status(HTTP_OK_STATUS).json(findId);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

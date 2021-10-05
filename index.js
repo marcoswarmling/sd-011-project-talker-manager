@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
 const talkers = require('./functionsAsync');
-const { validateToken, validateUserInfo } = require('./auths');
+// const { validateToken, validateUserInfo } = require('./auths');
 
 const app = express();
 app.use(bodyParser.json());

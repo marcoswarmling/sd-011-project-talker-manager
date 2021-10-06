@@ -22,17 +22,24 @@ rescue(async (_req, res) => {
   const read = await functionsAsync.getReadFile();
   if (!read) return res.status(200).json([]);
   res.status(200).json(read);
-  }));
+}));
 
-  app.get('/talker/:id', rescue(async (req, res) => {
-    const { id } = req.params;
-    const sync = await functionsAsync.getReadFile();
-    const filter = sync.find((i) => i.id === parseInt(id, 10));
-    if (!filter) {
-      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-    }
-    return res.status(200).json(filter);
-  }));
+app.get('/talker/search', validateToken, rescue(async (req, res) => {
+  const { q } = req.query;
+  const read = await functionsAsync.getReadFile();
+  const filterPerson = read.filter((r) => r.name.includes(q));
+  res.status(200).json(filterPerson);
+})); 
+
+app.get('/talker/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+  const sync = await functionsAsync.getReadFile();
+  const filter = sync.find((i) => i.id === parseInt(id, 10));
+  if (!filter) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  return res.status(200).json(filter);
+}));
 
   app.post('/login', validateEmail, validatePassword, (_req, res) => {
     const token = generatorToken();
@@ -79,7 +86,7 @@ app.delete('/talker/:id', validateToken, rescue(async (req, res) => {
   await functionsAsync.setWriteFile(deletePerson);
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 }));
- 
+
 app.listen(PORT, () => {
   console.log('Online');
 });

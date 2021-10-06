@@ -57,7 +57,7 @@ const isValidAge = (req, res, next) => {
 
 const isValidRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
-  if (!rate || rate < 1 || rate > 5) {
+  if ((!rate && rate === 0) || rate < 1 || rate > 5) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
@@ -79,7 +79,7 @@ const isValidWatchedAt = (req, res, next) => {
 
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate || talk === '') {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });

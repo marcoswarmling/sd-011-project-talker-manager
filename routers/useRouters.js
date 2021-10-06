@@ -62,13 +62,12 @@ router.put(
   isValidWatchedAt,
   async (req, res) => {
     const { id } = req.params;
-    const { name, age, talk } = req.body;
     try {
       const talkerData = await fs.readFile('./talker.json', 'utf8');
       const talker = JSON.parse(talkerData);
       const userIndex = talker.findIndex((user) => user.id === +id);
-      if (!userIndex) return res.status(404).json({ message: 'Id não encontrado' });
-      talker[userIndex] = { ...talker[userIndex], name, age, talk };
+      if (userIndex === -1) return res.status(404).json({ message: 'Id não encontrado' });
+      talker[userIndex] = { ...req.body, id: Number(id) };
       await fs.writeFile('./talker.json', JSON.stringify(talker));
       // const newUser = talker.find((user) => user.id === Number(id));
       return res.status(200).json(talker[userIndex]);

@@ -134,6 +134,20 @@ const putTalker = async (req, res) => {
     }    
 };
 
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const content = await fs.readFile('./talker.json', 'utf-8');
+    const response = JSON.parse(content);
+    const indexTalk = response.findIndex((item) => item.id === Number(id));
+    response.splice(indexTalk, 1);
+    await fs.writeFile('./talker.json', JSON.stringify(response));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso'});
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
   module.exports = {
     getRandomToken,
     validateEmail,
@@ -146,4 +160,5 @@ const putTalker = async (req, res) => {
     validateRate,
     postTalker,
     putTalker,
+    deleteTalker,
   };

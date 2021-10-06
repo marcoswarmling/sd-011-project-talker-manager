@@ -8,10 +8,10 @@ const authMiddleware = (req, res, next) => {
   const { token } = req.headers;
   const numberToken = 16;
   if (!token) {
-    return res.status(401).json({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
   if (token.length !== numberToken) {
-    return res.status(401).json({ message: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
   next();
 };
@@ -73,7 +73,7 @@ const validationAddTalkerTalkRate = (req, res, next) => {
   const { rate } = talk;
   const minRate = 1;
   const maxRate = 5;
-  if (rate >= minRate || rate <= maxRate) {
+  if (parseInt(rate, 10) < minRate || parseInt(rate, 10) > maxRate) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
@@ -98,9 +98,14 @@ router.get('/:id', async (req, res) => {
 router.post('/', authMiddleware, validationAddTalkerName, 
 validationAddTalkerAge, validationAddTalkerTalk,
 validationAddTalkerTalkRate, validationAddTalkerTalkWatchedAt, async (req, res) => {
-  const { name, age, talk } = req.bory;
-  await talkersWrite({ name, age, talk });
-  res.status(201).json({ name, age, talk });
+  const { name, age, talk } = req.body;
+  const newTalker = {
+    name,
+    age,
+    talk,
+  };
+  await talkersWrite(newTalker);
+  res.status(201).json(newTalker);
 });
 
 module.exports = router;

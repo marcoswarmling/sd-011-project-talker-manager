@@ -76,13 +76,26 @@ router.put(
   },
 );
 
+router.get('/talker/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+  try {
+    const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf-8'));
+    const filter = talkers.filter((talker) =>
+      talker.name.toLowerCase().includes(q.toLowerCase()));
+
+    return res.status(200).json(filter);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+});
+
 router.delete(
   '/talker/:id',
   isValidToken,
   async (req, res) => {
     const { id } = req.params;
     try {
-      const talkerData = await fs.readFile('./talker.json', 'utf8');
+      const talkerData = await fs.readFile(talke, 'utf8');
       const talker = JSON.parse(talkerData);
       const userIndex = talker.findIndex((user) => user.id === +id);
       talker.splice(userIndex, 1);

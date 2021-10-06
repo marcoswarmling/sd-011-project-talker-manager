@@ -1,3 +1,5 @@
+const { status } = require('../status/index');
+
 const validPassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {

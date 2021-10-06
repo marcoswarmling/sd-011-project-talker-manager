@@ -1,8 +1,8 @@
-const regexDate = /^\d{2}\/\d{2}\/\d{4}$/gm;
+const regexDate = /^\d{2}\/\d{2}\/\d{4}$/;
 
 const authDoRage = (req, res, next) => {
   const { talk: { watchedAt, rate } } = req.body;
-  if (rate < 1 || rate > 5) {
+  if (parseInt(rate, 10) < 1 || parseInt(rate, 10) > 5) {
     return res.status(400)
       .json({
         message: 'O campo "rate" deve ser um inteiro de 1 à 5',

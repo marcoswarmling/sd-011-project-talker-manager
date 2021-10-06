@@ -50,6 +50,18 @@ app.post(
   },
 );
 
+app.put(
+  '/talker/:id', authToken, authName, authAge, authTalk, authDoRage,
+  async (req, res) => {
+    const { id } = req.params;
+    const data = await readFile();
+    const index = data.findIndex((talker) => talker.id === parseInt(id, 10));
+    data[index] = { ...data[index], ...req.body };
+    await writeFile(data);
+    res.status(200).json(req.body);
+  },
+);
+
 app.post('/login', authLogin, (_req, res) => {
   res.status(200).json({
     token: getToken(16),

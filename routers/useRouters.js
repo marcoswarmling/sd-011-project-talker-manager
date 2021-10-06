@@ -52,4 +52,29 @@ router.post(
   },
 );
 
+router.put(
+  '/talker/:id',
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalk,
+  isValidRate,
+  isValidWatchedAt,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    try {
+      const talkerData = await fs.readFile('./talker.json', 'utf8');
+      const talker = JSON.parse(talkerData);
+      const userIndex = talker.findIndex((user) => user.id === Number(id));
+      talker[userIndex].push(...talker[userIndex], { name, age, talk });
+      await fs.writeFile('./talker.json', JSON.stringify(talker));
+      const newUser = talker.find((user) => user.id === Number(id));
+      return res.status(200).json(newUser);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+  },
+);
+
 module.exports = router;

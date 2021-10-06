@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { talkersList } = require('./challenges/talker');
+const { talkersList, writeNewTalker } = require('./challenges/talker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -58,33 +58,28 @@ const { validateTalk } = require('./middleware/talker/validateTalk');
 const { validateWatchedAt } = require('./middleware/talker/validateWatchedAt');
 const { validateRate } = require('./middleware/talker/validateRate');
 
-function addTalkerToItsList(listOfTalkers, newTalker) {
-  const talkersId = Object.keys(listOfTalkers);
-
-  const newList = {
-    id: talkersId[talkersId.length - 1],
-    newTalker,
-  };
-
-  return newList;
-}
-
 app.post('/talker',
   validateToken, validateName, validateAge,
   validateTalk, validateWatchedAt, validateRate,
   (req, res) => {
     const { name, age, talk } = req.body;
     const listOfTalkers = talkersList();
+    // const talkersId = Object.keys(listOfTalkers);
 
     const newTalker = {
       name,
       age,
+      id: 5,
       talk,
     };
 
     listOfTalkers.push(newTalker);
 
-    res.status(201).json(addTalkerToItsList(listOfTalkers, newTalker));
+    // console.log(JSON.stringify(listOfTalkers));
+
+    writeNewTalker(JSON.stringify(listOfTalkers));
+
+    res.status(201).json(newTalker);
   });
 
 // ! ================================= Fim Desafios ====================================

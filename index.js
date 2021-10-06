@@ -8,6 +8,7 @@ const authName = require('./middlewares/authName');
 const authAge = require('./middlewares/authAge');
 const authTalk = require('./middlewares/authTalk');
 const authDoRage = require('./middlewares/authDoRage');
+const authQuery = require('./middlewares/authQuery');
 
 const app = express();
 app.use(bodyParser.json());
@@ -23,6 +24,14 @@ app.get('/', (_request, response) => {
 app.get('/talker', async (_req, res) => {
   const data = await readFile();
   res.status(200).send(data);
+});
+
+app.get('/talker/search', authToken, authQuery, async (req, res) => {
+  const data = await readFile();
+  const { q } = req.query;
+  const filterTalkers = data.filter((talk) => talk.name.match(q));
+
+  res.status(200).json(filterTalkers);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -58,9 +67,17 @@ app.put(
     const index = data.findIndex((talker) => talker.id === parseInt(id, 10));
     data[index] = { ...data[index], ...req.body };
     await writeFile(data);
-    res.status(200).json(req.body);
+    res.status(200).json(data[index]);
   },
 );
+
+app.delete('/talker/:id', authToken, async (req, res) => {
+  const { id } = req.params;
+    const data = await readFile();
+    const newData = data.filter((talker) => talker.id !== parseInt(id, 10));
+    await writeFile(newData);
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
 
 app.post('/login', authLogin, (_req, res) => {
   res.status(200).json({

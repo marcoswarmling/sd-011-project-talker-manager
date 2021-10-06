@@ -16,6 +16,21 @@ router.get('/', async (_req, res) => {
   res.status(200).json(result);
 });
 
+router.get(
+  '/search',
+  validateToken,
+
+  async (req, res) => {
+    const searchData = req.querry;
+    const readJson = await readTalker(PATH_FILE);
+    if (!searchData) {
+      return res.status(200).json(readJson);
+    }
+    const result = readJson.filter((item) => item.name.includes(searchData));
+    res.status(200).json(result);
+  },
+);
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const readResult = await readTalker(PATH_FILE);

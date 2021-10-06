@@ -64,6 +64,17 @@ router.put('/talker/:id', validateToken, validateTalker, (req, res) => {
   return res.status(200).send(newTalker);
 });
 
+// 6 - Crie o endpoint DELETE /talker/:id
+router.delete('/talker/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+  const data = fs.readFileSync(talkerJSON);
+  const talkerList = JSON.parse(data);
+  const index = talkerList.findIndex((person) => person.id === Number(id));
+  talkerList.splice(index, 1);
+  fs.writeFileSync(talkerJSON, JSON.stringify(talkerList));
+  return res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
 
 // const newUser =  {

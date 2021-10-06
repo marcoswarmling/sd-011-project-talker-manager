@@ -117,6 +117,17 @@ app.put('/talker/:id',
   res.status(200).json(data[selectedIndexUser]);
 });
 
+app.delete('/talker/:id', tokenValidation, (req, res) => {
+  const data = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+  const selectedIndexUser = data.findIndex((t) => t.id === Number(req.params.id));
+
+  // Remove o usuário da lista de palestrantes.
+  data.splice(selectedIndexUser, 1);
+
+  fs.writeFileSync('./talker.json', JSON.stringify(data));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

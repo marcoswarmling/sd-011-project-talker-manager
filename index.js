@@ -64,6 +64,21 @@ validateObjTalk, validateRate,
   res.status(201).json(newTalker);
 }));
 
+app.put('/talker/:id', validateToken, validateName,
+validateAge, validateTalk, validateWatchedAt,
+validateObjTalk, validateRate,
+ rescue(async (req, res) => {
+  const talkersAsync = await talkers.getTalkers();
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const findTalker = talkersAsync.findIndex((t) => t.id === parseInt(id, 10));
+  
+  talkersAsync[findTalker] = { ...talkersAsync[findTalker], name, age, talk };
+  
+  await talkers.setTalkers(talkersAsync);
+  res.status(200).json(talkersAsync[findTalker]);
+ }));
+
 app.listen(PORT, () => {
   console.log('Online');
 });

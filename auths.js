@@ -51,7 +51,6 @@ function validateName(req, res, next) {
   }
 
   if (name.length < 3) {
-    console.log('entrou');
     return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
@@ -107,6 +106,8 @@ function validateWatchedAt(req, res, next) {
   next();
 }
 
+// regex de validação de data encontrado no seguinte link:
+// https://stackoverflow.com/questions/5465375/javascript-date-regex-dd-mm-yyyy
 function validateObjTalk(req, res, next) {
   const { talk } = req.body;
   const formatDate = /^[0-9]{2}\/{1}[0-9]{2}\/{1}[0-9]{4}$/g;

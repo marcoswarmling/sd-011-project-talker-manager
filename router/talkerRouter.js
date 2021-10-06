@@ -25,7 +25,6 @@ router.get('/', async (_req, res) => {
 
 router.get('/search', validateToken, async (req, res) => {
   const { q } = req.query; 
-  console.log(req.query);
   const searchContent = await searchContentFile(TALKER, q);
   res.status(200).json(searchContent);
 });
@@ -38,37 +37,31 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(checkId);
 });
 
-// router.use(validateToken); // middleware global?
+router.use(validateToken); // middleware global
 
-router.post('/',
-validateToken,
-validateName,
-validateAge,
-validateTalk,
-validateWatchedAt,
-validateRate,
-async (req, res) => {
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;  
+  await removeContentFile(TALKER, id);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+router.use(
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+);
+
+router.post('/', async (req, res) => {
   const talker = await writeContentFile(TALKER, req.body);
   res.status(201).json(talker);
 });
 
-router.put('/:id',
-validateToken,
-validateName,
-validateAge,
-validateTalk,
-validateRate,
-validateWatchedAt,
-async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await editContentFile(TALKER, id, req.body);
   res.status(200).json(talker);
-});
-
-router.delete('/:id', validateToken, async (req, res) => {
-  const { id } = req.params;  
-  await removeContentFile(TALKER, id);
-  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

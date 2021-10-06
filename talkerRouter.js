@@ -99,9 +99,12 @@ router.post('/', validationAddTalkerName, validationAddTalkerAge,
  validationAddTalkerTalk, validationAddTalkerTalkRate, 
  validationAddTalkerTalkWatchedAt, authMiddleware, async (req, res) => {
   const { name, age, talk } = req.body;
+  const talkers = await talkersRead();
+  const newTalkerId = talkers.length + 1;
   const newTalker = {
     name,
     age,
+    id: newTalkerId,
     talk,
   };
   await talkersWrite(newTalker);

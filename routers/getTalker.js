@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
-const router = express.Router();
 
+const router = express.Router();
 
 router.get('/', (_req, res) => {
   const talkers = fs.readFileSync('./talker.json', 'utf-8');
@@ -20,7 +20,5 @@ router.get('/:id', (req, res) => {
 }
   return res.status(200).json(filteredTalkers);
 });
-
-
 
 module.exports = router;

@@ -8,8 +8,10 @@ const { checkToken } = require('../middlewares/checkToken');
 const { checkTalker } = require('../middlewares/checkTalker');
 const { checkTalk, checkDate, checkRate } = require('../middlewares/checkTalk');
 
+const file = 'talker.json';
+
 router.get('/', async (_req, res) => {
-  const talkers = await getTalkers('talker.json');
+  const talkers = await getTalkers(file);
   if (!talkers) res.status(200).json([]);
 
   res.status(200).json(talkers);
@@ -18,7 +20,7 @@ router.get('/', async (_req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const talkers = await getTalkers('talker.json');
+  const talkers = await getTalkers(file);
   if (!talkers) res.status(200).json([]);
 
   const findTalker = talkers.find((t) => t.id === parseInt(id, 10));
@@ -35,11 +37,11 @@ router.post('/', checkToken, checkTalker, checkTalk, checkDate, checkRate, async
     age,
     talk: { watchedAt, rate },
   };
-  const currentTalkers = await getTalkers('talker.json');
+  const currentTalkers = await getTalkers(file);
   const newTalkers = [...currentTalkers, newDataTalker];
 
   try {
-    await updateTalkers('talker.json', newTalkers);
+    await updateTalkers(file, newTalkers);
   } catch (error) {
     return res.status(401).end();
   }
@@ -55,10 +57,10 @@ router.put('/:id', checkToken, checkTalker, checkTalk, checkDate, checkRate, asy
     age,
     talk: { watchedAt, rate },
   };
-  const currentTalkers = await getTalkers('talker.json');
+  const currentTalkers = await getTalkers(file);
   const idUpdateTalk = currentTalkers.findIndex((t) => t.id === parseInt(id, 10));
   currentTalkers[idUpdateTalk] = { ...currentTalkers[idUpdateTalk], ...newDataTalker };
-  await updateTalkers('talker.json', currentTalkers);
+  await updateTalkers(file, currentTalkers);
   res.status(200).json(currentTalkers[idUpdateTalk]);
 });
 module.exports = router;

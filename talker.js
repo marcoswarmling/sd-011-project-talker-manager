@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
+const m = require('./middleware/index');
 
 const router = express.Router();
 
@@ -34,5 +35,20 @@ router.get('/:id', async (request, response) => {
     return response.status(500).end();
   }
 });
+
+router.post('/',
+  m.tokenVerify, m.nameVerify, m.ageVerify, m.talkVerify, m.fieldVerify,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    try {
+      const data = await talkerData(PATH);
+      const newTalker = { name, age, talk, id: (data.length + 1) };
+
+      await fs.writeFile(PATH, JSON.stringify([...data, newTalker]));
+      res.status(201).json(newTalker);
+    } catch (error) {
+      res.status(500).end();
+    }
+  });
 
 module.exports = router;

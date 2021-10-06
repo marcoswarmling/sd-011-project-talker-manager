@@ -109,6 +109,19 @@ app.get('/talker', async (req, res) => {
   }
 });
 
+app.get('/talker/search', validateTokenMiddleware, async (req, res) => {
+  const { q } = req.query;
+  try {
+    const talker = await fs.readFile(db, 'utf8');
+    const filteredTalker = JSON.parse(talker).filter((r) => r.name.includes(q));
+    if (!q) return res.status(200).json([]);
+    if (filteredTalker.length === 0) return res.status(200).json(JSON.parse(talker));
+    res.status(200).json(filteredTalker);
+  } catch (error) {
+    res.status(400).json({ message: 'Tente novamente mais tarde' });
+  }
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   try {

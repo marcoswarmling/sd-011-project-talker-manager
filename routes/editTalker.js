@@ -90,5 +90,5 @@ module.exports = app.put('/talker/:id',
       },
     };
     await fs.writeFile('./talker.json', JSON.stringify(parseJson));
-    return res.status(200).json(parseJson);
+    return res.status(200).json(parseJson[getObjectID]);
   });

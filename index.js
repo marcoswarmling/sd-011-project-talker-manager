@@ -111,9 +111,7 @@ app.put('/talker/:id',
 
   const selectedIndexUser = data.findIndex((t) => t.id === Number(req.params.id));
 
-  data[selectedIndexUser].name = name;
-  data[selectedIndexUser].age = age;
-  data[selectedIndexUser].talk = talk;
+  data[selectedIndexUser] = { ...data[selectedIndexUser], name, age, talk };
 
   fs.writeFileSync('./talker.json', JSON.stringify(data));
   res.status(200).json(data[selectedIndexUser]);

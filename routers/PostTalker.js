@@ -44,4 +44,21 @@ async (req, res) => {
     return res.status(200).json(editedTalker);
 });
 
+/*router.delete('/:id',
+validateToken,
+validateAge,
+validateName,
+validateTalk,
+validateTalkIncrements,
+async (req, res) => {
+    const { id } = req.params;
+    const talkers = fs.readFileSync('./talker.json', 'utf8');
+    const talkerParse = JSON.parse(talkers);
+    const talkerIndex = talkerParse.findIndex((talker) => talker.id === +id);
+    talkerParse.splice(1, talkerIndex);
+   fs.writeFileSync('./talker.json', JSON.stringify(talkerParse, null, 2));
+    return res.status(200).json(talkerParse);
+});*/
+
 module.exports = router;
+

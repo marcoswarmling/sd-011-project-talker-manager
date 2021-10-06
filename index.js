@@ -70,7 +70,7 @@ app.get('/talker/:id', async (req, res) => {
 //   return token;
 // }
 
-// O código abaixo foi sugerido por Bruna Campos. Segue repositório: https://github.com/tryber/sd-011-project-talker-manager/pull/10/files
+// O código abaixo foi sugerido por Bruna Campos, aluna da turma 11 da Trybe, durante sessão de plantão. Segue repositório dela: https://github.com/tryber/sd-011-project-talker-manager/pull/10/files
 const getToken = () => {
   const token = crypto.randomBytes(8).toString('hex');
   return token;

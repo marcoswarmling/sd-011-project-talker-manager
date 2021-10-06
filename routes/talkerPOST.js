@@ -50,7 +50,18 @@ function validTalke(req, res, next) {
   next();
 }
 
-function validObjTake(req, res, next) {
+function objectTalkExists(req, res, next) {
+  const { talk } = req.body;
+
+  if (talk === undefined) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+  next();
+}
+
+function contentObjectTalkExists(req, res, next) {
   const { talk } = req.body;
   const { watchedAt, rate } = talk;
 
@@ -63,8 +74,8 @@ function validObjTake(req, res, next) {
 }
 
 module.exports = app.post('/talker',
-  validToken, validName, validAge,
-  validObjTake, validTalke, async (req, res) => {
+  validToken, validName, validAge, objectTalkExists,
+  contentObjectTalkExists, validTalke, async (req, res) => {
     const { name, age, talk } = req.body;
     const readFile = await fs.readFile('./talker.json');
     const parseJson = await JSON.parse(readFile);

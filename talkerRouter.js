@@ -16,10 +16,10 @@ const { validEmail, validPassword } = require('./validations');
 router.get('/talker', async (_req, res) => {
   const data = await fs.readFile(talkerJSON);
   const talker = JSON.parse(data);
-   if (talker.length === 0) {
-    res.status(HTTP_OK_STATUS).json([]);
+  if (talker.length === 0) {
+    return res.status(HTTP_OK_STATUS).json([]);
   }
-  res.status(HTTP_OK_STATUS).send(talker);
+  return res.status(HTTP_OK_STATUS).send(talker);
 });
 
 // 3 - Create Endpoint Login

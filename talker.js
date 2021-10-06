@@ -51,4 +51,22 @@ router.post('/',
     }
   });
 
+router.put('/:id',
+  m.tokenVerify, m.nameVerify, m.ageVerify, m.talkVerify, m.fieldVerify,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+
+    try {
+      const data = await talkerData(PATH);
+      const newTalker = { name, age, talk, id: Number(id) };
+      const idTalker = data.filter((t) => t.id !== Number(id));
+
+      await fs.writeFile(PATH, JSON.stringify([...idTalker, newTalker]));
+      res.status(200).json(newTalker);
+    } catch (error) {
+      res.status(500).end();
+    }
+  });
+
 module.exports = router;

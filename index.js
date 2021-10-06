@@ -107,14 +107,6 @@ app.get('/talker', (req, res) => {
   res.status(200).json(talkers);
 });
 
-app.get('/talker/:id', (req, res) => {
-  const talkers = getTalkers();
-  const { id } = req.params;
-  const talker = talkers.find((t) => t.id === parseInt(id, 10));
-  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(200).json(talker);
-});
-
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email) {
@@ -229,4 +221,35 @@ app.delete('/talker/:id', (req, res) => {
   const idNumber = parseInt(id, 10);
   deleteTalker(idNumber);
   res.status(200).json({ "message": "Pessoa palestrante deletada com sucesso" })
+});
+
+app.get('/talker/search', function(req, res) {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  } 
+  const talkers = getTalkers();
+  const { q } = req.query;
+  const response = talkers.filter((t) => {
+    return t.name.includes(q)
+  });
+  res.status(200).json(response);
+});
+
+app.get('/talker/:id', (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  } 
+  const talkers = getTalkers();
+  const { id } = req.params;
+  const talker = talkers.find((t) => t.id === parseInt(id, 10));
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  res.status(200).json(talker);
 });

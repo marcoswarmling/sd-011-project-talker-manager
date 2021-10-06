@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs').promises;
 
+const JSON_PATH = './talker.json';
 const userToken = crypto.randomBytes(8).toString('hex');
 
 const TokenCreation = async (_req, res) => {
@@ -13,7 +14,7 @@ const TokenCreation = async (_req, res) => {
 
 const getAllTalkers = async (_req, res) => {
   try {
-    const talkers = await fs.readFile('./talker.json', 'utf-8');
+    const talkers = await fs.readFile(JSON_PATH, 'utf-8');
     if (!talkers) res.status(200).json([]);
     res.status(200).json(JSON.parse(talkers));
   } catch (err) {
@@ -24,7 +25,7 @@ const getAllTalkers = async (_req, res) => {
 const IDVerification = async (req, res) => {
   try {
     const { id } = req.params;
-    const talkers = await fs.readFile('./talker.json', 'utf-8');
+    const talkers = await fs.readFile(JSON_PATH, 'utf-8');
     const result = JSON.parse(talkers);
     const talkerIncluded = result.find((talker) => talker.id === Number(id));
     if (!talkerIncluded) { 
@@ -141,7 +142,7 @@ const ratedVerification = (req, res, next) => {
 const talkerSetter = async (req, res) => {
   const { name, age, talk: { rate, watchedAt } } = req.body;
 
-  const talker = await fs.readFile('./talker.json', 'utf8');
+  const talker = await fs.readFile(JSON_PATH, 'utf8');
   const result = JSON.parse(talker);
 
   const newTalker = {
@@ -154,7 +155,7 @@ const talkerSetter = async (req, res) => {
     },
   };
   result.push(newTalker);
-  await fs.writeFile('./talker.json', JSON.stringify(result));
+  await fs.writeFile(JSON_PATH, JSON.stringify(result));
   res.status(201).send(newTalker);
 };
 
@@ -162,7 +163,7 @@ const modifyTalker = async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const { rate, watchedAt } = talk;
-  const talkers = await fs.readFile('./talker.json', 'utf8');
+  const talkers = await fs.readFile(JSON_PATH, 'utf8');
   const result = await JSON.parse(talkers);
   const newTalker = {
     name,
@@ -175,7 +176,7 @@ const modifyTalker = async (req, res) => {
   const talkerIndex = result.find((talker) => talker.id === Number(id));
   const talkersRemoved = result.filter((talker) => talker.id !== talkerIndex.id);
   const newArrayTalkers = [...talkersRemoved, newTalker];
-  await fs.writeFile('./talker.json', JSON.stringify(newArrayTalkers));
+  await fs.writeFile(JSON_PATH, JSON.stringify(newArrayTalkers));
   return res.status(200).send(newTalker);
 };
 

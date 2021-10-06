@@ -2,7 +2,6 @@ const fs = require('fs').promises;
 const crypto = require('crypto');
 
 const messages = 'Pessoa palestrante não encontrada';
-const deleteT = 'Pessoa palestrante deletada com sucesso';
 const HTTP_OK_STATUS = 200;
 const path = './talker.json';
 

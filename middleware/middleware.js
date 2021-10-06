@@ -1,3 +1,10 @@
+const fs = require('fs').promises;
+
+const messages = 'Pessoa palestrante não encontrada';
+const deleteT = 'Pessoa palestrante deletada com sucesso';
+const HTTP_OK_STATUS = 200;
+const path = './talker.json';
+
 const searchTalk = async (req, res) => {
   const { q } = req.query;
 

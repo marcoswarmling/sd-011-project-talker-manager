@@ -1,5 +1,8 @@
-const express = require('express');
 const bodyParser = require('body-parser');
+const express = require('express');
+const services = require('./services');
+const talkerRouter = require('./talkerRouter');
+const loginRouter = require('./loginRouter');
 
 const app = express();
 app.use(bodyParser.json());
@@ -11,6 +14,17 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.use('/', (req, _res, next) => {
+  const talkers = services.readFileTalker();
+  if (talkers) {
+    req.talkers = JSON.parse(talkers);
+  }
+  next();
+});
+
+app.use('/talker', talkerRouter);
+app.use('/login', loginRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

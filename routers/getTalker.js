@@ -18,7 +18,7 @@ router.get('/', (_req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
-/* router.get(
+ router.get(
   '/search',
   validateToken,
   (req, res) => {
@@ -31,7 +31,7 @@ router.get('/', (_req, res) => {
     } else { res.status(200).send(talker); }
   },
 );
-
+/*
 router.post('/',
   validateToken,
   validateName,

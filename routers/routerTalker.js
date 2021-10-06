@@ -10,6 +10,20 @@ const { checkTalk, checkDate, checkRate } = require('../middlewares/checkTalk');
 
 const file = 'talker.json';
 
+router.get('/search', checkToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers(file);
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+  const filteredTalkers = talkers.filter((t) => t.name.includes(q));
+  
+  if (!filteredTalkers) {
+    return res.status(200).json([]);
+  }
+  res.status(200).json(filteredTalkers);
+});
+
 router.get('/', async (_req, res) => {
   const talkers = await getTalkers(file);
   if (!talkers) res.status(200).json([]);
@@ -71,4 +85,5 @@ router.delete('/:id', checkToken, async (req, res) => {
   await updateTalkers(file, deletedTalkers);
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
+
 module.exports = router;

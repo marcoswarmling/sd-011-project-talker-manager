@@ -2,11 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 
-const allRouters = require('./router/allRouters');
+const routers = require('./router/allRouters');
 
 const app = express();
 app.use(bodyParser.json());
-app.use('/', allRouters);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -15,6 +14,8 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.use('/', routers);
 
 app.listen(PORT, () => {
   console.log('Online');

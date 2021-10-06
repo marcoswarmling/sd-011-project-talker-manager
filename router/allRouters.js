@@ -7,8 +7,23 @@ const {
   validateEmail,
   validatePassword,
   getRandomToken,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validatewatchedAt,
+  validateRate,
+  postTalker,
 } = require('../middleware/validations');
 
 router.post('/login', validateEmail, validatePassword, getRandomToken);
+router.post('/talker',
+  validateToken, 
+  validateName, 
+  validateAge, 
+  validateTalk,
+  validateRate,
+  validatewatchedAt, 
+  postTalker);
 
 module.exports = router;

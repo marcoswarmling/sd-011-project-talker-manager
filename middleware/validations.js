@@ -7,6 +7,7 @@ https://www.ti-enxame.com/pt/javascript/token-aleatorio-seguro-no-node.js/940938
  */
 
 const crypto = require('crypto');
+const fs = require('fs').promises;
 
 const getToken = crypto.randomBytes(8).toString('hex');
 const getRandomToken = (req, res) => {
@@ -17,10 +18,10 @@ const validateEmail = (req, res, next) => {
   const { email } = req.body;
   const reEmail = /\S+@\S+\.\S+/;
   if (!email) {
-    return res.status(400).send({ message: 'O campo "email" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (!reEmail.test(email)) {
-    return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   next();
 };
@@ -28,17 +29,105 @@ const validateEmail = (req, res, next) => {
 const validatePassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
-    return res.status(400).send({ message: 'O campo "password" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
-  const magicNumber = 6;
-  if (password.length < magicNumber) {
-    return res.status(400).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   next();
 };
 
-module.exports = {
-  getRandomToken,
-  validateEmail,
-  validatePassword,
+const validateToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  next();
 };
+
+const validateName = (req, res, next) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name.length < 3) {
+    return res.status(400).json({
+      message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  next();
+};
+
+const validateAge = (req, res, next) => {
+  const { age } = req.body;
+  if (!age) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (Number(age) < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  next();
+};
+
+const validateTalk = (req, res, next) => {
+  const { talk } = req.body;
+  if (!talk || talk === '' || !talk.watchedAt || !talk.rate) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  next();
+};
+
+const validateRate = (req, res, next) => {
+  const { talk } = req.body;
+  const rateNumber = Number(talk.rate);
+  if (rateNumber < 1 || rateNumber > 5) {
+    return res.status(400).json({
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  next();
+};
+
+const validatewatchedAt = (req, res, next) => {
+  const { talk } = req.body;
+  const reDate = /^\d{2}\/\d{2}\/\d{4}$/;
+  if (!reDate.test(talk.watchedAt)) {
+    return res.status(400).json({
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  next();
+};
+
+const postTalker = async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  try {
+    const content = await fs.readFile('./talker.json', 'utf8');
+    const response = await JSON.parse(content);
+    const newContent = {
+      name,
+      age,
+      id: response.length + 1,
+      talk: { watchedAt, rate },
+    };
+    response.push(newContent);
+    await fs.writeFile('./talker.json', JSON.stringify(response));
+    res.status(201).json(newContent);
+  } catch (error) {
+    return res.status(400).json(error);
+  } 
+};
+
+  module.exports = {
+    getRandomToken,
+    validateEmail,
+    validatePassword,
+    validateToken,
+    validateName,
+    validateAge,
+    validateTalk,
+    validatewatchedAt,
+    validateRate,
+    postTalker,
+  };

@@ -71,4 +71,13 @@ async (req, res) => {
   return res.status(200).json(updateTalker);
 });
 
+router.delete('/talker/:id', tokenValid, async (req, res) => {
+  const { id } = req.params;
+  const talker = await reading();
+
+  const deletedTalker = talker.filter((r) => r.id !== Number(id));
+  await fs.writeFile('./talker.json', JSON.stringify(deletedTalker));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

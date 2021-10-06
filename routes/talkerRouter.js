@@ -12,6 +12,17 @@ router.get('/', async (req, res) => {
   res.status(200).json(data);
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const data = await readTalkerFile();
+
+  const theTalker = data.filter((talker) => talker.name.includes(q));
+
+  if (!q || q === '') return res.status(200).json({ data });
+
+  res.status(200).json(theTalker);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -24,7 +35,9 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(findTalker);
 });
 
-router.delete('/:id', validateToken, async (req, res) => {
+router.use(validateToken);
+
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   const data = await readTalkerFile();
@@ -36,7 +49,6 @@ router.delete('/:id', validateToken, async (req, res) => {
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-router.use(validateToken);
 router.use(validateName);
 router.use(validateAge);
 router.use(validateTalk);

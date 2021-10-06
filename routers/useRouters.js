@@ -2,6 +2,8 @@ const router = require('express').Router();
 const randonToken = require('random-token');
 const fs = require('fs').promises;
 
+const talke = './talker.json';
+
 const {
   isValidEmail,
   isValidPassword,
@@ -12,6 +14,19 @@ const {
   isValidRate,
   isValidWatchedAt,
 } = require('../middlewares/validations');
+
+router.get('/talker/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+  try {
+    const talkFile = await fs.readFile('./talker.json', 'utf-8');
+    const talkers = JSON.parse(talkFile);
+    const filter = talkers.filter((talker) =>
+      talker.name.toLowerCase().includes(q.toLowerCase()));
+    return res.status(200).json(filter);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+});
 
 router.post(
   '/login',
@@ -26,7 +41,7 @@ router.post(
   }
   },
 );
-const talke = './talker.json';
+
 router.post(
   '/talker',
   isValidToken,
@@ -75,19 +90,6 @@ router.put(
     }
   },
 );
-
-router.get('/talker/search', isValidToken, async (req, res) => {
-  const { q } = req.query;
-  try {
-    const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf-8'));
-    const filter = talkers.filter((talker) =>
-      talker.name.toLowerCase().includes(q.toLowerCase()));
-
-    return res.status(200).json(filter);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
-  }
-});
 
 router.delete(
   '/talker/:id',

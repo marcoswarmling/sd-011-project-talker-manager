@@ -15,6 +15,8 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.use('/', userRouter);
+
 app.get('/talker', async (req, res) => {
   const talker = await fs.readFile('./talker.json', 'utf-8');
   if (!talker) return res.status(HTTP_OK_STATUS).json([]);
@@ -29,8 +31,6 @@ app.get('/talker/:id', async (req, res) => {
   if (!findId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
   res.status(HTTP_OK_STATUS).json(findId);
 });
-
-app.use('/', userRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

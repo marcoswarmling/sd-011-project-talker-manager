@@ -41,6 +41,7 @@ function verifyPasswordIsValid(req, res, next) {
 function generateToken() {
   const token = crypto.randomBytes(8).toString('hex');
   return token;
+  // nao precisei da next() aqui. Está correto?
 }
 
 function verifyTokenIsValid(req, res, next) {
@@ -50,7 +51,7 @@ function verifyTokenIsValid(req, res, next) {
     return res.status(401).json({ message: 'Token inválido!' });
   }
 
-  return next();
+  next();
 }
 
 module.exports = {

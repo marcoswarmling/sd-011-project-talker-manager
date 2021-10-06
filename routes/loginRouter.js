@@ -17,7 +17,7 @@ const loginValidations = [
   verifyPasswordExists,
   verifyPasswordIsValid];
 
-router.post('/', loginValidations, (_req, res) => {
+router.post('/', loginValidations, async (_req, res) => {
   res.status(200).json({ token: generateToken() }); // Espera retornar o token.
 });
 

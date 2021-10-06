@@ -1,35 +1,19 @@
 const router = require('express').Router();
 const randonToken = require('random-token');
-const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-const express = require('express');
 
-const app = express();
-app.use(bodyParser.json());
-
-const HTTP_OK_STATUS = 200;
+const fileTalker = './talker.json';
 
 const {
+  isValidtoken,
   isValidEmail,
   isValidPassword,
+  isValidName,
+  isValidAge,
+  isvalidateFields,
+  isvalidateTalkObject,
+  isvalidateTalk,
 } = require('../middlewares/validations');
-
-// requisito 1
-router.get('/talker', async (_req, res) => {
-  const talker = await fs.readFile('./talker.json', 'utf8');
-  if (!talker) return res.status(HTTP_OK_STATUS).json([]);
-  res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
-});
-
-// requisito 2
-router.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const talker = await fs.readFile('./talker.json', 'utf8');
-  const jsonData = JSON.parse(talker);
-  const data = jsonData.find((item) => item.id === Number(id));
-  if (!data) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(HTTP_OK_STATUS).json(data);
-});
 
 // requisito 3
 router.post(
@@ -41,5 +25,29 @@ router.post(
     res.status(200).json({ token });
   },
 );
+
+// requisito 4
+router.post('/talker',
+  isValidtoken,
+  isValidName, 
+  isValidAge,
+  isvalidateTalk,
+  isvalidateFields,
+  isvalidateTalkObject,
+  (req, res) => {
+    const { name, age, talk } = req.body;
+
+    try {
+      const talkers = JSON.parse(fs.readFileSync(fileTalker, 'utf8'));
+      const lastTalker = talkers[talkers.length - 1];
+      const newTalker = { name, age, talk, id: Number(lastTalker.id) + 1 };
+      talkers.push(newTalker);
+
+      fs.writeFileSync(fileTalker, JSON.stringify(talkers));
+      res.status(201).json(newTalker);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+});
 
 module.exports = router;

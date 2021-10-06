@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
 
 const app = express();
 app.use(bodyParser.json());
@@ -75,18 +76,19 @@ const validatePassword = (req, res, next) => {
 
 // Crie o endpoint POST /login
 app.post('/login', validateEmail, validatePassword, (_req, response) => {
+  const token = crypto.randomBytes(8).toString('hex');
     response.status(HTTP_OK_STATUS).send({
-      token: '7mqaVRXJSp886CGr',
+      token,
     });
 });
 
 const validateToken = (req, res, next) => {
-  const { token } = req.headers;
-  if (!token) {
-    res.status(401).send({ message: 'Token não encontrado' });
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (token && token.length < 16) {
-    res.status(401).send({ message: 'Token inválido' });
+  if (authorization && authorization.length < 16) {
+    return res.status(401).send({ message: 'Token inválido' });
   }
   next();
 };
@@ -94,10 +96,10 @@ const validateToken = (req, res, next) => {
 const validateName = (req, res, next) => {
   const { name } = req.body;
   if (!name) {
-    res.status(400).send({ message: 'O campo "name" é obrigatório' });
+    return res.status(400).send({ message: 'O campo "name" é obrigatório' });
   }
   if (name.length < 3) {
-    res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+    return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 };
@@ -105,19 +107,23 @@ const validateName = (req, res, next) => {
 const validateAge = (req, res, next) => {
   const { age } = req.body;
   if (!age) {
-    res.status(400).send({ message: 'O campo "age" é obrigatório' });
+   return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   }
   if (age < 18) {
-    res.status(400).send({ message: 'A pessoa palestrante deve ser maior de idade' });
+   return res.status(400).send({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
+  if (!talk) {
+    return res.status(400).send({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+    } 
   const { watchedAt, rate } = talk;
-  if (!talk || !watchedAt || !rate) {
-    res.status(400).send({
+  if (!watchedAt || !rate) {
+    return res.status(400).send({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
@@ -127,19 +133,24 @@ const validateWathedAtAndRate = (req, res, next) => {
   const { watchedAt, rate } = req.body.talk;
   const patternData = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
   if (!patternData.test(watchedAt)) {
-    res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa' });
+    return res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (rate % 1 !== 0) {
-    res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (rate % 1 !== 0 || rate < 1 || rate > 5) {
+    return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }  
   next();
 };
 
 // Crie o endpoint POST /talker
 app.post('/talker', validateToken, validateName,
-  validateAge, validateTalk, validateWathedAtAndRate, (req, res) => {  
-    const { id, name, age, talk: { watchedAt, rate } } = req.body;
-    res.status(201).send({ id, name, age, talk: { watchedAt, rate } });
+  validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {  
+    const fileData = await readTalker();
+    const fileDataJson = JSON.parse(fileData);
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    const newTalk = { id: fileDataJson.length + 1, name, age, talk: { watchedAt, rate } };
+    fileDataJson.push(newTalk);
+    fs.writeFile('./talker.json', JSON.stringify(fileDataJson));
+   return res.status(201).send(newTalk);
 });
 
 app.listen(PORT, () => {

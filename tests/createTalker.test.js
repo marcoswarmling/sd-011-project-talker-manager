@@ -13,19 +13,12 @@ const url = 'http://localhost:3000';
 
 describe('4 - Crie o endpoint POST /talker', () => {
   beforeEach(() => {
-    const talkerSeed = fs.readFileSync(
-      path.join(__dirname, 'seed.json'),
-      'utf8'
-    );
+    const talkerSeed = fs.readFileSync(path.join(__dirname, 'seed.json'), 'utf8');
 
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'talker.json'),
-      talkerSeed,
-      'utf8'
-    );
+    fs.writeFileSync(path.join(__dirname, '..', 'talker.json'), talkerSeed, 'utf8');
   });
 
-  it('Será validado que é possível cadastrar uma pessoa palestrante com sucesso', async () => {
+  it.only('Será validado que é possível cadastrar uma pessoa palestrante com sucesso', async () => {
     await frisby
       .post(`${url}/login`, {
         body: {
@@ -53,9 +46,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
           .expect('status', 201)
           .then((responseCreate) => {
             expect(require('../talker.json')).toEqual(
-              expect.arrayContaining(
-                [expect.objectContaining(postTalkerMock)]
-                )
+              expect.arrayContaining([expect.objectContaining(postTalkerMock)])
             );
             const { json } = responseCreate;
             expect(json).toEqual(postTalkerMock);
@@ -123,9 +114,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
           .expect('status', 400)
           .then((responseCreate) => {
             const { json } = responseCreate;
-            expect(json.message).toBe(
-              'O "name" deve ter pelo menos 3 caracteres'
-            );
+            expect(json.message).toBe('O "name" deve ter pelo menos 3 caracteres');
           });
       });
   });
@@ -190,9 +179,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
           .expect('status', 400)
           .then((responseCreate) => {
             const { json } = responseCreate;
-            expect(json.message).toBe(
-              'A pessoa palestrante deve ser maior de idade'
-            );
+            expect(json.message).toBe('A pessoa palestrante deve ser maior de idade');
           });
       });
   });
@@ -294,9 +281,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
           .expect('status', 400)
           .then((responseCreate) => {
             const { json } = responseCreate;
-            expect(json.message).toBe(
-              'O campo "rate" deve ser um inteiro de 1 à 5'
-            );
+            expect(json.message).toBe('O campo "rate" deve ser um inteiro de 1 à 5');
           });
       });
   });
@@ -329,9 +314,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
           .expect('status', 400)
           .then((responseCreate) => {
             const { json } = responseCreate;
-            expect(json.message).toBe(
-              'O campo "rate" deve ser um inteiro de 1 à 5'
-            );
+            expect(json.message).toBe('O campo "rate" deve ser um inteiro de 1 à 5');
           });
       });
   });
@@ -399,9 +382,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
           .expect('status', 400)
           .then((responseCreate) => {
             const { json } = responseCreate;
-            expect(json.message).toBe(
-              'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"'
-            );
+            expect(json.message).toBe('O campo "watchedAt" deve ter o formato "dd/mm/aaaa"');
           });
       });
   });

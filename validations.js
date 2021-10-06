@@ -8,6 +8,7 @@ const validUserName = (req, res, next) => {
 
 const validEmail = (req, res, next) => {
   const { email } = req.body;
+  console.log(req.body);
   if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
@@ -30,19 +31,20 @@ const validPassword = (req, res, next) => {
   next();
 };
 
-const validToken = (req, res, next) => {
-  console.log(req.headers);
-  const token = req.headers.authorization;
-  const tokenRegex = /^[a-zA-Z0-9-_]{12}$/;
-  if (!token || !tokenRegex.test(token)) {
-    return res.status(400).json({ message: 'Invalid Token' });
+const validAge = (req, res, next) => {
+  const { age } = req.body;
+  if (!age) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
 
 module.exports = {
+  validAge,
   validUserName,
   validEmail,
   validPassword,
-  validToken,
 };

@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 const { talkersList } = require('./challenges/talker');
 
 const app = express();
@@ -36,6 +37,16 @@ app.get('/talker/:id', (req, res) => {
   }
 
   res.status(200).json(chooseTalker);
+});
+
+// ? ================================= Desafios 3 ======================================
+
+const { validateEmail } = require('./middleware/validateEmail');
+const { validatePassword } = require('./middleware/validatePassword');
+
+app.post('/login', validateEmail, validatePassword, (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(200).json({ token });
 });
 
 // ! ================================= Fim Desafios ====================================

@@ -1,9 +1,17 @@
 const express = require('express');
+const fs = require('fs').promises;
 const bodyParser = require('body-parser');
-
-const router = express.Router();
-const { getTalkers, setTalker } = require('./readTalker');
-const { IDVerification } = require('./authTalkers');
+const { getTalkers } = require('./readTalker');
+const {
+  TokenCreation,
+  IDVerification,
+  TokenVerification,
+  ratedVerification,
+  EmailVerification,
+  PasswordVerification,
+  watchedAtVerification,
+  nameAndAgeVerification,
+} = require('./authTalkers');
 
 const app = express();
 app.use(bodyParser.json());
@@ -29,11 +37,32 @@ app.get('/talker', (_req, res) => {
 
 // Requisito 2
 
-router.get('/talker/:id', IDVerification, (req, res) => {
+app.get('/talker/:id', IDVerification, (req, res) => {
   const { id } = req.params;
   const talkers = getTalkers();
-  const filteredTalker = talkers.find((talker) => Number(talker.id) === Number(id));
-  res.status(200).send(filteredTalker);
+  const filteredTalker = talkers.find(
+    (talker) => Number(talker.id) === Number(id),
+  );
+  return res.status(200).json(filteredTalker);
 });
 
-module.exports = router;
+// Requisito 3
+
+app.post('/login', EmailVerification, PasswordVerification, TokenCreation);
+
+// Requisito 4
+
+app.post(
+  '/talker',
+  TokenVerification,
+  watchedAtVerification,
+  ratedVerification,
+  nameAndAgeVerification,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const talkers = getTalkers();
+    talkers.push({ id: talkers.length + 1, name, age, talk });
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
+    return res.status(201).json({ id: talkers.length, name, age, talk });
+  },
+);

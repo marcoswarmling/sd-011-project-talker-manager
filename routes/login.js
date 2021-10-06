@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
   if (!errorValidate) {
     return res.status(200).json(tokenGenerator(16));
   }
-  return res.status(404).json(errorValidate);
+  return res.status(400).json(errorValidate);
 });
 
 module.exports = router;

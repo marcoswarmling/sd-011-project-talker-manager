@@ -48,7 +48,7 @@ const validationAddTalkerTalk = (req, res, next) => {
      });
   }
   const { watchedAt, rate } = talk;
-  if (!watchedAt || !rate) {
+  if (!watchedAt || typeof (rate) !== 'number') {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
      });
@@ -95,9 +95,9 @@ router.get('/:id', async (req, res) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-router.post('/', validationAddTalkerName, validationAddTalkerAge, 
-  validationAddTalkerTalk, validationAddTalkerTalkRate, 
-  validationAddTalkerTalkWatchedAt, authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, validationAddTalkerName, 
+validationAddTalkerAge, validationAddTalkerTalk,
+validationAddTalkerTalkRate, validationAddTalkerTalkWatchedAt, async (req, res) => {
   const { name, age, talk } = req.body;
   const newTalker = {
     name,

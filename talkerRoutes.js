@@ -5,10 +5,18 @@ const writeTalkerFile = require('./writeTalkerFile');
 const validateRegister = require('./middleware/validateRegister');
 const validateToken = require('./middleware/validateToken');
 
-router.get('/', rescue(async (req, res) => {
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  try {
     const file = await readTalkerFile();
-    return res.status(200).json(file);
-}));
+    if (!q) return res.status(200).json(file);
+    const filteredTalker = file.filter((t) => t.name.includes(q));
+    if (filteredTalker.length === 0) return res.status(200).json([]);
+    return res.status(200).json(filteredTalker);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 router.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
@@ -18,6 +26,11 @@ router.get('/:id', rescue(async (req, res) => {
   if (talkerId === -1) throw new Error('404');
 
   return res.status(200).json(file[talkerId]);
+}));
+
+router.get('/', rescue(async (req, res) => {
+  const file = await readTalkerFile();
+  return res.status(200).json(file);
 }));
 
 router.post('/', validateToken, validateRegister, async (req, res) => {

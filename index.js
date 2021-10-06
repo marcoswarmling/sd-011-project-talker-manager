@@ -153,6 +153,17 @@ app.post('/talker', validateToken, validateName,
    return res.status(201).send(newTalk);
 });
 
+app.put('/talker/:id', validateToken, validateName,
+validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {
+  const fileData = await readTalker();
+  const fileDataJson = JSON.parse(fileData);
+  const { name, talk, age } = req.body;
+  const talkIndex = fileDataJson.findIndex((t) => t.id === req.params.id);
+  fileData[talkIndex] = { ...fileData[talkIndex], name, age, talk };
+  fs.writeFile('./talker.json', JSON.stringify(fileData));
+    return res.status(200).send(fileData[talkIndex]);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

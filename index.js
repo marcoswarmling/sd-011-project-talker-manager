@@ -95,6 +95,30 @@ propertiesVerify,
   res.status(201).json(newTalker);
 });
 
+// 5 - Crie o endpoint PUT /talker/:id
+app.put('/talker/:id',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  verifyExistsTalk,
+  rateValidation,
+  talkValidation,
+  propertiesVerify,
+  (req, res) => {
+  const { name, age, talk } = req.body;
+
+  const data = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+
+  const selectedIndexUser = data.findIndex((t) => t.id === Number(req.params.id));
+
+  data[selectedIndexUser].name = name;
+  data[selectedIndexUser].age = age;
+  data[selectedIndexUser].talk = talk;
+
+  fs.writeFileSync('./talker.json', JSON.stringify(data));
+  res.status(200).json(data[selectedIndexUser]);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

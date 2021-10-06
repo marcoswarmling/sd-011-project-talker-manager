@@ -4,7 +4,6 @@ function checkTalk(req, res, next) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  const { talk: { watchedAt, rate } } = req.body;
   if (!('watchedAt' in talk) || !('rate' in talk)) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });

@@ -1,5 +1,7 @@
 const router = require('express').Router();
 
+const { getToken } = require('../middleware/token');
+
 const {
   searchTalk,
   deleteTalker,
@@ -9,11 +11,8 @@ const {
 } = require('../middleware/middleware');
 
 const {
-  getAllTalkers, 
-  getTalkerById,
   validEmail,
   validPassword,
-  getToken,
   validToken,
   validRate,
   validWatchedAt,

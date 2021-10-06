@@ -14,7 +14,6 @@ app.get('/', (_request, response) => {
 });
 
 const fechAPI = './talker.json';
-const msg = 'Pessoa palestrante não encontrada';
 
 // Requisito 1
 

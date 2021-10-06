@@ -2,13 +2,13 @@
  const fs = require('fs');
 
 const talkerJSON = './talker.json';
-const { 
+ /* const { 
   validateToken,
   validateAge,
   validateName,
   validateTalk,
   validateTalkIncrements,
-} = require('../middlewares/ValidatePostTalker');
+} = require('../middlewares/ValidatePostTalker'); */
 
  const router = express.Router();
 
@@ -18,7 +18,7 @@ router.get('/', (_req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
- router.get(
+/* router.get(
   '/search',
   validateToken,
   (req, res) => {
@@ -76,7 +76,7 @@ router.delete('/:id', validateToken, (req, res) => {
       });
   });
 
-/* router.get('/:id', (req, res) => {
+ router.get('/:id', (req, res) => {
   const { id } = req.params;
   const talkers = fs.readFileSync('./talker.json', 'utf8');
   const result = JSON.parse(talkers);

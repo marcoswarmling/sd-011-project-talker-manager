@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { getToken } = require('../middleware/token');
+const { getToken } = require('../middleware/Token');
 
 const {
   searchTalk,

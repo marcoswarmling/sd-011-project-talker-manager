@@ -79,6 +79,21 @@ validateObjTalk, validateRate,
   res.status(200).json(talkersAsync[findTalker]);
  }));
 
+app.delete('/talker/:id', validateToken, rescue(async (req, res) => {
+  const talkersAsync = await talkers.getTalkers();
+  const { id } = req.params;
+
+  const deleteTalker = talkersAsync.findIndex((t) => t.id === parseInt(id, 10));
+
+  if (deleteTalker === -1) {
+    return res.status(404).json({ message: 'Id not found' });
+  }
+
+  talkersAsync.splice(deleteTalker, 1);
+  await talkers.setTalkers(talkersAsync);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}));
+
 app.listen(PORT, () => {
   console.log('Online');
 });

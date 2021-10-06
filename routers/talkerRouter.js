@@ -38,8 +38,7 @@ router.post('/talker', withOutName, tokenValid, ageValid, talkValid, async (req,
   const id = talker.length + 1;
 
   talker.push({ id, name, age, talk });
-  const writeFile = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
-  writeFile(talker);
+  await fs.writeFile('./talker.json', JSON.stringify(talker));
   return res.status(201).json({ name, age, talk, id });
 });
 

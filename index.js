@@ -27,28 +27,28 @@ app.get('/', async (_request, response) => {
 
 // requisito 2
 
-// app.get('/talker/:id', async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const data = await fs.readFile('./talker.json');
-//     const findData = JSON.parse(data);
-//     const findId = findData.find((e) => e.id === parseInt(id, 10) && [e]);
-//     if (!findId) {
-//       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-//     } 
-//     return res.status(HTTP_OK_STATUS).json(findId);
-//   } catch (error) {
-//     res.status(400).json({ message: `Erro: ${error.code}` });
-//   }
-// });
-
-app.post('/', async (req, res) => {
-  const { id, name } = req.body;
-  const data = await fs.readFile('./talker.json');
-  const findData = JSON.parse(data);
-  console.log(id, name, findData);
-  res.status(HTTP_OK_STATUS).json(JSON.parse(data));
+app.get('/talker/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await fs.readFile('./talker.json');
+    const findData = JSON.parse(data);
+    const findId = findData.find((e) => e.id === parseInt(id, 10) && [e]);
+    if (!findId) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    } 
+    return res.status(HTTP_OK_STATUS).json(findId);
+  } catch (error) {
+    res.status(400).json({ message: `Erro: ${error.code}` });
+  }
 });
+
+// app.post('/', async (req, res) => {
+//   const { id, name } = req.body;
+//   const data = await fs.readFile('./talker.json');
+//   const findData = JSON.parse(data);
+//   console.log(id, name, findData);
+//   res.status(HTTP_OK_STATUS).json(JSON.parse(data));
+// });
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

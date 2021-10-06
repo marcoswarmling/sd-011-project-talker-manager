@@ -21,17 +21,6 @@ router.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).send(talker);
 });
 
-router.get('/talker/:id', (req, res) => {
-  const { id } = req.params;
-  const data = fs.readFileSync(talkerJSON);
-  const talker = JSON.parse(data);
-  const talkerId = talker.find((person) => person.id === Number(id));
-  if (!talkerId) {
-    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  }
-  res.status(HTTP_OK_STATUS).send(talkerId);
-});
-
 router.post('/login', validEmail, validPassword, (_req, res) => {
   const obj = { token: tokenValue };
   return res.status(200).json(obj);
@@ -73,6 +62,30 @@ router.delete('/talker/:id', validateToken, (req, res) => {
   talkerList.splice(index, 1);
   fs.writeFileSync(talkerJSON, JSON.stringify(talkerList));
   return res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+// 7 - Crie o endpoint GET /talker/search?q=searchTerm
+router.get('/talker/search', validateToken, (req, res) => {
+  const { q } = req.query;
+  const data = fs.readFileSync(talkerJSON);
+  const talkerList = JSON.parse(data);
+  console.log(q);
+  const talker = talkerList.filter((person) => person.name.toLowerCase().includes(q.toLowerCase()));
+  if (talker.length === 0) {
+    return res.status(404).json(talkerList);
+  }
+  return res.status(200).send(talker);
+});
+
+router.get('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  const data = fs.readFileSync(talkerJSON);
+  const talker = JSON.parse(data);
+  const talkerId = talker.find((person) => person.id === Number(id));
+  if (!talkerId) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(HTTP_OK_STATUS).send(talkerId);
 });
 
 module.exports = router;

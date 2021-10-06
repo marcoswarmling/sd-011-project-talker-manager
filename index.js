@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const app = express();
 app.use(bodyParser.json());
@@ -8,9 +8,9 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-function readTalker() {
-  const filedata = fs.readFile('./talker.json', 'utf8');
-  return filedata;
+async function readTalker() {
+  const fileData = await fs.readFile('./talker.json', 'utf8');
+  return fileData;
 }
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -19,22 +19,26 @@ app.get('/', (_request, response) => {
 });
 
 // Crie o endpoint GET /talker
-app.get('/talker', (_request, response) => {
-    response.status(HTTP_OK_STATUS).send(readTalker);
+app.get('/talker', async (_request, response) => {
+  const fileData = await readTalker();  
+    if (!fileData) {
+      response.status(HTTP_OK_STATUS).send([]);
+    }    
+      response.status(HTTP_OK_STATUS).send(JSON.parse(fileData));  
 });
 
 // Crie o endpoint GET /talker/:id
-app.get('/talker/:id', (req, response) => {
+app.get('/talker/:id', async (req, response) => {
   const { id } = req.params;
-  const filedata = readTalker;
-  const people = filedata.find((p) => p.id === Number(id));
-  if (people) {
-    response.status(HTTP_OK_STATUS).send(people);
-  } else {
-    response.status(404).send({
-      message: 'Pessoa palestrante não encontrada',
-    });
-  }
+  const fileData = await readTalker();
+    const people = JSON.parse(fileData).find((p) => p.id === Number(id));
+    if (people) {
+      response.status(HTTP_OK_STATUS).send(people);
+    } else {
+      response.status(404).send({
+        message: 'Pessoa palestrante não encontrada',
+      });    
+    }
 });
 
 const validateEmail = (req, res, next) => {

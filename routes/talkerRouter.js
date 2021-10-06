@@ -37,4 +37,21 @@ router
   res.status(201).json({ id, name, age, talk });
 });
 
+router
+  .put('/:id',
+  validateToken, validateName, validateAge, validateTalk, validateRate, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+
+  const data = await readTalkerFile();
+
+  const indexProduct = data.findIndex((p) => p.id === Number(id));
+
+  data[indexProduct] = { ...data[indexProduct], name, age, talk };
+
+  await writeTalkerFile(data);
+
+  res.status(200).json(data[indexProduct]);
+});
+
 module.exports = router;

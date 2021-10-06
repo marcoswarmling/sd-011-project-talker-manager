@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./src/talker.js');
+const middleWares = require('./middleWares/index');
+const functionsLogin = require('./functionsLogin/index');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,6 +16,12 @@ app.get('/', (_request, response) => {
 });
 
 app.use(router);
+
+app.post('./login', middleWares.login, (req, res) => {
+  res.status(200).json({
+    token: `${functionsLogin.getToken()}`,
+  });
+});
 
 app.listen(PORT, () => {
   console.log('Online');

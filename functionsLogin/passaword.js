@@ -1,7 +1,7 @@
-const passawordValidate = (passaword) => {
-  const passCheck = 6;
+const passawordValidate = (password) => {
+const passwordRegexCheck = /^(\w{6,})/i;
 
-  if (passaword < passCheck) return false;
+  if (!passwordRegexCheck.test(password)) return false;
 
   return true;
 };

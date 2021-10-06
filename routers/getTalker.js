@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs');
-const { validateToken } = require('../middlewares/ValidatePostTalker');
+//const { validateToken } = require('../middlewares/ValidatePostTalker');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.get('/', (_req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
-router.get(
+/*router.get(
   '/search',
   validateToken,
   (req, res) => {
@@ -35,5 +35,5 @@ router.get('/:id', (req, res) => {
 }
   return res.status(200).json(filteredTalkers);
 });
-
+*/
 module.exports = router;

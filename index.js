@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const db = './talker.json';
 
 function generateToken(length) {
   let result = '';
@@ -62,18 +63,31 @@ const validateAgeMiddleware = (req, res, next) => {
 
 const validateTalkMiddleware = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk) {
     return res.status(400).json({ message:
        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
 };
 
-const validateRateAndDateMiddleware = (req, res, next) => {
-  const { talk: { watchedAt, rate } } = req.body;
+const validateDateMiddleware = (req, res, next) => {
+  const { talk: { watchedAt } } = req.body;
   const regex = /^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/-]\d{4}$/;
+  if (!watchedAt) {
+    return res.status(400).json({ message: 
+      'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
   if (!regex.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  next();
+};
+
+const validateRateMiddleware = (req, res, next) => {
+  const { talk: { rate } } = req.body;
+  if (!rate && rate !== 0) {
+    return res.status(400).json({ message:
+      'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   if (Number(rate) < 1 || Number(rate) > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
@@ -88,7 +102,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', async (req, res) => {
   try {
-    const talker = await fs.readFile('./talker.json');
+    const talker = await fs.readFile(db);
     res.status(200).json(JSON.parse(talker));
   } catch (error) {
     res.status(200).json([]);
@@ -98,7 +112,7 @@ app.get('/talker', async (req, res) => {
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const talker = await fs.readFile('./talker.json', 'utf8');
+    const talker = await fs.readFile(db, 'utf8');
     const teste = JSON.parse(talker).find((t) => t.id === parseInt(id, 10));
     if (!teste) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     res.status(200).json(teste);
@@ -115,13 +129,29 @@ app.post('/login', authMiddleware, (req, res) => {
 app.post('/talker',
  validateTokenMiddleware,
  validateNameMiddleware,
- validateAgeMiddleware, validateTalkMiddleware, validateRateAndDateMiddleware, async (req, res) => {
+ validateAgeMiddleware,
+ validateTalkMiddleware, validateDateMiddleware, validateRateMiddleware, async (req, res) => {
   const { name, age, talk } = req.body;
-  const response = await fs.readFile('./talker.json', 'utf8');
+  const response = await fs.readFile(db, 'utf8');
   const talkers = JSON.parse(response);
   talkers.push({ id: talkers.length + 1, name, age, talk });
-  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  await fs.writeFile(db, JSON.stringify(talkers));
   res.status(201).json({ id: talkers.length, name, age, talk });
+});
+
+app.put('/talker/:id', validateTokenMiddleware,
+validateNameMiddleware,
+validateAgeMiddleware,
+validateTalkMiddleware, validateDateMiddleware, validateRateMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const response = await fs.readFile(db, 'utf8');
+  const talkers = JSON.parse(response);
+  const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+  if (talkerIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
+  talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+  await fs.writeFile(db, JSON.stringify(talkers));
+  res.status(200).json(talkers[talkerIndex]);
 });
 
 app.listen(PORT, () => {

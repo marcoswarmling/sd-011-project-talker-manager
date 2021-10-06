@@ -20,6 +20,29 @@ router.get('/', async (_request, response) => {
   }
 });
 
+router.get('/search',
+  m.tokenVerify,
+  async (req, res) => {
+    const { q } = req.query;
+    try {
+      const data = await talkerData(PATH);
+
+      if (!q || q === '') {
+        return res.status(200).json(data);
+      }
+      const filterQuery = data
+        .filter(({ id, name, age, talk: { watchedAt, rate } }) => name.includes(q)
+          || watchedAt.includes(q)
+          || rate === Number(q)
+          || age === Number(q)
+          || id === Number(q));
+
+      res.status(200).json(filterQuery);
+    } catch (error) {
+      return res.status(500).end();
+    }
+  });
+
 router.get('/:id', async (request, response) => {
   const { id } = request.params;
   try {
@@ -82,29 +105,6 @@ router.delete('/:id',
       res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
     } catch (error) {
       res.status(500).end();
-    }
-  });
-
-router.get('/search',
-  m.tokenVerify,
-  async (req, res) => {
-    const { q } = req.query;
-    try {
-      const data = await talkerData(PATH);
-
-      if (!q || q === '') {
-        return res.status(200).json(data);
-      }
-      const filterQuery = data
-        .filter(({ id, name, age, talk: { watchedAt, rate } }) => name.includes(q)
-          || watchedAt.includes(q)
-          || rate === Number(q)
-          || age === Number(q)
-          || id === Number(q));
-
-      res.status(200).json(filterQuery);
-    } catch (error) {
-      return res.status(400).end();
     }
   });
 

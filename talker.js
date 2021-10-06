@@ -104,7 +104,7 @@ router.get('/search',
 
       res.status(200).json(filterQuery);
     } catch (error) {
-      return res.status(500).end();
+      return res.status(400).end();
     }
   });
 

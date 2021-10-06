@@ -1,6 +1,6 @@
 const HTTP_ERROR_STATUS = 400;
 
-const passwordValid = async (req, res, next) => {
+const passwordValid = (req, res, next) => {
   const { password } = req.body;
 
   if (!password || password === '') {

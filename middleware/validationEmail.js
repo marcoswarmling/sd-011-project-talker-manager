@@ -1,6 +1,6 @@
 const HTTP_ERROR_STATUS = 400;
 
-const emailValid = async (req, res, next) => {
+const emailValid = (req, res, next) => {
   const { email } = req.body;
 
   const format = (/\S+@\S+\.\S+/).test(email);

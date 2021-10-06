@@ -6,6 +6,7 @@ const fs = require('fs').promises;
 const token = require('./middleware/token');
 const emailValid = require('./middleware/validationEmail');
 const passwordValid = require('./middleware/validationPassword');
+const tokenValid = require('./middleware/validationToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -45,6 +46,10 @@ app.get('/talker/:id', async (req, res) => {
 // requisito 3
 
 app.post('/login', emailValid, passwordValid, token);
+
+// requisito 4
+
+app.post('/talker', tokenValid);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

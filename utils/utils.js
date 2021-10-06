@@ -1,6 +1,8 @@
 const fs = require('fs').promises;
 const crypto = require('crypto');
 
+const PATH = './talker.json';
+
 const readFileContent = async (path) => {
   try {
     const content = await fs.readFile(path, 'utf-8');
@@ -10,10 +12,18 @@ const readFileContent = async (path) => {
   }
 };
 
+const updateFileContent = async (path, talkers) => {
+  try {
+    await fs.writeFile(path, JSON.stringify(talkers));
+    return talkers;
+  } catch (err) {
+    return null;
+  }
+};
+
 const writeFileContent = async (path, newTalker) => {
   try {
     const currentContent = await readFileContent(path);
-    // const newTalkerWithId = { ...newTalker, id: currentContent.length + 1 };
     currentContent.push(newTalker);
     await fs.writeFile(path, JSON.stringify(currentContent));
     return newTalker;
@@ -24,7 +34,7 @@ const writeFileContent = async (path, newTalker) => {
 
 const getTalkerById = async (id) => {
   try {
-    const talkers = await readFileContent('./talker.json');
+    const talkers = await readFileContent(PATH);
     const talkerById = talkers.find((talker) => talker.id === Number(id));
   
     return talkerById;
@@ -35,32 +45,24 @@ const getTalkerById = async (id) => {
 
 const generateToken = () => crypto.randomBytes(8).toString('hex');
 
-// const editTalker = async (id, editTalkerInfo) => {
-//   try {
-//     console.log('id', id);
-//     console.log('editinfo', editTalkerInfo);
-//     const talkers = await readFileContent('./talker.json');
-//     console.log('talkers', talkers);
-//     const editedTalkers = talkers.filter((talker) => {
-//       if (talker.id === id) {
-//         return { editTalkerInfo };
-//       }
-//       return talker;
-//     });
-//     console.log(editedTalkers);
-//     await writeFileContent('.talker.json', editedTalkers);
-//     return editTalkerInfo;
-//   } catch (err) {
-//     return null;
-//   }
-// };
+const editTalker = async (id, editTalkerInfo) => {
+  try {
+    const { name, age, talk } = editTalkerInfo;
+    const talkers = await readFileContent(PATH);
+    const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+    const idToNumber = Number(id);
+    talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk, id: idToNumber };
+    await updateFileContent(PATH, talkers);
+    return talkers[talkerIndex];
+  } catch (err) {
+    return null;
+  }
+};
 
 const deleteTalker = async (id) => {
   try {
     const talkers = await readFileContent('./talker.json');
-    console.log('talkers', talkers);
     const newTalkers = talkers.filter((talker) => talker.id !== Number(id));
-    console.log(newTalkers);
     await fs.writeFile('./talker.json', JSON.stringify(newTalkers));
     return newTalkers;
   } catch (err) {
@@ -74,5 +76,5 @@ module.exports = {
   generateToken, 
   writeFileContent,
   deleteTalker,
-  // editTalker,
+  editTalker,
 };

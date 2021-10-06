@@ -4,7 +4,7 @@ const {
   readFileContent,
   getTalkerById,
   writeFileContent,
-  // editTalker,
+  editTalker,
   deleteTalker,
 } = require('../utils/utils');
 
@@ -46,21 +46,21 @@ router.post(
   },
 );
 
-// router.put(
-//   '/:id',
-//   tokenAuthentication,
-//   nameValidation,
-//   ageValidation,
-//   talkValidation,
-//   rateValidation,
-//   watchedAtValidation,
-//   async (req, res) => {
-//     const { id } = req.params;
-//     const editTalkerInfo = { ...req.body, id };
-//     const editedTalker = await editTalker(id, editTalkerInfo);
-//     return res.status(200).json(editedTalker);
-//   },
-// );
+router.put(
+  '/:id',
+  tokenAuthentication,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  rateValidation,
+  watchedAtValidation,
+  async (req, res) => {
+    const { id } = req.params;
+    const editTalkerInfo = req.body;
+    const updatedTalkers = await editTalker(id, editTalkerInfo);
+    return res.status(200).json(updatedTalkers);
+  },
+);
 
 router.delete(
   '/:id',

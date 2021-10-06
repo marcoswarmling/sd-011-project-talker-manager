@@ -38,9 +38,12 @@ router.post(
 
   async (req, res) => {
     const result = req.body;
+
     const readJson = await readTalker(PATH_FILE);
+
     result.id = readJson[readJson.length - 1].id + 1;
     readJson.push(result);
+    
     await writeTalker(PATH_FILE, readJson);
     res.status(201).json(result);
   },
@@ -69,6 +72,19 @@ router.put(
     readJson[result] = { ...dataIn };
     await writeTalker(PATH_FILE, readJson);
     res.status(200).json(dataIn);
+  },
+);
+
+router.delete(
+  '/:id',
+  validateToken,
+
+  async (req, res) => {
+    const { id } = req.params;
+    const readJson = await readTalker(PATH_FILE);
+    const result = readJson.filter((item) => item.id !== parseInt(id, 10));
+    await writeTalker(PATH_FILE, result);
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 

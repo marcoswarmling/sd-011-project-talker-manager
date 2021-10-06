@@ -1,8 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./src/talker.js');
-const middleWares = require('./middleWares/index');
-const functionsLogin = require('./functionsLogin/index');
+const { login } = require('./src');
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,11 +11,7 @@ const PORT = '3000';
 
 app.use(router);
 
-app.post('./login', middleWares.login, (_req, res) => {
-  res.status(200).json({
-    token: `${functionsLogin.getToken()}`,
-  });
-});
+app.post('/login', login);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

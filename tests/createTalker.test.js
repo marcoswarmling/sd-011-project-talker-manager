@@ -55,7 +55,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
             expect(require('../talker.json')).toEqual(
               expect.arrayContaining(
                 [expect.objectContaining(postTalkerMock)]
-                )
+              )
             );
             const { json } = responseCreate;
             expect(json).toEqual(postTalkerMock);
@@ -416,16 +416,16 @@ describe('4 - Crie o endpoint POST /talker', () => {
       })
       .then(() =>
         frisby
-          .post(`${url}/talker`, {
-            name: 'Zendaya Maree',
-            age: 17,
-            talk: { rate: 5, watchedAt: '25/09/2020' },
-          })
-          .expect('status', 401)
-          .then((responseCreate) => {
-            const { json } = responseCreate;
-            expect(json.message).toBe('Token não encontrado');
-          })
+        .post(`${url}/talker`, {
+          name: 'Zendaya Maree',
+          age: 17,
+          talk: { rate: 5, watchedAt: '25/09/2020' },
+        })
+        .expect('status', 401)
+        .then((responseCreate) => {
+          const { json } = responseCreate;
+          expect(json.message).toBe('Token não encontrado');
+        })
       );
   });
 
@@ -439,24 +439,24 @@ describe('4 - Crie o endpoint POST /talker', () => {
       })
       .then(() =>
         frisby
-          .setup({
-            request: {
-              headers: {
-                Authorization: 99999999,
-                'Content-Type': 'application/json',
-              },
+        .setup({
+          request: {
+            headers: {
+              Authorization: 99999999,
+              'Content-Type': 'application/json',
             },
-          })
-          .post(`${url}/talker`, {
-            name: 'Zendaya Maree',
-            age: 24,
-            talk: { rate: 5, watchedAt: '20/10/2020' },
-          })
-          .expect('status', 401)
-          .then((responseCreate) => {
-            const { json } = responseCreate;
-            expect(json.message).toBe('Token inválido');
-          })
+          },
+        })
+        .post(`${url}/talker`, {
+          name: 'Zendaya Maree',
+          age: 24,
+          talk: { rate: 5, watchedAt: '20/10/2020' },
+        })
+        .expect('status', 401)
+        .then((responseCreate) => {
+          const { json } = responseCreate;
+          expect(json.message).toBe('Token inválido');
+        })
       );
   });
 });

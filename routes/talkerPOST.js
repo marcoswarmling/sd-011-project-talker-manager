@@ -2,12 +2,14 @@ const express = require('express');
 const fs = require('fs').promises;
 
 const app = express();
+// https://www.regextester.com/99555
+const regexDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
 
 app.use(express.json());
 
 function validToken(req, res, next) {
-  const { token } = req.headers;
-  if (token === undefined) return res.status(401).json({ message: 'Token não encontrado' });
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
   if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   next();
 }
@@ -37,8 +39,6 @@ function validAge(req, res, next) {
 function validTalke(req, res, next) {
   const { talk } = req.body;
   const { watchedAt, rate } = talk;
-  // https://www.regextester.com/99555
-  const regexDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
 
   if (!regexDate.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -64,20 +64,20 @@ function validObjTake(req, res, next) {
 
 module.exports = app.post('/talker',
   validToken, validName, validAge,
-  validTalke, validObjTake, async (req, res) => {
+  validObjTake, validTalke, async (req, res) => {
     const { name, age, talk } = req.body;
-    const readFile = await fs.readFile('./talker.json', 'utf-8').catch(() =>
-      res.status(200).json([]));
-    const parseJson = JSON.parse(readFile);
+    const readFile = await fs.readFile('./talker.json');
+    const parseJson = await JSON.parse(readFile);
     const objectTaker = {
-      id: parseJson.length + 1,
       name,
       age,
+      id: parseJson.length + 1,
       talk: {
         ...talk,
       },
     };
+
     parseJson.push(objectTaker);
-    fs.writeFile('./talker.json', JSON.stringify(parseJson));
-    res.status(201).json(objectTaker);
+    await fs.writeFile('./talker.json', JSON.stringify(parseJson));
+    return res.status(201).json(objectTaker);
   });

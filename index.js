@@ -24,6 +24,21 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// REQUISITO 7
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+
+  const talkerList = await fs.readFile(talkerJsonFile, 'utf-8');
+  const newtalkerList = JSON.parse(talkerList);
+
+  const filteredList = newtalkerList.filter((person) => person.name.includes(q));
+
+  if (!q || q === '') return res.status(200).json(newtalkerList);
+  if (!filteredList) return res.status(200).json([]);
+  
+  return res.status(200).json(filteredList);
+});
+
 // REQUISITO 1
 app.get('/talker', async (_req, res) => {
   const data = await fs.readFile(talkerJsonFile, 'utf-8');

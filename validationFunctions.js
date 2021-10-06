@@ -1,26 +1,19 @@
-// peguei do link https://stackoverflow.com/questions/8532406/create-a-random-token-in-javascript-based-on-user-details
-
-function generateToken(length) {
-  // edit the token allowed characters
-  const a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');
-  const b = [];  
-  for (let i = 0; i < length; i += 1) {
-      const j = (Math.random() * (a.length - 1)).toFixed(0);
-      b[i] = a[j];
-  }
-  return b.join('');
-}
-
 function emailValidation(email) {
   const regex = /\S+@\S+\.\S+/;
   return regex.test(email);
 }
 
 const tokenValidation = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
-  next();
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  return next();
 };
 
 const nameValidation = (req, res, next) => {
@@ -41,23 +34,36 @@ const ageValidation = (req, res, next) => {
   next();
 };
 
-const watchedAtAndDateValidation = (req, res, next) => {
-  const { talk: { watchedAt, rate } } = req.body;
-  const dateRegex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
-  if (!watchedAt.match(dateRegex)) {
-    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+function watchedAtValidation(req, res, next) {
+  const { talk } = req.body;
+  if (!talk || talk === '' || !talk.watchedAt || talk.rate === undefined) {
+    res.status(400).json({ message:
+      'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  next();
+}
+
+const dateValidation = (req, res, next) => {
+  const { talk } = req.body;
+   const date = /^[0-9]{2}\/{1}[0-9]{2}\/{1}[0-9]{4}$/g;
+  if (!date.test(talk.watchedAt)) {
+    return res
+      .status(400)
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (talk.rate < 1 || talk.rate > 5) {
+    return res
+      .status(400)
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
 
 module.exports = {
-  generateToken,
   emailValidation,
   tokenValidation,
   nameValidation,
   ageValidation,
-  watchedAtAndDateValidation,
+  dateValidation,
+  watchedAtValidation,
 };

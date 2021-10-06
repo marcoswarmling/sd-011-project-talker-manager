@@ -23,10 +23,23 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', rescue(async (_req, res) => {
   const talkersAsync = await talkers.getTalkers();
-
+  
   if (!talkersAsync) return res.status(200).json([]);
   
   res.status(200).json(talkersAsync);
+}));
+
+app.get('/talker/search', validateToken, rescue(async (req, res) => {
+  const talkersAsync = await talkers.getTalkers();
+  const { q } = req.query;
+
+  const searchTalker = talkersAsync.filter((t) => t.name.includes(q));
+
+  if (!q || q === '') {
+    return res.status(200).json(talkersAsync);
+  }
+
+  res.status(200).json(searchTalker);
 }));
 
 // Requisito 2 - Crie o endpoint GET /talker/:id

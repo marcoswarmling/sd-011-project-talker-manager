@@ -42,6 +42,17 @@ talkerRouter.post(
   }),
 );
 
+talkerRouter.get(
+  '/search',
+  rescue(validateToken),
+  rescue(async (request, response) => {
+    const { q: searchTerm } = request.query;
+    const file = await readTalker();
+    const data = file.filter((item) => item.name.includes(searchTerm));
+    response.status(HTTP_OK_STATUS).json(data);
+  }),
+);
+  
 talkerRouter.get('/:id', rescue(async (request, response) => {
   const { id } = request.params;
   const { talkerNotFound } = errorMessages;

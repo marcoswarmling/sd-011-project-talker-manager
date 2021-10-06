@@ -17,17 +17,35 @@ const {
   watchedAtValidation,
 } = require('../middlewares/middlewares');
 
-router.get('/', async (_req, res) => {
-  const fileContent = await readFileContent('./talker.json') || [];
-  res.status(200).json(fileContent);
-});
+router.get(
+  '/search',
+  tokenAuthentication,
+  async (req, res) => {
+    const { searchTerm } = req.query;
+    const talkers = await readFileContent('./talker.json') || [];
+
+    if (!searchTerm || searchTerm === '') {
+      return res.status(200).json(talkers);
+    }
+
+    const filteredTalkersByQuery = talkers.filter((talker) => talker.name.includes(searchTerm)); 
+    if (filteredTalkersByQuery.length === 0) return res.status(200).json([]);
+
+    return res.status(200).json(filteredTalkersByQuery);
+  },
+);
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talkerById = await getTalkerById(id);
   if (!talkerById) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-
+  
   res.status(200).json(talkerById);
+});
+
+router.get('/', async (_req, res) => {
+  const fileContent = await readFileContent('./talker.json') || [];
+  res.status(200).json(fileContent);
 });
 
 router.post(

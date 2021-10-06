@@ -26,11 +26,17 @@ const passwordValidation = (req, res, next) => {
 
 const tokenAuthentication = (req, res, next) => {
   const { authorization } = req.headers;
+  // console.log('req.body.headers', req.body);
+  if (!authorization) {
+    // console.log('autorization', authorization);
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
 
-  if (!authorization) res.status(401).json({ message: 'Token não encontrado' });
-
-  if (authorization.length !== 16) res.status(401).json({ message: 'Token inválido' });
-
+  if (authorization.length !== 16) {
+    // console.log('authorization.length', authorization.length);
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  // console.log('passou');
   next();
 };
 

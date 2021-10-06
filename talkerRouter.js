@@ -32,7 +32,7 @@ router.get('/talker/:id', (req, res) => {
 
 router.post('/login', validEmail, validPassword, (_req, res) => {
   console.log('teste');
-  return res.status(201).json({ token: tokenValue });
+  return res.status(200).json({ token: tokenValue });
 });
 
 // 4 - Crie o EndPoint POST / talker

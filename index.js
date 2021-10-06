@@ -25,3 +25,17 @@ app.get('/talker', async (_req, res) => {
   res.status(400).json({ message: err.message });
 }
 });
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const talker = await fs.readFile('./talker.json', 'utf-8');
+    const dados = JSON.parse(talker).find((p) => p.id === Number(id));
+    if (!dados) {
+      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+    res.status(HTTP_OK_STATUS).json(dados);
+} catch (err) {
+  res.status(404).json({ message: err.message });
+}
+});

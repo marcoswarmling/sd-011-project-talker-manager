@@ -12,6 +12,16 @@ const {
 
 const PATHNAME = './talker.json';
 
+router.get('/search',
+validateToken,
+async (req, res) => {
+  const term = req.querry;
+  const result = await readFile(PATHNAME);
+  if (!term) return res.status(200).json(result);
+  const filteredList = result.filter((talker) => talker.name.includes(term));
+  res.status(200).json(filteredList);
+});
+
 router.get('/', async (_req, res) => {
   const result = await readFile(PATHNAME) || [];
   res.status(200).json(result);

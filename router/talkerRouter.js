@@ -5,6 +5,7 @@ const {
   writeContentFile,
   removeContentFile,
   editContentFile,
+  searchContentFile,
 } = require('../helpers/readWriteFile');
 const {
   validateToken,
@@ -20,6 +21,13 @@ const TALKER = './talker.json';
 router.get('/', async (_req, res) => {
   const talker = await readContentFile(TALKER) || [];
   res.status(200).json(talker);
+});
+
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query; 
+  console.log(req.query);
+  const searchContent = await searchContentFile(TALKER, q);
+  res.status(200).json(searchContent);
 });
 
 router.get('/:id', async (req, res) => {

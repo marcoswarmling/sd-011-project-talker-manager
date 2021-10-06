@@ -31,9 +31,17 @@ const removeContentFile = async (path, id) => {
   await fs.writeFile(path, JSON.stringify(newContent));
 };
 
+const searchContentFile = async (path, searchTerm) => {
+  const oldContent = await readContentFile(path) || [];
+  if (!searchTerm || searchTerm === '') return oldContent;
+  const searchContent = oldContent.filter((item) => item.name.includes(searchTerm));
+  return searchContent;
+};
+
 module.exports = {
   readContentFile,
   writeContentFile,
   editContentFile,
   removeContentFile,
+  searchContentFile,
 };

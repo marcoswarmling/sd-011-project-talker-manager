@@ -7,3 +7,5 @@ const getToken = (req, res) => {
     token: loginToken,
   });
 };
+
+module.exports = { getToken };

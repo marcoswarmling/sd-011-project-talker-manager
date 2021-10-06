@@ -25,7 +25,7 @@ function validateAge(req, res, next) {
 }
 
 function validateTalk(req, res, next) {
-  console.log(req.body);
+  // console.log(req.body);
   const { watchedAt, rate } = req.body.talk;
   const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/;
   

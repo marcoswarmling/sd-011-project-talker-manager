@@ -35,6 +35,7 @@ router.post(
   validateAge,
   validateTalkExists,
   validateTalk,
+
   async (req, res) => {
     const result = req.body;
     const readJson = await readTalker(PATH_FILE);
@@ -42,6 +43,32 @@ router.post(
     readJson.push(result);
     await writeTalker(PATH_FILE, readJson);
     res.status(201).json(result);
+  },
+);
+
+router.put(
+  '/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalkExists,
+  validateTalk,
+
+  async (req, res) => {
+    const { id } = req.params;
+    const dataIn = req.body;
+
+    dataIn.id = parseInt(id, 10);
+    const readJson = await readTalker(PATH_FILE);
+    const result = readJson.findIndex((item) => item.id === parseInt(id, 10));
+
+    if (result === -1) {
+      return res.status(404).json({ message: 'Palenstrante não encontrado' });
+    }
+
+    readJson[result] = { ...dataIn };
+    await writeTalker(PATH_FILE, readJson);
+    res.status(200).json(dataIn);
   },
 );
 

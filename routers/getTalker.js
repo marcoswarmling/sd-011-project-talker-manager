@@ -1,8 +1,8 @@
-// const express = require('express');
-// const fs = require('fs');
-// const { validateToken } = require('../middlewares/ValidatePostTalker');
+ const express = require('express');
+ const fs = require('fs');
+ const { validateToken } = require('../middlewares/ValidatePostTalker');
 
-/* const router = express.Router();
+ const router = express.Router();
 
 router.get('/', (_req, res) => {
   const file = fs.readFileSync('./talker.json', 'utf8');
@@ -24,7 +24,7 @@ router.get('/', (_req, res) => {
   },
 );
 
-router.get('/:id', (req, res) => {
+/* router.get('/:id', (req, res) => {
   const { id } = req.params;
   const talkers = fs.readFileSync('./talker.json', 'utf8');
   const result = JSON.parse(talkers);
@@ -32,6 +32,6 @@ router.get('/:id', (req, res) => {
 if (!talker) {
  return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 } return res.status(200).json(talker);
-});
+}); */
 
-module.exports = router; */
+module.exports = router; 

@@ -80,9 +80,9 @@ app.post('/talker',
     res.status(201).json(newTalker);
   });
 
-// ? ================================= Desafio 4 = ======================================
+// ? ================================= Desafio 5 ========================================
 
-function handleCreateNewTalker(talker, newTalker, id) {
+function handleCreateNewTalkerList(talker, newTalker, id) {
   const newList = talker.filter((e) => e.id !== Number(id));
 
   newList.push(newTalker);
@@ -107,8 +107,29 @@ app.put('/talker/:id', validateToken, validateName, validateAge,
     id: Number(id),
     talk,
   };
-  handleCreateNewTalker(talker, newTalker, id);
+  handleCreateNewTalkerList(talker, newTalker, id);
   res.status(200).json(newTalker);
+});
+
+// ? ================================= Desafio 5 ========================================
+
+function handleRemoveTalker(talker, id) {
+  const newList = talker.filter((e) => e.id !== Number(id));
+  writeNewTalker(JSON.stringify(newList));
+}
+
+app.delete('/talker/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+
+  const talker = talkersList();
+  const putNewTalkerInfos = talker.find((e) => e.id === Number(id));
+
+  if (!putNewTalkerInfos) {
+    return res.status(404)
+    .json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  handleRemoveTalker(talker, id);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 // ! ================================= Fim Desafios ====================================

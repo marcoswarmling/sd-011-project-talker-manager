@@ -1,8 +1,8 @@
-const express = require('express');
-const fs = require('fs');
+// const express = require('express');
+// const fs = require('fs');
 // const { validateToken } = require('../middlewares/ValidatePostTalker');
 
-const router = express.Router();
+/* const router = express.Router();
 
 router.get('/', (_req, res) => {
   const file = fs.readFileSync('./talker.json', 'utf8');
@@ -10,7 +10,7 @@ router.get('/', (_req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
-/* router.get(
+ router.get(
   '/search',
   validateToken,
   (req, res) => {
@@ -23,7 +23,7 @@ router.get('/', (_req, res) => {
     } else { res.status(200).send(talker); }
   },
 );
-*/
+
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const talkers = fs.readFileSync('./talker.json', 'utf8');
@@ -34,4 +34,4 @@ if (!talker) {
 } return res.status(200).json(talker);
 });
 
-module.exports = router;
+module.exports = router; */

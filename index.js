@@ -3,6 +3,8 @@ const fs = require('fs').promises;
 const bodyParser = require('body-parser');
 const { getTalkers } = require('./readTalker');
 const {
+  AgeVerify,
+  nameVerify,
   TokenCreation,
   IDVerification,
   TokenVerification,
@@ -10,7 +12,6 @@ const {
   EmailVerification,
   PasswordVerification,
   watchedAtVerification,
-  nameAndAgeVerification,
 } = require('./authTalkers');
 
 const app = express();
@@ -57,7 +58,8 @@ app.post(
   TokenVerification,
   watchedAtVerification,
   ratedVerification,
-  nameAndAgeVerification,
+  nameVerify,
+  AgeVerify,
   async (req, res) => {
     const { name, age, talk } = req.body;
     const talkers = getTalkers();

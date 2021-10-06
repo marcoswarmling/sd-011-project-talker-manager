@@ -51,14 +51,19 @@ const TokenVerification = (req, res, next) => {
   next();
 };
 
-const nameAndAgeVerification = (req, res, next) => {
-  const { name, age } = req.body;
+const nameVerify = (req, res, next) => {
+  const { name } = req.body;
   if (!name) {
     res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
-  if (name.length < 3) {
+  if (name && name.length < 3) {
     res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
+  next();
+};
+
+const AgeVerify = (req, res, next) => {
+  const { age } = req.body;
   if (!age) {
     res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
@@ -97,7 +102,9 @@ const ratedVerification = (req, res, next) => {
   next();
 };
 
-module.exports = { 
+module.exports = {
+  AgeVerify,
+  nameVerify,
   TokenCreation,
   IDVerification,
   EmailVerification,
@@ -105,5 +112,4 @@ module.exports = {
   ratedVerification,
   PasswordVerification,
   watchedAtVerification,
-  nameAndAgeVerification,
 };

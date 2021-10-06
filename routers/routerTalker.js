@@ -63,4 +63,12 @@ router.put('/:id', checkToken, checkTalker, checkTalk, checkDate, checkRate, asy
   await updateTalkers(file, currentTalkers);
   res.status(200).json(currentTalkers[idUpdateTalk]);
 });
+
+router.delete('/:id', checkToken, async (req, res) => {
+  const { id } = req.params;
+  const currentTalkers = await getTalkers(file);
+  const deletedTalkers = currentTalkers.filter((t) => t.id !== parseInt(id, 10));
+  await updateTalkers(file, deletedTalkers);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
 module.exports = router;

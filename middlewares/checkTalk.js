@@ -4,8 +4,8 @@ function checkTalk(req, res, next) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  const { talk: { watchedAt, rate } } = req.body;  
-  if (!watchedAt || !rate) {
+  const { talk: { watchedAt, rate } } = req.body;
+  if (!('watchedAt' in talk) || !('rate' in talk)) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -14,7 +14,6 @@ function checkTalk(req, res, next) {
 
 function checkDate(req, res, next) {
   const { talk: { watchedAt } } = req.body;
-  console.log(watchedAt);
   if (watchedAt.split('/').length !== 3) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }

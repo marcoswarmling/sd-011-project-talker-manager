@@ -16,7 +16,7 @@ app.get('/', async (_request, response) => {
     const data = await fs.readFile('./talker.json');
     // requisito 1
     if (JSON.parse(data).length === 0) {
-      response.status(HTTP_OK_STATUS).json({ message: '[]' });
+      response.status(HTTP_OK_STATUS).json([]);
     } else {
       response.status(HTTP_OK_STATUS).json(JSON.parse(data));
     }

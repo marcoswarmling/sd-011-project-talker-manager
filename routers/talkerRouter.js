@@ -70,7 +70,7 @@ async (req, res) => {
   const updateTalker = talker.find((r) => r.id === Number(id));
   return res.status(200).json(updateTalker);
 });
-
+// req 6
 router.delete('/talker/:id', tokenValid, async (req, res) => {
   const { id } = req.params;
   const talker = await reading();

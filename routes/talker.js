@@ -5,6 +5,16 @@ const { validateToken } = require('../middleware/authorization');
 const { validateName, validateAge } = require('../middleware/validateParams');
 const { validateTalk, validateSubTalk } = require('../middleware/validateParams2');
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const people = await readFileContent();
+
+  if (!q) return res.status(200).json(people);
+
+  const search = people.filter((value) => value.name.includes(q));
+  return res.status(200).json(search);
+});
+
 router.get('/', async (_req, res) => {
   const people = await readFileContent();
   return res.status(200).json(people);

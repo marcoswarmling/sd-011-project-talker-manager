@@ -4,6 +4,8 @@ const {
   readFileContent,
   getTalkerById,
   writeFileContent,
+  // editTalker,
+  deleteTalker,
 } = require('../utils/utils');
 
 const { 
@@ -37,9 +39,36 @@ router.post(
   rateValidation,
   watchedAtValidation,
   async (req, res) => {
-    const newTalker = req.body;
-    const newTalkerWithId = await writeFileContent('./talker.json', newTalker);
+    const currentContent = await readFileContent('./talker.json');
+    const updatedTalker = { ...req.body, id: currentContent.length + 1 };
+    const newTalkerWithId = await writeFileContent('./talker.json', updatedTalker);
     return res.status(201).json(newTalkerWithId);
+  },
+);
+
+// router.put(
+//   '/:id',
+//   tokenAuthentication,
+//   nameValidation,
+//   ageValidation,
+//   talkValidation,
+//   rateValidation,
+//   watchedAtValidation,
+//   async (req, res) => {
+//     const { id } = req.params;
+//     const editTalkerInfo = { ...req.body, id };
+//     const editedTalker = await editTalker(id, editTalkerInfo);
+//     return res.status(200).json(editedTalker);
+//   },
+// );
+
+router.delete(
+  '/:id',
+  tokenAuthentication,
+  async (req, res) => {
+    const { id } = req.params;
+    await deleteTalker(id);
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 

@@ -157,26 +157,6 @@ const validRate = (req, res, next) => {
   next();
 };
 
-const setTalker = async (req, res) => {
-  const { name, age, talk: { rate, watchedAt } } = req.body;
-
-  const talker = await fs.readFile(path, 'utf8');
-  const result = JSON.parse(talker);
-
-  const newTalker = {
-    name,
-    age,
-    id: result.length + 1,
-    talk: {
-      rate,
-      watchedAt,
-    },
-  };
-  result.push(newTalker);
-  await fs.writeFile(path, JSON.stringify(result));
-  res.status(201).send(newTalker);
-};
-
 module.exports = { 
   getAllTalkers,
   getTalkerById,
@@ -189,5 +169,4 @@ module.exports = {
   validTalk,
   validAge,
   validName,
-  setTalker,
 };

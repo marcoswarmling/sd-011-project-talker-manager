@@ -1,6 +1,11 @@
 const router = require('express').Router();
 
-const { searchTalk, deleteTalker, setEditTalker } = require('../middleware/middleware');
+const {
+  searchTalk,
+  deleteTalker,
+  setEditTalker,
+  setTalker,
+} = require('../middleware/middleware');
 
 const {
   getAllTalkers, 
@@ -14,7 +19,6 @@ const {
   validTalk,
   validAge,
   validName,
-  setTalker,
 } = require('../middleware/validation');
 
 router.get('/talker', getAllTalkers);

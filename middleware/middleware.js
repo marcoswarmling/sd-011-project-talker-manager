@@ -44,4 +44,29 @@ const setEditTalker = async (req, res) => {
   res.status(200).send(talk);
 };
 
-module.exports = { searchTalk, deleteTalker, setEditTalker };
+const setTalker = async (req, res) => {
+  const { name, age, talk: { rate, watchedAt } } = req.body;
+
+  const talker = await fs.readFile(path, 'utf8');
+  const result = JSON.parse(talker);
+
+  const newTalker = {
+    name,
+    age,
+    id: result.length + 1,
+    talk: {
+      rate,
+      watchedAt,
+    },
+  };
+  result.push(newTalker);
+  await fs.writeFile(path, JSON.stringify(result));
+  res.status(201).send(newTalker);
+};
+
+module.exports = {
+  searchTalk,
+  deleteTalker,
+  setEditTalker,
+  setTalker,
+};

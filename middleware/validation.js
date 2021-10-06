@@ -1,13 +1,3 @@
-const crypto = require('crypto');
-
-const loginToken = crypto.randomBytes(8).toString('hex');
-
-const getToken = (req, res) => {
-  res.status(200).send({
-    token: loginToken,
-  });
-};
-
 const validPassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
@@ -129,7 +119,6 @@ module.exports = {
   validEmail,
   validToken,
   validPassword,
-  getToken,
   validRate,
   validWatchedAt,
   validTalk,

@@ -30,7 +30,7 @@ function validateTalk(req, res, next) {
   const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/;
   
   if (!(dateRegex.test(watchedAt))) {
-    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa' });
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 
   if (rate < 1 || rate > 5) {

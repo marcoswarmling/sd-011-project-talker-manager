@@ -12,11 +12,10 @@ function validToken(req, res, next) {
   next();
 }
 
-module.exports = app.delete('/talker/:id', validToken, async (req, res) => {
-  const { id } = req.params;
+module.exports = app.get('/talker/search', validToken, async (req, res) => {
+  const { q } = req.query;
   const readFile = await fs.readFile('./talker.json');
   const parseJson = await JSON.parse(readFile);
-  const newObject = parseJson.filter((object) => object.id !== Number(id));
-  await fs.writeFile('./talker.json', JSON.stringify(newObject));
-  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  const newObject = parseJson.filter((object) => object.name.includes(q));
+  return res.status(200).json(newObject);
 });

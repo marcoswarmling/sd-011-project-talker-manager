@@ -6,8 +6,10 @@ const login = require('./routes/login');
 const createTalker = require('./routes/createTalker');
 const editTalker = require('./routes/editTalker');
 const deleteTalker = require('./routes/deleteTalker');
+const searchTalker = require('./routes/searchTalker');
 
 const app = express();
+app.use(searchTalker);
 app.use(bodyParser.json());
 app.use(getAllTalkers);
 app.use(getTalkerById);

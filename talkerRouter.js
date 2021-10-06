@@ -19,11 +19,11 @@ const authMiddleware = (req, res, next) => {
 const validationAddTalkerName = (req, res, next) => {
   const { name } = req.body;
   const minLengthName = 3;
-  if (name.length < minLengthName) {
-    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  }
   if (!name) {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name.length < minLengthName) {
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 };
@@ -31,11 +31,11 @@ const validationAddTalkerName = (req, res, next) => {
 const validationAddTalkerAge = (req, res, next) => {
   const { age } = req.body;
   const minAge = 18;
-  if (parseInt(age, 10) < minAge) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
   if (!age) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (parseInt(age, 10) < minAge) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };

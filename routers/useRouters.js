@@ -26,7 +26,7 @@ router.post(
   }
   },
 );
-
+const talke = './talker.json';
 router.post(
   '/talker',
   isValidToken,
@@ -38,13 +38,13 @@ router.post(
   async (req, res) => {
     const { name, age, talk } = req.body;
     try {
-      const talkerData = await fs.readFile('./talker.json', 'utf8');
+      const talkerData = await fs.readFile(talke, 'utf8');
       const talker = JSON.parse(talkerData);
 
       const id = talker.length + 1;
       const newUser = { name, age, id, talk };
       talker.push(newUser);
-      await fs.writeFile('./talker.json', JSON.stringify(talker));
+      await fs.writeFile(talke, JSON.stringify(talker));
       return res.status(201).json(newUser);
     } catch (error) {
         return res.status(400).json({ message: error.message });
@@ -63,14 +63,31 @@ router.put(
   async (req, res) => {
     const { id } = req.params;
     try {
-      const talkerData = await fs.readFile('./talker.json', 'utf8');
+      const talkerData = await fs.readFile(talke, 'utf8');
       const talker = JSON.parse(talkerData);
       const userIndex = talker.findIndex((user) => user.id === +id);
       if (userIndex === -1) return res.status(404).json({ message: 'Id não encontrado' });
       talker[userIndex] = { ...req.body, id: Number(id) };
       await fs.writeFile('./talker.json', JSON.stringify(talker));
-      // const newUser = talker.find((user) => user.id === Number(id));
       return res.status(200).json(talker[userIndex]);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+  },
+);
+
+router.delete(
+  '/talker/:id',
+  isValidToken,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const talkerData = await fs.readFile('./talker.json', 'utf8');
+      const talker = JSON.parse(talkerData);
+      const userIndex = talker.findIndex((user) => user.id === +id);
+      talker.splice(userIndex, 1);
+      await fs.writeFile('./talker.json', JSON.stringify(talker));
+      return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }

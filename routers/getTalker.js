@@ -8,7 +8,7 @@ const talkerJSON = './talker.json';
  // validateName,
  // validateTalk,
 //  validateTalkIncrements,
-} = require('../middlewares/ValidatePostTalker'); */
+} = require('../middlewares/ValidatePostTalker'); 
 
  const router = express.Router();
 

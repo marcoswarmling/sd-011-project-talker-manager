@@ -128,7 +128,7 @@ app.put('/talker/:id',
     const talkerListStringfy = JSON.stringify(talkerListJson);
     await fs.writeFile(talkerJsonFile, talkerListStringfy);
   
-    res.status(200).json(newTalker);
+    return res.status(200).json(newTalker);
 });
 
 // REQUISITO 6
@@ -144,7 +144,7 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
   const talkerListStringfy = JSON.stringify(talkerListData);
   await fs.writeFile(talkerJsonFile, talkerListStringfy);
 
-  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {

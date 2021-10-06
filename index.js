@@ -70,6 +70,15 @@ validateRate, rescue(async (req, res) => {
   await functionsAsync.setWriteFile(newPerson);
   res.status(200).json(newPerson[filterIndex]);
 }));
+
+app.delete('/talker/:id', validateToken, rescue(async (req, res) => {
+  const { id } = req.params;
+  const deletePerson = await functionsAsync.getReadFile();
+  const personFilter = deletePerson.findIndex((r) => r.id === parseInt(id, 10));
+  deletePerson.splice(personFilter, 1);
+  await functionsAsync.setWriteFile(deletePerson);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}));
  
 app.listen(PORT, () => {
   console.log('Online');

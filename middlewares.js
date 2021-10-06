@@ -22,18 +22,11 @@ const getTalkerById = (req, res) => {
 const getToken = (req, res) => {
   const token = services.generateToken();
   const { email, password } = req.body;
-  const missingEmail = { message: missingMessages.email };
-  const invalidEmail = { message: invalidMessages.email };
-  const missingPassword = { message: missingMessages.password };
-  const invalidPassword = { message: invalidMessages.password };
-
-  const isValidEmail = services.validateEmail(email);
-  const isValidPassword = services.validatePassword(password);
-
-  if (!email) return res.status(400).json(missingEmail);
-  if (!isValidEmail) return res.status(400).json(invalidEmail);
-  if (!password) return res.status(400).json(missingPassword);
-  if (!isValidPassword) return res.status(400).json(invalidPassword);
+  const isValidCredentials = services.validateCredentials(email, password);
+  console.log(isValidCredentials);
+  if (isValidCredentials.message) {
+    return res.status(400).json({ message: isValidCredentials.message });
+  }
   res.status(200).json({ token });
 };
 
@@ -81,15 +74,15 @@ const validateTalk = (req, res, next) => {
   const { talk } = req.body;
   const isValidTalk = (talk.watchedAt && talk.rate);
   if (!isValidTalk) return res.status(401).json({ message: missingMessages.talk });
-  res.status(200).json({ message: 'talk ok' });
   next();
 };
 
 const insertData = (req, res) => {
   const newTalker = req.body;
   const talkers = services.readFileTalker();
-  newTalker.id = talkers.length + 1;
-  const newFile = [talkers, newTalker];
+  const newId = talkers.length;
+  newTalker.id = newId + 1;
+  const newFile = [...talkers, newTalker];
   services.writeFileTalker(newFile);
   res.status(201).json(newTalker);
 };

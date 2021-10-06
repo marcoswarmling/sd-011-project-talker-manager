@@ -18,7 +18,7 @@ app.get('/', (_request, response) => {
 app.use('/', (req, _res, next) => {
   const talkers = services.readFileTalker();
   if (talkers) {
-    req.talkers = JSON.parse(talkers);
+    req.talkers = talkers;
   }
   next();
 });

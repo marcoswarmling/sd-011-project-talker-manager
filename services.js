@@ -26,18 +26,14 @@ const TALKER_PATH = './talker.json';
 const readFileTalker = () => {
   try {
     const talkers = fs.readFileSync(TALKER_PATH, 'utf-8');
-    return talkers;
+    return JSON.parse(talkers);
   } catch (err) {
     throw new Error(err);
   }
 };
 
 const writeFileTalker = (file) => {
-  try {
-    fs.writeFileSync(TALKER_PATH, file);
-  } catch (err) {
-    throw new Error(err);
-  }
+  fs.writeFileSync(TALKER_PATH, JSON.stringify(file));
 };
 
 function generateToken() {
@@ -52,14 +48,23 @@ function validateEmail(email) {
 
 function validatePassword(password) {
   const MIN_PW_LENGTH = 6;
-  
   const isValidPassword = password && password.length >= MIN_PW_LENGTH;
   return isValidPassword;
 }
 
+function validateCredentials(email, password) {
+  const isValidEmail = validateEmail(email);
+  const isValidPassword = validatePassword(password);
+  if (!email) return ({ message: missingMessages.email });
+  if (!isValidEmail) return ({ message: invalidMessages.email });
+  if (!password) return ({ message: missingMessages.password });
+  if (!isValidPassword) return ({ message: invalidMessages.password });
+  return true;
+}
+
 function validateToken(token) {
   const TOKEN_LENGTH = 16;
-  const isValidToken = token.length === TOKEN_LENGTH;
+  const isValidToken = token && token.length === TOKEN_LENGTH;
   return isValidToken;
 }
 
@@ -99,8 +104,7 @@ module.exports = {
   readFileTalker,
   generateToken,
   validateToken,
-  validateEmail,
-  validatePassword,
+  validateCredentials,
   validateAge,
   validateName,
   validateTalk,

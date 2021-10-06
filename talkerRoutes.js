@@ -75,4 +75,19 @@ router.put('/:id',
     }
 });
 
+router.delete('/:id', 
+  authValidation,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const getTalkers = await fs.readFile(talkersJSON, 'utf-8');
+      const talkersData = await JSON.parse(getTalkers);
+      const editTalker = talkersData.filter((talker) => talker.id !== parseInt(id, 10));
+      await fs.writeFile(talkersJSON, JSON.stringify(editTalker));
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    } catch (error) {
+      return error;
+    }
+});
+
 module.exports = router;

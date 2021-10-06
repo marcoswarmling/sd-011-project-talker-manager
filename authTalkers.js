@@ -158,11 +158,33 @@ const talkerSetter = async (req, res) => {
   res.status(201).send(newTalker);
 };
 
+const modifyTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const { rate, watchedAt } = talk;
+  const talkers = await fs.readFile('./talker.json', 'utf8');
+  const result = await JSON.parse(talkers);
+  const newTalker = {
+    name,
+    age,
+    id: Number(id),
+    talk: {
+      rate, watchedAt,
+    },
+  };
+  const talkerIndex = result.find((talker) => talker.id === Number(id));
+  const talkersRemoved = result.filter((talker) => talker.id !== talkerIndex.id);
+  const newArrayTalkers = [...talkersRemoved, newTalker];
+  await fs.writeFile('./talker.json', JSON.stringify(newArrayTalkers));
+  return res.status(200).send(newTalker);
+};
+
 module.exports = {
   AgeVerify,
   nameVerify,
   validTalk,
   talkerSetter,
+  modifyTalker,
   getAllTalkers,
   TokenCreation,
   IDVerification,

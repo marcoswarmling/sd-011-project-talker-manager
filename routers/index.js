@@ -5,6 +5,7 @@ const {
   nameVerify,
   validTalk,
   talkerSetter,
+  modifyTalker,
   TokenCreation,
   getAllTalkers,
   IDVerification,
@@ -38,6 +39,19 @@ router.post(
   AgeVerify,
   nameVerify,
   talkerSetter,
+);
+
+// Requisito 5
+
+router.put(
+  '/talker/:id', 
+  TokenVerification, 
+  nameVerify, 
+  AgeVerify, 
+  validTalk, 
+  watchedAtVerification, 
+  ratedVerification, 
+  modifyTalker,
 );
 
 module.exports = router;

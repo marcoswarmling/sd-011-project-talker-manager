@@ -15,9 +15,7 @@ app.get('/', (_request, response) => {
 app.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await fs.readFile('./talker.json', 'utf8');
-  console.log('esse é o talker', talker);
   const findId = JSON.parse(talker).find((element) => element.id === Number(id));
-  console.log('esse é o findId', findId);
   if(!findId) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada'
   });

@@ -55,6 +55,22 @@ rescue(async (_req, res) => {
     res.status(201).json(person);
   }));
 
+app.put('/talker/:id', validateToken, 
+validateName, 
+validateAge,
+validateTalk, 
+validateWatched, 
+validateDate, 
+validateRate, rescue(async (req, res) => { 
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const newPerson = await functionsAsync.getReadFile();
+  const filterIndex = newPerson.findIndex((i) => i.id === parseInt(id, 10));
+  newPerson[filterIndex] = { ...newPerson[filterIndex], name, age, talk };
+  await functionsAsync.setWriteFile(newPerson);
+  res.status(200).json(newPerson[filterIndex]);
+}));
+ 
 app.listen(PORT, () => {
   console.log('Online');
 });

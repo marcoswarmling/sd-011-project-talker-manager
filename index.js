@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const validationTokenMiddleware = require('./validate-token-middleware');
 
 const app = express();
 app.use(bodyParser.json());
@@ -55,12 +56,12 @@ function updateTalker(id, newTalker) {
   }
 }
 
-function deleteTalker(id){
+function deleteTalker(id) {
   const currentTalkers = getTalkers();
-  let newTalkers = [];
-  for(let i = 0; i < currentTalkers; i+=1) {
-    if(currentTalkers[i].id !== id){
-      newTalkers.push(currentTalkers[i])
+  const newTalkers = [];
+  for (let i = 0; i < currentTalkers; i += 1) {
+    if (currentTalkers[i].id !== id) {
+      newTalkers.push(currentTalkers[i]);
     }
   }
   try {
@@ -81,14 +82,75 @@ function insertTalker(newTalker) {
   }
 }
 
-function isEmailValid(email) {
-  const regex = /\S+@\S+\.\S+/;
-  return regex.test(email);
-}
-
 function isDateValid(date) {
   const regex = /^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
   return regex.test(date);
+}
+
+function validateName(name) {
+  if (!name) {
+    return { message: 'O campo "name" é obrigatório', isValid: false };
+  }
+  if (name.length <= 2) {
+    return { message: 'O "name" deve ter pelo menos 3 caracteres', isValid: false };
+  }
+  return { isValid: true };
+}
+
+function validateAge(age) {
+  if (typeof age !== 'number' || !age) {
+    return { message: 'O campo "age" é obrigatório', isValid: false };
+  }
+  if (age < 18) {
+    return { message: 'A pessoa palestrante deve ser maior de idade', isValid: false };
+  }
+  return { isValid: true };
+}
+
+function validateFields(talk) {
+  if (!talk || talk.rate === undefined || !talk.watchedAt) {
+    return {
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+        isValid: false,
+    };
+  }
+  return { isValid: true };
+}
+
+function validateTalk(talk) {
+  const responseFields = validateFields(talk);
+  if (!responseFields.isValid) {
+    return responseFields;
+  }
+  if (!isDateValid(talk.watchedAt)) {
+    return { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', isValid: false };
+  }
+  if (talk.rate < 1 || talk.rate > 5) {
+    return { message: 'O campo "rate" deve ser um inteiro de 1 à 5', isValid: false };
+  }
+  return { isValid: true };
+}
+
+function validateTalker(talker) {
+  const { name, age, talk } = talker;
+  const validationName = validateName(name);
+  if (!validationName.isValid) {
+    return validationName;
+  }
+  const validationAge = validateAge(age);
+  if (!validationAge.isValid) {
+    return validationAge;
+  }
+  const validationTalk = validateTalk(talk);
+  if (!validationTalk.isValid) {
+    return validationTalk;
+  }
+  return { isValid: true };
+}
+
+function isEmailValid(email) {
+  const regex = /\S+@\S+\.\S+/;
+  return regex.test(email);
 }
 
 function generateToken(length) {
@@ -127,126 +189,45 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/talker', function (req, res){
+app.post('/talker', validationTokenMiddleware, (req, res) => {
   const { name, age, talk } = req.body;
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-  if (!name) {
-    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
-  }
-  if (name.length <= 2) {
-    return res.status(400)
-      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  }
-  if (typeof age !== 'number' || !age) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
-  if (!talk || !talk.rate || !talk.watchedAt) {
-    return res.status(400)
-      .json({ 
-        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
-      });
-  }
-  if (!isDateValid(talk.watchedAt)) {
-    return res.status(400)
-      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
-  if (typeof talk.rate !== 'number' || talk.rate < 1 || talk.rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  const talker = req.body;
+  const response = validateTalker(talker);
+  if (!response.isValid) {
+    return res.status(400).json({ message: response.message });
   }
   const newTalker = { id: getLastId() + 1, name, age, talk };
   insertTalker(newTalker);
   return res.status(201).json(newTalker);
 });
 
-app.put('/talker/:id', function (req, res){
+app.put('/talker/:id', validationTokenMiddleware, (req, res) => {
   const newTalker = req.body;
-  const { name, age, talk } = newTalker;
   const { id } = req.params;
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-  if (!name) {
-    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
-  }
-  if (name.length <= 2) {
-    return res.status(400)
-      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  }
-  if (typeof age !== 'number' || !age) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
-  if (!talk || talk.rate === undefined || !talk.watchedAt) {
-    return res.status(400)
-      .json({ 
-        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' 
-      });
-  }
-  if (!isDateValid(talk.watchedAt)) {
-    return res.status(400)
-      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
-  if (typeof talk.rate !== 'number' || talk.rate < 1 || talk.rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  const response = validateTalker(newTalker);
+  if (!response.isValid) {
+    return res.status(400).json({ message: response.message });
   }
   const idNumber = parseInt(id, 10);
   updateTalker(idNumber, newTalker);
   res.status(200).json({ id: idNumber, ...newTalker });
 });
 
-app.delete('/talker/:id', (req, res) => {
+app.delete('/talker/:id', validationTokenMiddleware, (req, res) => {
   const { id } = req.params;
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
   const idNumber = parseInt(id, 10);
   deleteTalker(idNumber);
-  res.status(200).json({ "message": "Pessoa palestrante deletada com sucesso" })
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-app.get('/talker/search', function(req, res) {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  } 
+app.get('/talker/search', validationTokenMiddleware, (req, res) => {
   const talkers = getTalkers();
   const { q } = req.query;
-  const response = talkers.filter((t) => {
-    return t.name.includes(q)
-  });
+  const response = talkers.filter((t) => t.name.includes(q));
   res.status(200).json(response);
 });
 
 app.get('/talker/:id', (req, res) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  } 
   const talkers = getTalkers();
   const { id } = req.params;
   const talker = talkers.find((t) => t.id === parseInt(id, 10));

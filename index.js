@@ -19,10 +19,7 @@ app.get('/talker', async (_request, response) => {
   try {
     const data = await fs.readFile('./talker.json');
     // requisito 1
-    if (JSON.parse(data).length === 0) {
-      return response.status(HTTP_OK_STATUS).json(JSON.parse(data));
-    }
-    return response.status(HTTP_OK_STATUS).json(JSON.parse(data));
+   return response.status(HTTP_OK_STATUS).json(JSON.parse(data));
   } catch (error) {
     response.status(400).json({ message: `Erro ${error.code}` });
   }

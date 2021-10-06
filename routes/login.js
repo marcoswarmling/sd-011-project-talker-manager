@@ -20,7 +20,7 @@ function verifyEmail(email) {
 }
 
 function checkBody(email, password) {
-  const passCheck = password.length > 6;
+  const passCheck = password.length >= 6;
 
   if (!email) return { message: 'O campo "email" é obrigatório' }; 
   if (!verifyEmail(email)) return { message: 'O "email" deve ter o formato "email@email.com"' }; 

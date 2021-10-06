@@ -4,6 +4,7 @@ const {
   AgeVerify,
   nameVerify,
   validTalk,
+  deleteTalker,
   talkerSetter,
   modifyTalker,
   TokenCreation,
@@ -53,5 +54,9 @@ router.put(
   ratedVerification, 
   modifyTalker,
 );
+
+// Requisito 6
+
+router.delete('/talker/:id', TokenVerification, deleteTalker);
 
 module.exports = router;

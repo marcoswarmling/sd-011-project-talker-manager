@@ -180,11 +180,22 @@ const modifyTalker = async (req, res) => {
   return res.status(200).send(newTalker);
 };
 
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  const talkers = await fs.readFile(JSON_PATH, 'utf8');
+  const result = await JSON.parse(talkers);
+  const talkerIndex = result.filter((talker) => talker.id !== Number(id));
+
+  await fs.writeFile(JSON_PATH, JSON.stringify(talkerIndex));
+  res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   AgeVerify,
   nameVerify,
   validTalk,
   talkerSetter,
+  deleteTalker,
   modifyTalker,
   getAllTalkers,
   TokenCreation,

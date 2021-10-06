@@ -8,6 +8,7 @@ const getTalkers = async () => {
   const talkers = JSON.parse(data);
   return talkers;
 };
+
 const getAllTalkers = async () => {
     const talkers = await getTalkers();
     return talkers;
@@ -19,7 +20,26 @@ const getAllTalkers = async () => {
     return foundedTalker;
   };
 
+const addTalker = async (body) => {
+  const { name, age, talk } = body;
+  const talkers = await getTalkers();
+  const NEXT_ID = talkers.length + 1;
+  
+  const newTalker = {
+    name,
+    age,
+    id: NEXT_ID,
+    talk,
+  };
+  // [...talkers, newTalker]
+  const updatedTalkers = [newTalker];
+  console.log(updatedTalkers);
+  await fs.writeFile(DATA_PATH, JSON.stringify(updatedTalkers));
+  return newTalker;
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
+  addTalker,
 };

@@ -1,8 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { getAllTalkers, getTalkerById } = require('./services/talkers');
+const { getAllTalkers, getTalkerById, addTalker } = require('./services/talkers');
+
 const { validNameAndEmail } = require('./middlewares/validLogin');
+const { validateBody } = require('./middlewares/validateBody');
+const { validateTokenAuthorization } = require('./middlewares/validateToken');
 
 const { generateToken } = require('./helpers/generateToken');
 
@@ -30,9 +33,14 @@ app.get('/talker', async (_req, res) => {
       return res.status(200).send(data);
   });
 
-  app.post('/login', validNameAndEmail, (req, res) => {
+  app.post('/login', validNameAndEmail, (_req, res) => {
     const token = generateToken();
     res.status(200).send({ token });
+  });
+
+  app.post('/talker', validateTokenAuthorization, validateBody, async (req, res) => {
+    const talkerAdded = await addTalker(req.body);
+    res.status(201).json(talkerAdded);
   });
 
 app.listen(PORT, () => {

@@ -73,7 +73,7 @@ const validateAge = (req, res, next) => {
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || talk === '' || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -82,8 +82,7 @@ const validateTalk = (req, res, next) => {
 
 const validateRate = (req, res, next) => {
   const { talk } = req.body;
-  const rateNumber = Number(talk.rate);
-  if (rateNumber < 1 || rateNumber > 5) {
+  if ((!talk.rate && talk.rate === 0) || talk.rate < 1 || talk.rate > 5) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -119,6 +118,22 @@ const postTalker = async (req, res) => {
   } 
 };
 
+/* Feito com ajuda do Mauricio Ieiri */
+const putTalker = async (req, res) => {
+  const { id } = req.params;
+  try {  
+    const content = await fs.readFile('./talker.json', 'utf-8');
+    const response = JSON.parse(content);
+    const indexTalk = response.findIndex((item) => item.id === Number(id));   
+    if (indexTalk === -1) return res.status(404).json({ message: 'Id não encontrado' });
+    response[indexTalk] = { ...req.body, id: Number(id) };
+    await fs.writeFile('./talker.json', JSON.stringify(response));
+    return res.status(200).json(response[indexTalk]);
+    } catch (error) {
+      return res.status(400).json(error);
+    }    
+};
+
   module.exports = {
     getRandomToken,
     validateEmail,
@@ -130,4 +145,5 @@ const postTalker = async (req, res) => {
     validatewatchedAt,
     validateRate,
     postTalker,
+    putTalker,
   };

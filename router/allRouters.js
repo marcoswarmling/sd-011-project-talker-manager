@@ -14,6 +14,7 @@ const {
   validatewatchedAt,
   validateRate,
   postTalker,
+  putTalker,
 } = require('../middleware/validations');
 
 router.post('/login', validateEmail, validatePassword, getRandomToken);
@@ -25,5 +26,14 @@ router.post('/talker',
   validateRate,
   validatewatchedAt, 
   postTalker);
+
+router.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateRate,
+  validatewatchedAt,
+  putTalker);
 
 module.exports = router;

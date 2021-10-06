@@ -80,10 +80,22 @@ const getTalkerById = async (req, res) => {
   }
 };
 
+const getAllTalkers = async (req, res) => {
+  try {
+    const response = await fs.readFile(path, 'utf8');
+    if (!response) return res.status(HTTP_OK_STATUS).json([]);
+
+    res.status(HTTP_OK_STATUS).json(JSON.parse(response));
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
 module.exports = {
   searchTalk,
   deleteTalker,
   setEditTalker,
   setTalker,
   getTalkerById,
+  getAllTalkers,
 };

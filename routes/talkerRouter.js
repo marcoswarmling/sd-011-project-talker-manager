@@ -13,7 +13,7 @@ const HTTP_CREATED_STATUS = 201;
 const HTTP_ERROR_STATUS = 404;
 
 const data = './talker.json';
-const isValidTalker = [
+const registerOrEditTalkers = [
   isValidToken, 
   isValidName, 
   isValidAge, 
@@ -43,7 +43,7 @@ router.get('/:id', async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(result);
 });
 
-router.post('/', isValidTalker, async (req, res) => {
+router.post('/', registerOrEditTalkers, async (req, res) => {
   const { name, age, talk: { rate, watchedAt } } = req.body;
 
   const response = await fs.readFile(data, 'utf-8');
@@ -56,6 +56,20 @@ router.post('/', isValidTalker, async (req, res) => {
   await fs.writeFile(data, JSON.stringify(talkers));
 
   return res.status(HTTP_CREATED_STATUS).json(newTalker);
+});
+
+router.put('/:id', registerOrEditTalkers, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { rate, watchedAt } } = req.body;
+  const talkers = { id, name, age, talk: { rate, watchedAt } };
+  const response = await fs.readFile(data, 'utf-8');
+  const registeredTalkers = JSON.parse(response);
+
+  const indexOfEditedTalkers = registeredTalkers.findIndex((t) => t.id === Number(id));
+  registeredTalkers[indexOfEditedTalkers] = talkers;
+  await fs.writeFile(data, JSON.stringify(registeredTalkers));
+
+  return res.status(HTTP_OK_STATUS).json(talkers);
 });
 
 module.exports = router;

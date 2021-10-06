@@ -4,7 +4,7 @@ const router = Router();
 
 const fs = require('fs');
 
-const validateNewTalker = require('../middlewares/validationNewTalker');
+const validateNewTalker = require('../middlewares/validationTalkers');
 
 router.post('/', validateNewTalker, (req, res) => {
   const content = fs.readFileSync('./talker.json');

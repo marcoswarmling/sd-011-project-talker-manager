@@ -1,15 +1,22 @@
 const router = require('express').Router();
 const fs = require('fs').promises;
-const { emailValidation, generateToken } = require('./validationFunctions');
+const { generateToken,
+  emailValidation,
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  watchedAtAndDateValidation } = require('./validationFunctions');
+
+const talkerFile = './talker.json';
 
 router.get('/talker', async (_req, res) => {
-  const talkers = await fs.readFile('./talker.json');
+  const talkers = await fs.readFile(talkerFile);
   const result = JSON.parse(talkers);
   res.status(200).json(result);
 });
 
 router.get('/talker/:id', async (req, res) => {
-  const talkers = await fs.readFile('./talker.json');
+  const talkers = await fs.readFile(talkerFile);
   const { id } = req.params;
   const result = JSON.parse(talkers);
 
@@ -37,6 +44,24 @@ router.post('/login', (req, res) => {
   return res.status(200).json({
     token: generateToken(16),
   });
+});
+
+router.post('/talker', tokenValidation, nameValidation, ageValidation, 
+watchedAtAndDateValidation, (req, res) => {
+  try {
+    const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf-8'));
+    const { name, age, talk } = req.body;
+    const addTalker = { name, age, talk: { ...talk }, id: talkers.length + 1 };
+
+    talkers.push(addTalker);
+
+    fs.writeFileSync(talkerFile, JSON.stringify(talkers));
+    return res.status(201).json(addTalker);
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
 });
 
 module.exports = router;

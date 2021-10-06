@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 function getTalkers() {
   return fs.readFile('./talker.json', 'utf-8')

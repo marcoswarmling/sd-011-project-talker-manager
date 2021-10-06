@@ -84,7 +84,7 @@ router.get('/talker/search', tokenValid, async (req, res) => {
   const { q } = req.query;
   const talker = await reading();
 
-  const searchTalker = talker.filter((r) => r.name.includes(q));
+  const searchTalker = talker.filter((p) => p.name.includes(q));
 
   return res.status(200).json(searchTalker);
 });

@@ -63,7 +63,7 @@ const talkValidation = (req, res, next) => {
   const { talk } = req.body;
   const { watchedAt } = talk;
 
-  // https://stackoverflow.com/questions/15491894/regex-to-validate-date-formats-dd-mm-yyyy-dd-mm-yyyy-dd-mm-yyyy-dd-mmm-yyyy
+  // By: Matheus Alexandre
   const dataFormat = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
 
   // Para tempo palestra

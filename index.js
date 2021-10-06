@@ -37,6 +37,15 @@ app.get('/talker', (req, res) => {
     res.status(200).json(data);
 });
 
+app.get('/talker/search', tokenValidation, (req, res) => {
+  const { q } = req.query;
+
+  const data = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
+  const filtered = data.filter((talker) => talker.name.includes(q));
+
+  res.status(200).json(filtered);
+});
+
 // 2 - Crie o endpoint GET /talker/:id
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;

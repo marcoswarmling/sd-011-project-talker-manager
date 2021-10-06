@@ -5,8 +5,8 @@ const talkersWrite = (newTalker) => {
     fs.readFile('./talker.json', 'utf-8')
     .then((data) => JSON.parse(data))
     .then((fileContent) => {
-      const talkers = fileContent;
-      talkers.push(newTalker);
+      let talkers = fileContent;
+      talkers = newTalker;
       if (newTalker) {
         resolve(fs.writeFile('./talker.json', JSON.stringify(talkers)));
       } else {

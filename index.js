@@ -16,7 +16,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// requisito 01
+// Requisito 01
 app.use('/talker', talkerRouter);
 
 // Requisito 02

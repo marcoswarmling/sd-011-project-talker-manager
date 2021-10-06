@@ -3,6 +3,10 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs').promises;
 
+const token = require('./middleware/token');
+const emailValid = require('./middleware/validationEmail');
+const passwordValid = require('./middleware/validationPassword');
+
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
@@ -42,13 +46,9 @@ app.get('/talker/:id', async (req, res) => {
   }
 });
 
-// app.post('/', async (req, res) => {
-//   const { id, name } = req.body;
-//   const data = await fs.readFile('./talker.json');
-//   const findData = JSON.parse(data);
-//   console.log(id, name, findData);
-//   res.status(HTTP_OK_STATUS).json(JSON.parse(data));
-// });
+// requisito 3
+
+app.post('/login', emailValid, passwordValid, token);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

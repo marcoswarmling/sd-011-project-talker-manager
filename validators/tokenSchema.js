@@ -26,10 +26,11 @@ const tokenSchema = {
 const validate = ajv.compile(tokenSchema);
 
 const validToken = (req, res, next) => {
-  console.log(req.headers);
   if (!validate(req.headers)) {
     return res.status(401).json({ message: validate.errors[0].message });
   }
   next();
 };
 module.exports = validToken;
+
+// 7mqaVRXJSp886CGr

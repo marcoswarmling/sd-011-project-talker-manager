@@ -8,8 +8,7 @@ const validUserName = (req, res, next) => {
 
 const validEmail = (req, res, next) => {
   const { email } = req.body;
-  console.log(req.body);
-  if (!email) {
+    if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 

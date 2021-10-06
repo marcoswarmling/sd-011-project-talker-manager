@@ -64,9 +64,26 @@ const setTalker = async (req, res) => {
   res.status(201).send(newTalker);
 };
 
+const getTalkerById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const talker = await fs.readFile(path, 'utf8');
+    const result = JSON.parse(talker);
+    const response = result.find((value) => value.id === Number(id));
+
+    if (!response) return res.status(404).json({ message: messages });
+
+    res.status(HTTP_OK_STATUS).json(response);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
 module.exports = {
   searchTalk,
   deleteTalker,
   setEditTalker,
   setTalker,
+  getTalkerById,
 };

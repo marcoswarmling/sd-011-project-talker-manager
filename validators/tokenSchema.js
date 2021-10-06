@@ -6,19 +6,19 @@ require('ajv-errors')(ajv /* , {singleError: true} */);
 
 const tokenSchema = {
   type: 'object',
-  required: ['token'],
+  required: ['authorization'],
   properties: {
-    token: {
+    authorization: {
       type: 'string',
       pattern: '^[a-zA-Z0-9-_]{16}$',
     },
   },
   errorMessage: {
     required: {
-      token: 'Token não encontrado',
+      authorization: 'Token não encontrado',
     },
     properties: {
-      token: 'Token inválido',
+      authorization: 'Token inválido',
     },
   },
 };
@@ -27,7 +27,7 @@ const validate = ajv.compile(tokenSchema);
 
 const validToken = (req, res, next) => {
   console.log(req.headers);
-  if (!validate(req.body)) {
+  if (!validate(req.headers)) {
     return res.status(401).json({ message: validate.errors[0].message });
   }
   next();

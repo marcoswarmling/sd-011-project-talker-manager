@@ -5,7 +5,7 @@ const talkersWrite = require('./talkersWrite');
 const router = express.Router();
 
 const authMiddleware = (req, res, next) => {
-  const { token } = req.headers;
+  const token = req.headers.authorization;
   const numberToken = 16;
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });

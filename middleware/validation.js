@@ -1,7 +1,6 @@
 const fs = require('fs').promises;
 const crypto = require('crypto');
 
-const messages = 'Pessoa palestrante não encontrada';
 const HTTP_OK_STATUS = 200;
 const path = './talker.json';
 
@@ -143,7 +142,6 @@ const validRate = (req, res, next) => {
 
 module.exports = { 
   getAllTalkers,
-  getTalkerById,
   validEmail,
   validToken,
   validPassword,

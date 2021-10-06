@@ -5,6 +5,7 @@ const {
   deleteTalker,
   setEditTalker,
   setTalker,
+  getTalkerById,
 } = require('../middleware/middleware');
 
 const {

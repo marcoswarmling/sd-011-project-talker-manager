@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const validateEmail = require('./middlewares/validateEmail');
+const validatePassword = require('./middlewares/validatePassword');
 
 const app = express();
 app.use(bodyParser.json());
@@ -38,4 +40,8 @@ app.get('/talker/:id', async (req, res) => {
 } catch (err) {
   res.status(404).json({ message: err.message });
 }
+});
+
+app.post('/login', validateEmail, validatePassword, (_req, res) => {
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 });

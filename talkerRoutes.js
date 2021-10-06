@@ -32,6 +32,21 @@ router.post('/', validateToken, validateRegister, async (req, res) => {
   }
 });
 
+router.put('/:id', validateToken, validateRegister, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const file = await readTalkerFile();
+    const talkerIndex = file.findIndex((t) => t.id === Number(id));
+    if (talkerIndex === -1) return res.status(404).json({ message: 'Talker not found' });
+    file[talkerIndex] = { ...req.body, id: Number(id) };
+    const updatedFile = JSON.stringify(file);
+    await writeTalkerFile(updatedFile);
+    return res.status(200).json({ message: 'pessoa palestrante' });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 router.use((err, _req, res, _next) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });

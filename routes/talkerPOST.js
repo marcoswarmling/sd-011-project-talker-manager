@@ -65,20 +65,18 @@ function validObjTake(req, res, next) {
 module.exports = app.post('/talker',
   validToken, validName, validAge,
   validTalke, validObjTake, async (req, res) => {
-    // const {} = req.body;
+    const { name, age, talk } = req.body;
     const readFile = await fs.readFile('./talker.json').catch(() =>
       res.status(200).json([]));
     const parseJson = JSON.parse(readFile);
-
     const objectTaker = {
-      name: 'Danielle Santos',
-      age: 56,
+      id: parseJson.length + 1,
+      name,
+      age,
       talk: {
-        watchedAt: '22/10/2019',
-        rate: 5,
+        ...talk,
       },
     };
-
     parseJson.push(objectTaker);
     fs.writeFile('./talker.json', JSON.stringify(parseJson));
     res.status(201).json(objectTaker);

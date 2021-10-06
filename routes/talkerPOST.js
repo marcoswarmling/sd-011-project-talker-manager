@@ -66,7 +66,7 @@ module.exports = app.post('/talker',
   validToken, validName, validAge,
   validTalke, validObjTake, async (req, res) => {
     const { name, age, talk } = req.body;
-    const readFile = await fs.readFile('./talker.json').catch(() =>
+    const readFile = await fs.readFile('./talker.json', 'utf-8').catch(() =>
       res.status(200).json([]));
     const parseJson = JSON.parse(readFile);
     const objectTaker = {

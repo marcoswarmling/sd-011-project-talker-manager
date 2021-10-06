@@ -20,11 +20,11 @@ function verifyEmail(email) {
 }
 
 function checkBody(email, password) {
-  const passCheck = password.length >= 6;
-
+  if (!password) return { message: 'O campo "password" é obrigatório' };
   if (!email) return { message: 'O campo "email" é obrigatório' }; 
   if (!verifyEmail(email)) return { message: 'O "email" deve ter o formato "email@email.com"' }; 
-  if (!password) return { message: 'O campo "password" é obrigatório' };
+  
+  const passCheck = password.length >= 6;
   if (!passCheck) return { message: 'O "password" deve ter pelo menos 6 caracteres' };
 }
 

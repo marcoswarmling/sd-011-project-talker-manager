@@ -177,8 +177,6 @@ const setTalker = async (req, res) => {
   res.status(201).send(newTalker);
 };
 
-
-
 module.exports = { 
   getAllTalkers,
   getTalkerById,
@@ -192,5 +190,4 @@ module.exports = {
   validAge,
   validName,
   setTalker,
-  setEditTalker,
 };

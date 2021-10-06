@@ -1,5 +1,5 @@
-function validateCredentials(req, res) {
-  const emailModel = /^[a-zA-Z0-9._]*@email.com$/i;
+function validateCredentials(req, res, next) {
+  const emailModel = /[a-zA-Z0-9]*@\w*.com$/i;
   const passMinLength = 6;
   const { email, password } = req.body;
 
@@ -15,6 +15,8 @@ function validateCredentials(req, res) {
     return res.status(400)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
+
+  next();
 }
 
 module.exports = validateCredentials;

@@ -9,10 +9,9 @@ function generateToken() {
 
 const validateCredentials = require('./validateCredentials');
 
-router.post('/', (_req, res) => {
+router.post('/', validateCredentials, (_req, res) => {
   const getToken = generateToken();
 
-  validateCredentials();
   return res.status(200).json({ token: getToken });
 });
 

@@ -1,3 +1,5 @@
+const fs = require('fs').promises;
+
 const authValidation = (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
@@ -72,10 +74,20 @@ const talkPropertiesValidation = (req, res, next) => {
   next();
 };
 
+const validateSearchTerm = async (req, res, next) => {
+  if (!req.query.searchTerm || req.query.searchTerm === '') {
+    const getTalkers = await fs.readFile('./talker.json', 'utf-8');
+    return res.status(200).json(JSON.parse(getTalkers));
+  }
+
+  next();
+};
+
 module.exports = {
   authValidation,
   nameValidation,
   ageValidation,
   talkValidation,
   talkPropertiesValidation,
+  validateSearchTerm,
 };

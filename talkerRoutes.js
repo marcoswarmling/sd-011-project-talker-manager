@@ -12,7 +12,26 @@ const {
   ageValidation,
   talkValidation,
   talkPropertiesValidation,
+  validateSearchTerm,
 } = require('./talkerValidations');
+
+router.get('/search', 
+  authValidation,
+  validateSearchTerm,
+  async (req, res) => {
+    const { searchTerm } = req.query;
+    try {
+      const getTalkers = await fs.readFile(talkersJSON, 'utf-8');
+      const talkersData = await JSON.parse(getTalkers);
+      const findTalker = talkersData.filter((talker) => talker.name.includes(searchTerm));
+      if (findTalker) {
+        return res.status(200).json(findTalker);
+      }
+      throw new Error();
+    } catch (error) {
+      return res.status(200).send([]);
+    }
+});
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -31,7 +50,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/', async (_req, res) => {
   const getTalkers = await fs.readFile(talkersJSON, 'utf-8');
-  res.status(200).json(JSON.parse(getTalkers));
+  return res.status(200).json(JSON.parse(getTalkers));
 });
 
 router.post('/', 

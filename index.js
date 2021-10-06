@@ -17,4 +17,4 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.use('/talker', talkerRoutes);
+app.use('/', talkerRoutes);

@@ -10,27 +10,20 @@ const {
     validateTalkIncrements,
 } = require('../middlewares/ValidatePostTalker');
 
-const talkerWrite = (req) => {
-    const talkerJSON = fs.readFileSync('./talker.json', 'utf8');
-    const talkerParse = JSON.parse(talkerJSON);
-    const { name, age, talk } = req;
-    const id = talkerParse.length + 1;
-    talkerParse.push({ name, age, id, talk });
- fs.writeFileSync('./talker.json', JSON.stringify(talkerParse));
- };
-
-router.post(
-'/',
- validateToken, 
- validateAge, 
- validateName,
- validateTalk,
- validateTalkIncrements,
-(req, res) => {
-const talkerRequest = req.body;
-talkerWrite(talkerRequest);
-return res.status(201).json(talkerRequest);
-},
-);
+router.post('/',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk, 
+  validateTalkIncrements,
+  async (req, res) => {
+  const { name, age, talk } = req.body;
+  const talkerContent = fs.readFileSync('./talker.json');
+  const talker = JSON.parse(talkerContent);
+  const id = talker[talker.length - 1].id + 1;
+  talker.push({ id, name, age, talk });
+  await fs.writeFileSync('./talker.json', JSON.stringify(talker, null, 2));
+  return res.status(201).json({ id, name, age, talk });
+});
 
 module.exports = router;

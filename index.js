@@ -6,7 +6,8 @@ app.use(bodyParser.json());
 const rescue = require('express-rescue');
 
 const functionsAsync = require('./functionAsync');
-const { validateEmail, validatePassword, generatorToken } = require('./validate');
+const { validateEmail, validatePassword, generatorToken, validateToken, validateName, 
+validateAge, validateDate, validateTalk, validateRate, validateWatched } = require('./validate');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -37,6 +38,22 @@ rescue(async (_req, res) => {
     const token = generatorToken();
     res.status(200).json({ token });
   });
+
+  app.post('/talker', validateToken, 
+  validateName, 
+  validateAge, 
+  validateTalk,
+  validateWatched, 
+  validateDate,
+  validateRate, rescue(async (req, res) => { 
+    const { name, age, talk } = req.body;
+    const newpersons = await functionsAsync.getReadFile();
+    const newId = newpersons.length + 1;
+    const person = { id: newId, name, age, talk };
+    newpersons.push(person);
+    await functionsAsync.setWriteFile(newpersons);
+    res.status(201).json(person);
+  }));
 
 app.listen(PORT, () => {
   console.log('Online');

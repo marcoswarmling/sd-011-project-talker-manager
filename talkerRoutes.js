@@ -1,27 +1,36 @@
 const router = require('express').Router();
 const rescue = require('express-rescue');
-const readFile = require('./utilityFunctions/readFile');
+const readTalkerFile = require('./readTalkerFile');
+const writeTalkerFile = require('./writeTalkerFile');
 const validateRegister = require('./middleware/validateRegister');
+const validateToken = require('./middleware/validateToken');
 
 router.get('/', rescue(async (req, res) => {
-    const file = await readFile();
+    const file = await readTalkerFile();
     return res.status(200).json(file);
 }));
 
 router.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
-  const file = await readFile();
+  const file = await readTalkerFile();
   const talkerId = await file.findIndex((t) => t.id === Number(id));
 
-  if (Number(id) > file.length) throw new Error('404');
+  if (talkerId === -1) throw new Error('404');
 
   return res.status(200).json(file[talkerId]);
 }));
 
-router.post('/', validateRegister, rescue(async (req, res) => {
-  // const file = await readFile();
-  res.status(201).json({ message: 'pessoa cadastrada com sucesso!' });
-}));
+router.post('/', validateToken, validateRegister, async (req, res) => {
+  try {
+    const file = await readTalkerFile();
+    const newTalker = { ...req.body, id: file.length + 1 };
+    const addNewTalker = JSON.stringify([...file, newTalker]);
+    await writeTalkerFile(addNewTalker);
+    return res.status(201).json(newTalker);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 router.use((err, _req, res, _next) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });

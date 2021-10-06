@@ -17,8 +17,11 @@ const singleDateValidation = require('../middlewares/singleDateValidation');
 const singleRateValidation = require('../middlewares/singleRateValidation');
 const singleTalkValidation = require('../middlewares/singleTalkValidation');
 const deleteTalker = require('../middlewares/deleteTalker');
+const findByQueryTalker = require('../middlewares/searchByQuery');
 
 router.get('/talker', readFileMiddleware);
+
+router.get('/talker/search', validateToken, findByQueryTalker);
 
 router.get('/talker/:id', getTalkerById);
 

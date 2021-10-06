@@ -31,10 +31,10 @@ function checkBody(email, password) {
 router.post('/', (req, res) => {
   const { email, password } = req.body;
   const errorValidate = checkBody(email, password);
-  if (errorValidate) {
-    return res.status(404).json(errorValidate);
+  if (!errorValidate) {
+    return res.status(200).json(tokenGenerator(16));
   }
-  return res.status(200).json(tokenGenerator(16));
+  return res.status(404).json(errorValidate);
 });
 
 module.exports = router;

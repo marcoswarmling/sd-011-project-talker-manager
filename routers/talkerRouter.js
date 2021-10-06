@@ -4,6 +4,8 @@ const router = express.Router();
 
 const fs = require('fs').promises;
 
+const { reading } = require('../helpers/main');
+
 const { 
   withOutName,
   tokenValid,
@@ -14,16 +16,14 @@ const {
 } = require('../middlewares/createdTalker');
 
 router.get('/talker', async (_req, res) => {
-  const data = await fs.readFile('./talker.json', 'utf8');
-  const talker = JSON.parse(data);
+  const talker = await reading();
 
   return res.status(200).json(talker);
 });
 
 router.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await fs.readFile('./talker.json', 'utf8');
-  const talker = JSON.parse(data);
+  const talker = await reading();
   const response = talker.find((r) => r.id === Number(id));
 
   if (!response) return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
@@ -41,14 +41,34 @@ validWatchedAt,
 async (req, res) => {
   const { name, age, talk } = req.body;
 
-  const data = await fs.readFile('./talker.json', 'utf8');
-  const talker = JSON.parse(data);
+  const talker = await reading();
 
   const id = talker.length + 1;
 
   talker.push({ id, name, age, talk });
   await fs.writeFile('./talker.json', JSON.stringify(talker));
   return res.status(201).json({ name, age, talk, id });
+});
+
+router.put('/talker/:id', 
+withOutName, 
+tokenValid, 
+ageValid, 
+talkValid, 
+rateInterval, 
+validWatchedAt,
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talker = await reading();
+
+  const talkIndex = talker.findIndex((r) => r.id === Number(id));
+
+  talker[talkIndex] = { ...talker[talkIndex], name, age, talk };
+  await fs.writeFile('./talker.json', JSON.stringify(talker));
+
+  const updateTalker = talker.find((r) => r.id === Number(id));
+  return res.status(200).json(updateTalker);
 });
 
 module.exports = router;

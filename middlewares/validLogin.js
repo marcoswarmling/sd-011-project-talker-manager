@@ -5,7 +5,7 @@ function validateEmail(email) {
 
 const validNameAndEmail = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email) res.status(400).send({ message: 'O campo "email" é obrigatório' });
+  if (!email) return res.status(400).send({ message: 'O campo "email" é obrigatório' });
   if (!validateEmail(email)) {
     return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
   }

@@ -7,9 +7,8 @@ const {
   validateEmail,
   validatePassword,
   getRandomToken,
-  validateToken,
 } = require('../middleware/validations');
 
-router.post('/login', validateEmail, validatePassword, validateToken, getRandomToken);
+router.post('/login', validateEmail, validatePassword, getRandomToken);
 
 module.exports = router;

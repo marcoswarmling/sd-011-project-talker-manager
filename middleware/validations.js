@@ -8,23 +8,9 @@ https://www.ti-enxame.com/pt/javascript/token-aleatorio-seguro-no-node.js/940938
 
 const crypto = require('crypto');
 
-const HTTP_OK_STATUS = 200;
-
 const getToken = crypto.randomBytes(8).toString('hex');
 const getRandomToken = (req, res) => {
-  res.status(HTTP_OK_STATUS).send({ token: getToken });
-};
-
-const validateToken = (req, res, next) => {
-  const { authorize } = req.headers;
-  if (!authorize) {
-    return res.status(400).json({ message: 'Token não encontrado' });
-  }
-  const magicNumber = 16;
-  if (authorize.length !== magicNumber) {
-    return res.status(400).json({ message: 'Token inválido' });
-  }
-  next();
+  res.status(200).send({ token: getToken });
 };
 
 const validateEmail = (req, res, next) => {
@@ -53,7 +39,6 @@ const validatePassword = (req, res, next) => {
 
 module.exports = {
   getRandomToken,
-  validateToken,
   validateEmail,
   validatePassword,
 };

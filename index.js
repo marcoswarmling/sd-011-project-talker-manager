@@ -20,7 +20,6 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1 - Crie o endpoint GET /talker
-
 app.get('/talker', rescue(async (_req, res) => {
   const talkersAsync = await talkers.getTalkers();
   
@@ -29,6 +28,7 @@ app.get('/talker', rescue(async (_req, res) => {
   res.status(200).json(talkersAsync);
 }));
 
+// Requisito 7 -  Crie o endpoint GET /talker/search?q=searchTerm
 app.get('/talker/search', validateToken, rescue(async (req, res) => {
   const talkersAsync = await talkers.getTalkers();
   const { q } = req.query;
@@ -43,7 +43,6 @@ app.get('/talker/search', validateToken, rescue(async (req, res) => {
 }));
 
 // Requisito 2 - Crie o endpoint GET /talker/:id
-
 app.get('/talker/:id', rescue(async (req, res) => {
   const talkersAsync = await talkers.getTalkers();
   const { id } = req.params;
@@ -55,14 +54,12 @@ app.get('/talker/:id', rescue(async (req, res) => {
 }));
 
 // Requisito 3 - Crie o endpoint POST /login
-
 app.post('/login', validateEmail, validatePassword, (_req, res) => {
   const token = generateToken();
   res.status(200).json({ token });  
 });
 
 // Requisito 4 - Crie o endpoint POST /talker
-
 app.post('/talker', validateToken, validateName,
 validateAge, validateTalk, validateWatchedAt,
 validateObjTalk, validateRate,
@@ -77,6 +74,7 @@ validateObjTalk, validateRate,
   res.status(201).json(newTalker);
 }));
 
+// Requisição 5 - Crie o endpoint PUT /talker/:id
 app.put('/talker/:id', validateToken, validateName,
 validateAge, validateTalk, validateWatchedAt,
 validateObjTalk, validateRate,
@@ -92,6 +90,7 @@ validateObjTalk, validateRate,
   res.status(200).json(talkersAsync[findTalker]);
  }));
 
+// Requisito 6 - Crie o endpoint DELETE /talker/:id
 app.delete('/talker/:id', validateToken, rescue(async (req, res) => {
   const talkersAsync = await talkers.getTalkers();
   const { id } = req.params;

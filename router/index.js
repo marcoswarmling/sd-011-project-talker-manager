@@ -8,6 +8,7 @@ const {
   setEditTalker,
   setTalker,
   getTalkerById,
+  getAllTalkers,
 } = require('../middleware/middleware');
 
 const {

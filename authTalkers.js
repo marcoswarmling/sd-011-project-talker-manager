@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const { getTalkers } = require('./readTalker');
 
+const userToken = crypto.randomBytes(8).toString('hex');
+
 const IDVerification = (req, res, next) => {
   const { id } = req.params;
   const talkers = getTalkers();
@@ -13,12 +15,11 @@ const IDVerification = (req, res, next) => {
 };
 
 const EmailVerification = (req, res, next) => {
-  const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const { email } = req.body;
-  if (!email || email === '') {
+  if (!email) {
     res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
-  if (!email.match(regexEmail)) {
+  if (!(email.includes('.com') && email.includes('@'))) {
     res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   next();
@@ -35,19 +36,16 @@ const PasswordVerification = (req, res, next) => {
   next();
 };
 
-const TokenCreation = (req, res, next) => {
-  const { email, password } = req.body;
-  if (email && password) {
-    const token = crypto.randomBytes(8).toString('hex');
-    res.status(200).json({ token });
-  }
-  next();
+const TokenCreation = (_req, res) => {
+  res.status(200).json({ token: userToken });
 };
 
 const TokenVerification = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) res.status(401).json({ message: 'Token não encontrado' });
-  if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization && authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
   next();
 };
 

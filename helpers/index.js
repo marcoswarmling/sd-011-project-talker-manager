@@ -1,3 +1,4 @@
-// const validators = require('./validators');
+const validateLogin = require('./loginValidator');
+const talkerValidators = require('./talkerValidators');
 
-// module.exports = { ...validators };
+module.exports = { validateLogin, ...talkerValidators };

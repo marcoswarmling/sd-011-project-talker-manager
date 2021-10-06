@@ -1,17 +1,17 @@
-// const fs = require('fs').promises;
+const fs = require('fs').promises;
 
-// const talker = '../talker.json';
+const talker = './talker.json';
 
-// function readTalker() {
-//   return fs.readFile(talker, 'utf8').then(
-//     (data) => JSON.parse(data),
-//   );
-// }
+function readTalker() {
+  return fs.readFile(talker, 'utf8').then(
+    (data) => JSON.parse(data),
+  );
+}
 
-// function writeTalker(data) {
-//   fs.writeFile(talker, data, 'utf-8', (error) => {
-//     if (error) throw error;
-//   });
-// }
+function writeTalker(data) {
+  fs.writeFile(talker, data, 'utf-8', (error) => {
+    if (error) throw error;
+  });
+}
 
-// module.exports = { readTalker, writeTalker };
+module.exports = { readTalker, writeTalker };

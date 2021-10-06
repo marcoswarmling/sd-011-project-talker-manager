@@ -30,9 +30,10 @@ router.get('/talker/:id', (req, res) => {
   res.status(HTTP_OK_STATUS).send(talkerId);
 });
 
-router.post('/login', validEmail, validPassword, (_req, res) =>
-  res.status(201).json({ token: tokenValue })
-);
+router.post('/login', validEmail, validPassword, (_req, res) => {
+  console.log('teste');
+  return res.status(201).json({ token: tokenValue });
+});
 
 // 4 - Crie o EndPoint POST / talker
 router.post('/talker', validateToken, validateTalker, (req, res) => {

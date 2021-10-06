@@ -9,6 +9,8 @@ const {
   tokenValid,
   ageValid,
   talkValid,
+  rateInterval,
+  validWatchedAt,
 } = require('../middlewares/createdTalker');
 
 router.get('/talker', async (_req, res) => {
@@ -29,7 +31,14 @@ router.get('/talker/:id', async (req, res) => {
   return res.status(200).json(response);
 });
 
-router.post('/talker', withOutName, tokenValid, ageValid, talkValid, async (req, res) => {
+router.post('/talker', 
+withOutName, 
+tokenValid, 
+ageValid, 
+talkValid, 
+rateInterval, 
+validWatchedAt, 
+async (req, res) => {
   const { name, age, talk } = req.body;
 
   const data = await fs.readFile('./talker.json', 'utf8');

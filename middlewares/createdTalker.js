@@ -40,37 +40,33 @@ function ageValid(req, res, next) {
   next();
 }
 
-function rateInterval(rate, res) {
+function rateInterval(req, res, next) {
+  const { talk: { rate } } = req.body;
   if (rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
+  next();
 }
 
-function validWatchedAt(watchedAt, res) {
+function validWatchedAt(req, res, next) {
+  const { talk: { watchedAt } } = req.body;
   const dateRgx = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
   const result = dateRgx.test(watchedAt);
   if (!result) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
+
+  next();
 }
 
 function talkValid(req, res, next) {
   const { talk } = req.body;
-
-  if (!talk) {
+  if (!talk || !talk.watchedAt || talk.rate === '' || talk.rate === undefined) {
     return res.status(400)
       .json({ 
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-
-  if (!talk.watchedAt || talk.rate === '' || talk.rate === undefined) {
-    return res.status(400)
-      .json({ 
-        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
-  }
-
-  rateInterval(talk.rate, res);
-  validWatchedAt(talk.watchedAt, res);
 
   next();
 }
@@ -80,4 +76,6 @@ module.exports = {
   tokenValid,
   ageValid,
   talkValid,
+  rateInterval,
+  validWatchedAt,
 };

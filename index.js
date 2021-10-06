@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const talker = require('./routes/talker');
-const talkerID = require('./routes/talkerID');
+const talker = require('./routes/getAllTalkers');
+const talkerID = require('./routes/getTalkerById');
 const login = require('./routes/login');
-const talkerPOST = require('./routes/talkerPOST');
+const talkerPOST = require('./routes/createTalker');
 
 const app = express();
 app.use(bodyParser.json());

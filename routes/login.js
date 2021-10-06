@@ -5,7 +5,7 @@ const validatePassword = require('../validate/validatePassword');
 
 const validateLogin = [validateEmail, validatePassword];
 
-router.post('/', validateLogin, (req, res) => {
+router.post('/', validateLogin, (_req, res) => {
   res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 });
 

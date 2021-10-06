@@ -24,4 +24,24 @@ const deleteTalker = async (req, res) => {
   res.status(HTTP_OK_STATUS).send({ message: deleteT });
 };
 
-module.exports = { searchTalk, deleteTalker };
+const setEditTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { rate, watchedAt } } = req.body;
+  const talker = await fs.readFile(path, 'utf8');
+  const result = JSON.parse(talker);
+  const talk = {
+    name,
+    age,
+    id: Number(id),
+    talk: {
+      rate,
+      watchedAt,
+    },
+  };
+  const talkIndex = result.findIndex((value) => value.id === Number(id));
+  result[talkIndex] = talk;
+  await fs.writeFile(path, JSON.stringify(result));
+  res.status(200).send(talk);
+};
+
+module.exports = { searchTalk, deleteTalker, setEditTalker };

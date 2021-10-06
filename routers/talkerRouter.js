@@ -70,4 +70,18 @@ talkerRouter.put(
   }),
 );
 
+talkerRouter.delete(
+  '/:id',
+  rescue(validateToken),
+  rescue(async (request, response) => {
+    const { id } = request.params;
+    const file = await readTalker();
+    const data = JSON.stringify(
+      file.filter((item) => (item.id !== Number(id))),
+    );
+    writeTalker(data);
+    response.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  }),
+);
+
 module.exports = talkerRouter;

@@ -85,4 +85,27 @@ router.delete('/:id',
     }
   });
 
+router.get('/search',
+  m.tokenVerify,
+  async (req, res) => {
+    const { q } = req.query;
+    try {
+      const data = await talkerData(PATH);
+
+      if (!q || q === '') {
+        return res.status(200).json(data);
+      }
+      const filterQuery = data
+        .filter(({ id, name, age, talk: { watchedAt, rate } }) => name.includes(q)
+          || watchedAt.includes(q)
+          || rate === Number(q)
+          || age === Number(q)
+          || id === Number(q));
+
+      res.status(200).json(filterQuery);
+    } catch (error) {
+      return res.status(500).end();
+    }
+  });
+
 module.exports = router;

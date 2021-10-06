@@ -102,7 +102,6 @@ app.put('/talker/:id',
   async (req, res) => {
     const { id } = req.params;
     const { name, age, talk: { watchedAt, rate } } = req.body;
-    // const newTalker = { id, name, age, talk: { watchedAt, rate } };
     const talkerList = await fs.readFile(talkerJsonFile, 'utf-8');
     const talkerListJson = JSON.parse(talkerList);
   
@@ -115,7 +114,22 @@ app.put('/talker/:id',
     await fs.writeFile(talkerJsonFile, talkerListStringfy);
   
     res.status(200).json(newTalker);
-    console.log(newTalker);
+});
+
+// REQUISITO 6
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  const talkerList = await fs.readFile(talkerJsonFile, 'utf-8');
+  const talkerListData = JSON.parse(talkerList);
+
+  const talkerIndex = talkerListData.findIndex((person) => person.id === id);
+  talkerListData.splice(talkerIndex, 1);
+  
+  const talkerListStringfy = JSON.stringify(talkerListData);
+  await fs.writeFile(talkerJsonFile, talkerListStringfy);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {

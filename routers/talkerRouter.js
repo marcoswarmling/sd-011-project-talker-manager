@@ -4,6 +4,13 @@ const router = express.Router();
 
 const fs = require('fs').promises;
 
+const { 
+  withOutName,
+  tokenValid,
+  ageValid,
+  talkValid,
+} = require('../middlewares/createdTalker');
+
 router.get('/talker', async (_req, res) => {
   const data = await fs.readFile('./talker.json', 'utf8');
   const talker = JSON.parse(data);
@@ -20,6 +27,20 @@ router.get('/talker/:id', async (req, res) => {
   if (!response) return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
   
   return res.status(200).json(response);
+});
+
+router.post('/talker', withOutName, tokenValid, ageValid, talkValid, async (req, res) => {
+  const { name, age, talk } = req.body;
+
+  const data = await fs.readFile('./talker.json', 'utf8');
+  const talker = JSON.parse(data);
+
+  const id = talker.length + 1;
+
+  talker.push({ id, name, age, talk });
+  const writeFile = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
+  writeFile(talker);
+  return res.status(201).json({ name, age, talk, id });
 });
 
 module.exports = router;

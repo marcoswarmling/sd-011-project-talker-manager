@@ -58,4 +58,19 @@ router.put('/:id',
   return res.status(200).json({ id: Number(id), name, age, talk });
 });
 
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  const people = await readFileContent();
+  const indexPeople = people.findIndex((p) => p.id === Number(id));
+
+  if (!indexPeople) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+
+  const newFileContent = people.filter((value) => value.id !== Number(id));
+
+  await fs.writeFile('./talker.json', JSON.stringify(newFileContent, null, 2));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

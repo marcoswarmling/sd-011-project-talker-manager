@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+const { validateLogin, genToken } = require('./middlewareNFunc');
+
 const talkerFile = './talker.json';
 
 const app = express();
@@ -42,6 +44,14 @@ app.get('/talker/:id', (req, res) => {
   if (talkerId) {
     return res.status(200).json(talkerId);
   }
+});
+
+// test login.test.js
+app.post('/login', validateLogin, (req, res) => {
+  // if (validatedEmail && validatedPassword) {
+    const token = genToken();
+    return res.status(200).json({ token });
+  // }
 });
 
 app.listen(PORT, () => {

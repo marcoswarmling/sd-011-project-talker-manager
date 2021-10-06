@@ -1,8 +1,4 @@
-const fs = require('fs').promises;
 const crypto = require('crypto');
-
-const HTTP_OK_STATUS = 200;
-const path = './talker.json';
 
 const loginToken = crypto.randomBytes(8).toString('hex');
 
@@ -129,8 +125,7 @@ const validRate = (req, res, next) => {
   next();
 };
 
-module.exports = { 
-  getAllTalkers,
+module.exports = {
   validEmail,
   validToken,
   validPassword,

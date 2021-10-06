@@ -126,7 +126,7 @@ const validTalk = (req, res, next) => {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
- 
+  // Jean Esteves me ajudou a resolver o erro que estava acontecendo no desafio 4;
   next();
 };
 

@@ -3,12 +3,11 @@ const fs = require('fs');
 
 const router = express.Router();
 
-app.get('/talker', rescue(async (_request, response) => {
-  const file = await fs.readFile('./talker.json', 'utf8');
-  if (!file) return response.status(200).json([]);
-  response.status(200).json(JSON.parse(file));
-}));
-
+router.get('/', (_req, res) => {
+  const file =  fs.readFileSync('./talker.json', 'utf8');
+  if (!file) return res.status(200).json([]);
+  res.status(200).json(JSON.parse(file));
+});
 
 router.get('/:id', (req, res) => {
   const talkers = fs.readFileSync('./talker.json', 'utf-8');

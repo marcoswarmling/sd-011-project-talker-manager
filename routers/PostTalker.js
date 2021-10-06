@@ -44,7 +44,7 @@ async (req, res) => {
     return res.status(200).json(editedTalker);
 });
 
-/*router.delete('/:id',
+/* router.delete('/:id',
 validateToken,
 validateAge,
 validateName,
@@ -58,7 +58,6 @@ async (req, res) => {
     talkerParse.splice(1, talkerIndex);
    fs.writeFileSync('./talker.json', JSON.stringify(talkerParse, null, 2));
     return res.status(200).json(talkerParse);
-});*/
+}); */
 
 module.exports = router;
-

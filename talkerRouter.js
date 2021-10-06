@@ -95,9 +95,9 @@ router.get('/:id', async (req, res) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-router.post('/', authMiddleware, validationAddTalkerName, 
-validationAddTalkerAge, validationAddTalkerTalk,
-validationAddTalkerTalkRate, validationAddTalkerTalkWatchedAt, async (req, res) => {
+router.post('/', validationAddTalkerName, validationAddTalkerAge, 
+  validationAddTalkerTalk, validationAddTalkerTalkRate, 
+  validationAddTalkerTalkWatchedAt, authMiddleware, async (req, res) => {
   const { name, age, talk } = req.body;
   const newTalker = {
     name,

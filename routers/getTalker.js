@@ -2,12 +2,12 @@
  const fs = require('fs');
 
 const talkerJSON = './talker.json';
- /* const { 
+  const { 
   validateToken,
-  validateAge,
-  validateName,
-  validateTalk,
-  validateTalkIncrements,
+ // validateAge,
+ // validateName,
+ // validateTalk,
+//  validateTalkIncrements,
 } = require('../middlewares/ValidatePostTalker'); */
 
  const router = express.Router();

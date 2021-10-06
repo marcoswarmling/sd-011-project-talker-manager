@@ -197,8 +197,6 @@ const setEditTalker = async (req, res) => {
   res.status(200).send(talk);
 };
 
-
-
 module.exports = { 
   getAllTalkers,
   getTalkerById,

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
-const { searchTalk, deleteTalker, } = require('../middleware/middleware')
+const { searchTalk, deleteTalker } = require('../middleware/middleware');
+
 const {
   getAllTalkers, 
   getTalkerById,

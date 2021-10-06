@@ -18,7 +18,7 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1 - GET com todos os talkers
-app.get('/talkers', async (_req, res) => {
+app.get('/talker', async (_req, res) => {
   readFile('./talker.json', 'utf8').then((data) => {
       res.status('200').json(JSON.parse(data));
   });

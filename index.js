@@ -92,6 +92,32 @@ app.post(
   },
 );
 
+// REQUISITO 5
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkKeys,  
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    // const newTalker = { id, name, age, talk: { watchedAt, rate } };
+    const talkerList = await fs.readFile(talkerJsonFile, 'utf-8');
+    const talkerListJson = JSON.parse(talkerList);
+  
+    const talkerIndex = talkerListJson.findIndex((talker) => talker.id === Number(id));
+    talkerListJson[talkerIndex] = { 
+      ...talkerListJson[talkerIndex], name, age, talk: { watchedAt, rate },
+    };
+    const newTalker = talkerListJson[talkerIndex];
+    const talkerListStringfy = JSON.stringify(talkerListJson);
+    await fs.writeFile(talkerJsonFile, talkerListStringfy);
+  
+    res.status(200).json(newTalker);
+    console.log(newTalker);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

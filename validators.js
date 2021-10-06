@@ -19,7 +19,7 @@ const validLogin = (email, pass) => {
 const generatorToken = (email, pass) => {
   if (validLogin(email, pass)) {
     let token = '';
-    const possible = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const possible = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     for (let index = 0; index < 16; index += 1) {
       token += possible.charAt(Math.floor(Math.random() * possible.length));
     }
@@ -31,4 +31,5 @@ const generatorToken = (email, pass) => {
 module.exports = { validEmail,
 validPassword,
    validLogin,
-generatorToken };
+generatorToken,
+};

@@ -154,6 +154,17 @@ validateTalkMiddleware, validateDateMiddleware, validateRateMiddleware, async (r
   res.status(200).json(talkers[talkerIndex]);
 });
 
+app.delete('/talker/:id', validateTokenMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const response = await fs.readFile(db, 'utf8');
+  const talkers = JSON.parse(response);
+  const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+  if (talkerIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
+  talkers.splice(talkerIndex, 1);
+  await fs.writeFile(db, JSON.stringify(talkers));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

@@ -1,5 +1,6 @@
 const express = require('express');
-const talkerRoutes = require('./talker-routes');
+const talkerRoutes = require('./talkerRoutes');
+const loginRoutes = require('./loginRoutes');
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/talker', talkerRoutes);
-app.use('/talker/:id', talkerRoutes);
+app.use('/login', loginRoutes);
 
 app.listen(PORT, () => {
   console.log('Online');

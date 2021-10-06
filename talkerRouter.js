@@ -58,12 +58,15 @@ const validateTalk2 = ((req, res, next) => {
 });
 
 // Requisições
-router.get('/', validateFile, (req, res) => {
+// Recupera todos os Registros
+router.get('/', validateFile,
+(req, res, _next) => {
   const { fileContent } = req;
   if (!fileContent.length) return res.status(HTTP_OK_STATUS).json([]);
   res.status(HTTP_OK_STATUS).json(fileContent);
 });
 
+// Adiciona novo registro
 router.post('/', validateFile, validateToken, validateNameAndAge, validateTalk1, validateTalk2,
 (req, res, _next) => {
   const { fileContent } = req;
@@ -74,7 +77,24 @@ router.post('/', validateFile, validateToken, validateNameAndAge, validateTalk1,
   res.status(201).json(newTalker);
 });
 
-router.get('/:id', validateFile, (req, res) => {
+// Pesquisa registros pela propriedade "name"
+router.get('/search', validateFile, validateToken,
+(req, res, _next) => {
+  const { fileContent } = req;
+  const { q } = req.query;
+
+  if (!q) return res.status(HTTP_OK_STATUS).json(fileContent);
+
+  const foundTalkers = fileContent.filter((t) => t.name.includes(q));
+
+  if (foundTalkers.length === 0) return res.status(HTTP_OK_STATUS).json([]);
+
+  res.status(200).json(foundTalkers);
+});
+
+// Recupera registro por "id"
+router.get('/:id', validateFile,
+(req, res, _next) => {
   const { id } = req.params;
   const { fileContent } = req;
   const foundTalker = fileContent.find((t) => t.id === parseInt(id, 10));
@@ -82,6 +102,7 @@ router.get('/:id', validateFile, (req, res) => {
   res.status(HTTP_OK_STATUS).json(foundTalker);
 });
 
+// Modifica registro por "id"
 router.put('/:id', validateFile, validateToken, validateNameAndAge, validateTalk1, validateTalk2,
 (req, res, _next) => {
   const { fileContent } = req;
@@ -99,6 +120,7 @@ router.put('/:id', validateFile, validateToken, validateNameAndAge, validateTalk
   res.status(200).json({ id: parseInt(id, 10), ...newTalker });
 });
 
+// Deleta registro pro "id"
 router.delete('/:id', validateFile, validateToken,
 (req, res, _next) => {
   const { fileContent } = req;

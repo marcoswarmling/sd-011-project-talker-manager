@@ -41,7 +41,7 @@ router.put('/:id', validateToken, validateRegister, async (req, res) => {
     file[talkerIndex] = { ...req.body, id: Number(id) };
     const updatedFile = JSON.stringify(file);
     await writeTalkerFile(updatedFile);
-    return res.status(200).json({ message: 'pessoa palestrante' });
+    return res.status(200).json({ ...req.body, id: Number(id) });
   } catch (error) {
     console.error(error);
   }

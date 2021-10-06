@@ -69,4 +69,20 @@ router.put('/:id',
     }
   });
 
+router.delete('/:id',
+  m.tokenVerify,
+  async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const data = await talkerData(PATH);
+      const idTalker = data.filter((t) => t.id !== Number(id));
+
+      await fs.writeFile(PATH, JSON.stringify(idTalker), 'utf-8');
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    } catch (error) {
+      res.status(500).end();
+    }
+  });
+
 module.exports = router;

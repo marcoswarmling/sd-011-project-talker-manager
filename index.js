@@ -18,9 +18,9 @@ const PORT = '3000';
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/talker', async (_request, response) => {
   try {
-    const data = await fs.readFile('./talker.json');
+    const data = await fs.readFile('./talker.json', 'utf-8');
     // requisito 1
-   return response.status(HTTP_OK_STATUS).json(JSON.parse(data));
+    response.status(HTTP_OK_STATUS).json(JSON.parse(data));
   } catch (error) {
     response.status(400).json({ message: `Erro ${error.code}` });
   }
@@ -31,8 +31,8 @@ app.get('/talker', async (_request, response) => {
 app.get('/talker/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await fs.readFile('./talker.json');
-    const findData = JSON.parse(data);
+    const data = await fs.readFile('./talker.json', 'utf-8');
+    const findData = await JSON.parse(data);
     const findId = findData.find((e) => e.id === parseInt(id, 10) && [e]);
     if (!findId) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });

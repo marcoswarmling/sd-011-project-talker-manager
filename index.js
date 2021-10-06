@@ -12,6 +12,10 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+const router = require('./rotas/index');
+
+app.use('/', router);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

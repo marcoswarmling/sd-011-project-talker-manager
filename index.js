@@ -21,11 +21,10 @@ async function getTalkers() {
 
 app.get('/talker', async (_req, res) => {
   const data = await getTalkers();
-  console.log(data);
   if (data.length === 0) {
-  res.status(HTTP_OK_STATUS).json([]);
+    res.status(HTTP_OK_STATUS).json([]);
   }
-  res.status(HTTP_OK_STATUS).json({o:'i'});
+  res.status(HTTP_OK_STATUS).json(data);
 });
 
 app.get('/', (_request, response) => {

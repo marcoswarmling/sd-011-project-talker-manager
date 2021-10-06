@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const fs = require('fs').promises;
+const fs = require('fs');
 
-router.get('/talker', async (_req, res) => {
-  const talkers = await fs.readFile('./talker.json', 'utf-8');
+router.get('/', (_req, res) => {
+  const talkers = fs.readFileSync('./talker.json', 'utf-8');
   
   res.status(200).json(JSON.parse(talkers));
 });

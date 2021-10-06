@@ -84,7 +84,7 @@ module.exports = app.put('/talker/:id',
     parseJson[getObjectID] = {
       name,
       age,
-      id,
+      id: Number(id),
       talk: {
         ...talk,
       },

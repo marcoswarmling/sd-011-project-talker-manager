@@ -8,8 +8,8 @@ function validateWatchedAt(req, res, next) {
   }
 
   const validateDate = /^[0-9]{2}\/{1}[0-9]{2}\/{1}[0-9]{4}$/g;
-  const testDate = validateDate.test(watchedAt);
-  if (!testDate) {
+  const testFormatDate = validateDate.test(watchedAt);
+  if (!testFormatDate) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 

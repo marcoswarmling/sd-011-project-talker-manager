@@ -75,12 +75,41 @@ app.post('/talker',
 
     listOfTalkers.push(newTalker);
 
-    // console.log(JSON.stringify(listOfTalkers));
-
     writeNewTalker(JSON.stringify(listOfTalkers));
 
     res.status(201).json(newTalker);
   });
+
+// ? ================================= Desafio 4 = ======================================
+
+function handleCreateNewTalker(talker, newTalker, id) {
+  const newList = talker.filter((e) => e.id !== Number(id));
+
+  newList.push(newTalker);
+
+  writeNewTalker(JSON.stringify(newList));
+}
+
+app.put('/talker/:id', validateToken, validateName, validateAge,
+  validateTalk, validateWatchedAt, validateRate, (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talker = talkersList();
+  const putNewTalkerInfos = talker.find((e) => e.id === Number(id));
+
+  if (!putNewTalkerInfos) {
+    return res.status(404)
+    .json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  const newTalker = {
+    name,
+    age,
+    id: Number(id),
+    talk,
+  };
+  handleCreateNewTalker(talker, newTalker, id);
+  res.status(200).json(newTalker);
+});
 
 // ! ================================= Fim Desafios ====================================
 

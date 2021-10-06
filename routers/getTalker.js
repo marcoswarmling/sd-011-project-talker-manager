@@ -4,10 +4,10 @@
 const talkerJSON = './talker.json';
   const { 
   validateToken,
- // validateAge,
- // validateName,
- // validateTalk,
-//  validateTalkIncrements,
+  validateAge,
+  validateName,
+  validateTalk,
+  validateTalkIncrements,
 } = require('../middlewares/ValidatePostTalker'); 
 
  const router = express.Router();
@@ -31,7 +31,7 @@ router.get('/', (_req, res) => {
     } else { res.status(200).send(talker); }
   },
 );
-/*
+
 router.post('/',
   validateToken,
   validateName,
@@ -84,6 +84,6 @@ router.delete('/:id', validateToken, (req, res) => {
 if (!talker) {
  return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 } return res.status(200).json(talker);
-}); */
+}); 
 
 module.exports = router; 

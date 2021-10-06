@@ -1,9 +1,9 @@
 const emailValidate = require('./email');
-const passawordValidate = require('./passaword');
+const passwordValidate = require('./password');
 const getToken = require('./token');
 
 module.exports = {
   emailValidate,
-  passawordValidate,
+  passwordValidate,
   getToken,
 };

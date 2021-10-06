@@ -1,13 +1,13 @@
-const { emailValidate, passawordValidate } = require('../functionsLogin/index');
+const { emailValidate, passwordValidate } = require('../functionsLogin/index');
 
 const login = (req, res, next) => {
-  const { email, passaword } = req.body;
+  const { email, password } = req.body;
   if (!email) { return res.status(400).json({ message: 'O campo "email" é obrigatório' }); }
     
-  if (!passaword) { return res.status(400).json({ message: 'O campo "password" é obrigatório' }); }
+  if (!password) { return res.status(400).json({ message: 'O campo "password" é obrigatório' }); }
 
   const emailValidation = emailValidate(email);
-  const passawordValidation = passawordValidate(passaword);
+  const passawordValidation = passwordValidate(password);
 
   if (!emailValidation) {
         return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });

@@ -1,6 +1,6 @@
 const emailValidate = (email) => {
   const regexEmail = /^([\w]+)@([\w]+\.)+([\w]{2,})/i;
-  if (regexEmail !== email) return false;
+  if (regexEmail.test(email)) return false;
 
   return true;
 };

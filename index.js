@@ -36,7 +36,7 @@ app.get('/talker/:id', (req, res) => {
 
   const dataFind = data.find((item) => item.id === Number(id));
   
-  if (!dataFind) res.status(400).json({ message: 'Pessoa palestrante não encontrada' });
+  if (!dataFind) res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(dataFind);
 });
 

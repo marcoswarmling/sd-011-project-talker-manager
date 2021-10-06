@@ -24,9 +24,27 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(findTalker);
 });
 
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  const data = await readTalkerFile();
+
+  const newData = data.filter((talker) => Number(talker.id) !== Number(id));
+
+  await writeTalkerFile(newData);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+router.use(validateToken);
+router.use(validateName);
+router.use(validateAge);
+router.use(validateTalk);
+router.use(validateRate);
+
 router
   .post('/',
-  validateToken, validateName, validateAge, validateTalk, validateRate, async (req, res) => {
+  async (req, res) => {
   const { name, age, talk } = req.body;
 
   const data = await readTalkerFile();
@@ -39,7 +57,7 @@ router
 
 router
   .put('/:id',
-  validateToken, validateName, validateAge, validateTalk, validateRate, async (req, res) => {
+  async (req, res) => {
   const { name, age, talk } = req.body;
   const { id } = req.params;
 

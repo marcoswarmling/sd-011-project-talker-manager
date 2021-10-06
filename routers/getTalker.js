@@ -29,10 +29,9 @@ router.get('/:id', (req, res) => {
   const talkers = fs.readFileSync('./talker.json', 'utf8');
   const result = JSON.parse(talkers);
   const talker = result.find((person) => person.id === parseInt(id, 10));
-if(!talker) {return res.status(404).json({"message": "Pessoa palestrante não encontrada"})
-}else {return res.status(200).json(talker)}
-
- 
+if (!talker) {
+ return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+} return res.status(200).json(talker);
 });
 
 module.exports = router;

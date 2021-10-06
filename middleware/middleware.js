@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const { status } = require('../status/index');
 
 const messages = 'Pessoa palestrante não encontrada';
 const deleteT = 'Pessoa palestrante deletada com sucesso';

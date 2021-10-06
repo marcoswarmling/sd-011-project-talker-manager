@@ -1,16 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const talker = require('./routes/getAllTalkers');
-const talkerID = require('./routes/getTalkerById');
+const getAllTalkers = require('./routes/getAllTalkers');
+const getTalkerById = require('./routes/getTalkerById');
 const login = require('./routes/login');
-const talkerPOST = require('./routes/createTalker');
+const createTalker = require('./routes/createTalker');
+const editTalker = require('./routes/editTalker');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(talker);
-app.use(talkerID);
+app.use(getAllTalkers);
+app.use(getTalkerById);
 app.use(login);
-app.use(talkerPOST);
+app.use(createTalker);
+app.use(editTalker);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

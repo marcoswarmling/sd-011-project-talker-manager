@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const rescue = require('express-rescue');
+const crypto = require('crypto');
+const talkerRouter = require('./talkerRouter');
+
+const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const app = express();
 app.use(bodyParser.json());
@@ -9,29 +11,28 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const validateFile = rescue((req, _res, next) => {
-  const result = fs.readFileSync('./talker.json');
-  req.fileContent = JSON.parse(result);
-  next();
-});
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', validateFile, (req, res) => {
-  const { fileContent } = req;
-  if (!fileContent.length) return res.status(HTTP_OK_STATUS).json([]);
-  res.status(HTTP_OK_STATUS).json(fileContent);
-});
+app.use('/talker', talkerRouter);
 
-app.get('/talker/:id', validateFile, (req, res) => {
-  const { id } = req.params;
-  const { fileContent } = req;
-  const foundTalker = fileContent.find((t) => t.id === parseInt(id, 10));
-  if (!foundTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(HTTP_OK_STATUS).json(foundTalker);
+app.post('/login', (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  } if (!email.match(regEmail)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  } if (!password) {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  } if (password.length < 6) {
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+  next();
+}, (_req, res) => {
+  const token = crypto.randomBytes(16).toString('hex').substr(0, 16);
+  res.status(HTTP_OK_STATUS).json({ token });
 });
 
 app.use((err, _req, res, _next) => { 

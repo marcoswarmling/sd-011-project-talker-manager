@@ -4,7 +4,7 @@ const fs = require('fs');
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-  const file =  fs.readFileSync('./talker.json', 'utf8');
+  const file = fs.readFileSync('./talker.json', 'utf8');
   if (!file) return res.status(200).json([]);
   res.status(200).json(JSON.parse(file));
 });

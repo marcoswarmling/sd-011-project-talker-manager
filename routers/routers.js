@@ -16,6 +16,7 @@ const editTalker = require('../middlewares/editTalker');
 const singleDateValidation = require('../middlewares/singleDateValidation');
 const singleRateValidation = require('../middlewares/singleRateValidation');
 const singleTalkValidation = require('../middlewares/singleTalkValidation');
+const deleteTalker = require('../middlewares/deleteTalker');
 
 router.get('/talker', readFileMiddleware);
 
@@ -27,5 +28,7 @@ router.post('/talker', validateToken, validateName, validateAge, validateTalk, r
 
 router.put('/talker/:id', validateToken, validateName, validateAge, 
 singleTalkValidation, singleDateValidation, singleRateValidation, editTalker);
+
+router.delete('/talker/:id', validateToken, deleteTalker);
 
 module.exports = router;

@@ -1,44 +1,63 @@
 // Requisito 3
 
-const verifyEmailExists = (req, res, next) => {
+const crypto = require('crypto');
+
+function verifyEmailExists(req, res, next) {
   const { email } = req.body;
 
   if (email === '' || !email) {
-    res.status(400).json({ message: 'O campo "email" é obrigatório' });
-    next();
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
-};
+  next();
+}
 
-const verifyEmailisValid = (req, res, next) => {
+function verifyEmailisValid(req, res, next) {
   const { email } = req.body;
 
   if (!email || !email.includes('@') || !email.includes('.com')) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   next();
-};
+}
 
-const verifyPasswordExists = (req, res, next) => {
+function verifyPasswordExists(req, res, next) {
   const { password } = req.body;
 
-  if (password === '' || !password) {
-    res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  if (!password) {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   next();
-};
+}
 
-const verifyPasswordIsValid = (req, res, next) => {
+function verifyPasswordIsValid(req, res, next) {
   const { password } = req.body;
 
   if (password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   next();
-};
+}
+
+function generateToken() {
+  const token = crypto.randomBytes(8).toString('hex');
+  return token;
+}
+
+function verifyTokenIsValid(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (!token || token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido!' });
+  }
+
+  return next();
+}
 
 module.exports = {
   verifyEmailExists,
   verifyEmailisValid,
   verifyPasswordExists,
   verifyPasswordIsValid,
+  generateToken,
+  verifyTokenIsValid,
 };

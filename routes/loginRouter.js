@@ -8,6 +8,7 @@ const {
   verifyEmailisValid,
   verifyPasswordExists,
   verifyPasswordIsValid,
+  generateToken,
 } = require('../middlewares/validateLogin');
 
 const loginValidations = [
@@ -16,12 +17,8 @@ const loginValidations = [
   verifyPasswordExists,
   verifyPasswordIsValid];
 
-router.post('/', loginValidations, (req, res) => {
-    const token = '7mqaVRXJSp886CGr';
-    if (token) return res.status(200).json({ token });
-    
-    const { email, password } = req.body;
-    if (email && password) return res.status(200).json({ email, password });
+router.post('/', loginValidations, (_req, res) => {
+  res.status(200).json({ token: generateToken() }); // Espera retornar o token.
 });
 
 module.exports = router;

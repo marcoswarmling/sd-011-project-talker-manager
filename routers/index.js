@@ -1,18 +1,18 @@
 const router = require('express').Router();
 
 const {
-  // AgeVerify,
-  // nameVerify,
-  // validTalk,
-  // talkerSetter,
+  AgeVerify,
+  nameVerify,
+  validTalk,
+  talkerSetter,
   TokenCreation,
   getAllTalkers,
   IDVerification,
-  // TokenVerification,
-  // ratedVerification,
+  TokenVerification,
+  ratedVerification,
   EmailVerification,
   PasswordVerification,
-  // watchedAtVerification,
+  watchedAtVerification,
 } = require('../authTalkers');
 
 // Requisito 1
@@ -29,15 +29,15 @@ router.post('/login', PasswordVerification, EmailVerification, TokenCreation);
 
 // Requisito 4
 
-// router.post(
-//   '/talker',
-//   TokenVerification,
-//   validTalk,
-//   ratedVerification,
-//   watchedAtVerification,
-//   AgeVerify,
-//   nameVerify,
-//   talkerSetter,
-// );
+router.post(
+  '/talker',
+  TokenVerification,
+  validTalk,
+  ratedVerification,
+  watchedAtVerification,
+  AgeVerify,
+  nameVerify,
+  talkerSetter,
+);
 
 module.exports = router;

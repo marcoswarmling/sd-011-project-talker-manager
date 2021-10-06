@@ -214,5 +214,4 @@ module.exports = {
   validName,
   setTalker,
   setEditTalker,
-  deleteTalker,
 };

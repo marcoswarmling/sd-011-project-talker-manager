@@ -69,6 +69,8 @@ app.get('/talker/:id', async (req, res) => {
 //   token.join('');
 //   return token;
 // }
+
+// O código abaixo foi sugerido por Bruna Campos. Segue repositório: https://github.com/tryber/sd-011-project-talker-manager/pull/10/files
 const getToken = () => {
   const token = crypto.randomBytes(8).toString('hex');
   return token;

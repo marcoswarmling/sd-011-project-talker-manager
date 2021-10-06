@@ -35,7 +35,6 @@ router.post('/', checkToken, checkTalker, checkTalk, checkDate, checkRate, async
     age,
     talk: { watchedAt, rate },
   };
-  console.log(newDataTalker);
   const currentTalkers = await getTalkers('talker.json');
   const newTalkers = [...currentTalkers, newDataTalker];
 
@@ -48,4 +47,18 @@ router.post('/', checkToken, checkTalker, checkTalk, checkDate, checkRate, async
   res.status(201).json(newDataTalker);
 });
 
+router.put('/:id', checkToken, checkTalker, checkTalk, checkDate, checkRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const newDataTalker = {
+    name,
+    age,
+    talk: { watchedAt, rate },
+  };
+  const currentTalkers = await getTalkers('talker.json');
+  const idUpdateTalk = currentTalkers.findIndex((t) => t.id === parseInt(id, 10));
+  currentTalkers[idUpdateTalk] = { ...currentTalkers[idUpdateTalk], ...newDataTalker };
+  await updateTalkers('talker.json', currentTalkers);
+  res.status(200).json(currentTalkers[idUpdateTalk]);
+});
 module.exports = router;

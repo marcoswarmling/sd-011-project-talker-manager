@@ -14,6 +14,7 @@ function checkTalk(req, res, next) {
 
 function checkDate(req, res, next) {
   const { talk: { watchedAt } } = req.body;
+  console.log(watchedAt);
   if (watchedAt.split('/').length !== 3) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
@@ -30,13 +31,12 @@ function checkDate(req, res, next) {
 }
 
 function checkRate(req, res, next) {
-  const { talk } = req.body;
-  const { rate } = talk;
+  const { talk: { rate } } = req.body;
 
   if (!Number.isInteger(parseInt(rate, 10))) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  if (parseInt(rate, 10) < 1 || parseInt(rate, 10) > 5) {
+  if (rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();

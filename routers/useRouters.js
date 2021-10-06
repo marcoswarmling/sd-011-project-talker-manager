@@ -67,7 +67,7 @@ router.put(
       const talkerData = await fs.readFile('./talker.json', 'utf8');
       const talker = JSON.parse(talkerData);
       const userIndex = talker.findIndex((user) => user.id === Number(id));
-      talker[userIndex].push(...talker[userIndex], { name, age, talk });
+      talker[userIndex] = ({ ...talker[userIndex], name, age, talk });
       await fs.writeFile('./talker.json', JSON.stringify(talker));
       const newUser = talker.find((user) => user.id === Number(id));
       return res.status(200).json(newUser);

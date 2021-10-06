@@ -7,8 +7,6 @@ const router = express.Router();
 
 const app = express();
 
-app.use(express.json());
-
 router.post('/', validateEmail, validatePassword, (req, res) => {  
   const token = crypto.randomBytes(8).toString('hex');
 

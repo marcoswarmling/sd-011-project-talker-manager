@@ -3,7 +3,7 @@ const HTTP_ERROR_STATUS = 400;
 const ageValid = (req, res, next) => {
   const { age } = req.body;
 
-  if (!age || typeof age === 'number') {
+  if (!age || age === '') {
     return res.status(HTTP_ERROR_STATUS)
       .json({ message: 'O campo "age" é obrigatório' });
   }

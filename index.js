@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const HTTP_OK_STATUS = 200;
+const HTTP_TALKER_OK_STATUS = 201;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -79,10 +80,12 @@ app.post('/talker',
   parseFetch.push(obj);
   await fs.writeFile('./talker.json', JSON.stringify(parseFetch));
 
-  return res.status(HTTP_OK_STATUS).json(obj);
+  return res.status(HTTP_TALKER_OK_STATUS).json(obj);
 });
 
 // requisito 5
+
+app.put('/talker/:id');
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

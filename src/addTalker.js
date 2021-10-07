@@ -3,7 +3,7 @@ const path = require('path');
 
 const filePath = path.resolve(__dirname, '..', 'talker.json');
 
-const addTalker = (req, res, _next) => {
+const addNewTalker = (req, res, _next) => {
   const talker = JSON.parse(fs.readFileSync('talker.json'));
   const newTalker = {
     id: talker.length + 1,
@@ -19,4 +19,4 @@ const addTalker = (req, res, _next) => {
   res.status(201).json(newTalker);
 };
 
-module.exports = addTalker;
+module.exports = addNewTalker;

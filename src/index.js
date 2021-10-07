@@ -1,13 +1,12 @@
 const error = require('./error');
 const addTalker = require('./addTalker');
-const { login, 
-    validName,
-    validAge,
-    validTalk,
-    validaData,
-    validRate,
-    generateToken,
-    isValidToken } = require('./login');
+const login = require('./login');
+const scanToken = require('./scanToken');
+const validName = require('./validName');
+const validAge = require('./validAge');
+const validDate = require('./validDate');
+const validRate = require('./validRate');
+const validTalk = require('./validTalk');
 
 module.exports = {
   addTalker,
@@ -16,8 +15,7 @@ module.exports = {
   validName,
   validAge,
   validTalk,
-  validaData,
+  validDate,
   validRate,
-  generateToken,
-  isValidToken,
+  scanToken,
 };

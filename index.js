@@ -5,11 +5,10 @@ const { login,
   validName,
   validAge,
   validTalk,
-  validaData,
+  validDate,
   validRate,
-  generateToken,
-  isValidToken, 
-  addTalker } = require('./src');
+  addTalker, 
+  scanToken } = require('./src');
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,13 +21,12 @@ app.use(router);
 app.post('/login', login);
 
 app.post('/talker', [
+  scanToken,
   validName,
   validAge,
   validTalk,
-  validaData,
+  validDate,
   validRate,
-  generateToken,
-  isValidToken,
   addTalker,
 ]);
 

@@ -10,7 +10,8 @@ const tokenValid = require('./middleware/validationToken');
 const nameValid = require('./middleware/validationName');
 const ageValid = require('./middleware/validationAge');
 const talkValid = require('./middleware/validationTalk');
-const watchRateValid = require('./middleware/validationWatchRate');
+const watchValid = require('./middleware/validationWatch');
+const rateValid = require('./middleware/validationRate');
 // const newData = require('./middleware/newData');
 
 const app = express();
@@ -36,6 +37,18 @@ app.get('/talker', async (_request, response) => {
   } catch (error) {
     response.status(400).json({ message: `Erro ${error.code}` });
   }
+});
+
+// requisito 7
+
+app.get('/talker/search', tokenValid, async (req, res) => {
+  const { q } = req.query;
+
+  const data = await fs.readFile(URL, 'utf-8');
+  const findData = await JSON.parse(data);
+  const search = findData.filter((e) => (e.name).includes(q) && e);
+
+  return res.status(HTTP_OK_STATUS).json(search);
 });
 
 // requisito 2
@@ -66,7 +79,8 @@ app.post('/talker',
   nameValid,
   ageValid,
   talkValid,
-  watchRateValid,
+  rateValid,
+  watchValid,
   async (req, res) => {
   const { name, age, talk } = req.body;
   const fetch = await fs.readFile(URL, 'utf-8');
@@ -90,7 +104,8 @@ app.put('/talker/:id',
   nameValid,
   ageValid,
   talkValid,
-  watchRateValid,
+  watchValid,
+  rateValid,
   async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
@@ -106,11 +121,26 @@ app.put('/talker/:id',
     }
     return e;
   });
-  
+
   await fs.writeFile(URL, JSON.stringify(update));
 
   return res.status(HTTP_OK_STATUS).json(findData[findIdex]);
 });
+
+// requisito 6
+
+app.delete('/talker/:id', tokenValid, async (req, res) => {
+  const { id } = req.params;
+  const data = await fs.readFile(URL, 'utf-8');
+  const findData = await JSON.parse(data);
+  const updateDeleted = findData.map((e) => e.id !== parseInt(id, 10) && e);
+
+  await fs.writeFile(URL, JSON.stringify(updateDeleted));
+
+  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

@@ -1,6 +1,6 @@
 const express = require('express');
 const talker = require('./desafios/talker');
-// const login = require('./desafios/login');
+const login = require('./desafios/login');
 
 const app = express();
 app.use(express.json());
@@ -15,7 +15,7 @@ app.get('/', (_request, response) => {
 
 app.use('/talker', talker);
 
-// app.use('/login', login);
+app.use('/login', login);
 
 app.listen(PORT, () => {
   console.log('Online');

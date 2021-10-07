@@ -118,7 +118,7 @@ validationAddTalkerTalkWatchedAt, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const talkersEdited = await talkerEdit(id, name, age, talk);
-  if (talkersEdited) return res.status(200).json(talkersEdited);
+  if (talkersEdited) return res.status(200).json({ id, name, age, talk });
 });
 
 module.exports = router;

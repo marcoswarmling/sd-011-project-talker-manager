@@ -8,7 +8,8 @@ const { login,
   validDate,
   validRate,
   addTalker, 
-  scanToken } = require('./src');
+  scanToken,
+  registerTalker } = require('./src');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,6 +29,17 @@ app.post('/talker', [
   validDate,
   validRate,
   addTalker,
+]);
+
+app.put('/talker/:id', [
+  scanToken,
+  validName,
+  validAge,
+  validTalk,
+  validDate,
+  validRate,
+  addTalker,
+  registerTalker,
 ]);
 
 // não remova esse endpoint, e para o avaliador funcionar

@@ -7,6 +7,7 @@ const validAge = require('./validAge');
 const validDate = require('./validDate');
 const validRate = require('./validRate');
 const validTalk = require('./validTalk');
+const registerTalker = require('./registerTalker');
 
 module.exports = {
   addTalker,
@@ -18,4 +19,5 @@ module.exports = {
   validDate,
   validRate,
   scanToken,
+  registerTalker,
 };

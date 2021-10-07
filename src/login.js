@@ -18,5 +18,6 @@ const login = (req, res) => {
   }
   return res.status(200).json({ token: generateToken(16) });
 };
-  
+  // console.log(generateToken(16));
+
   module.exports = login;

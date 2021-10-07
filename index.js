@@ -3,6 +3,15 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
 const { checkEmail, checkPassword } = require('./helper/validation');
+const {
+  checkAge, 
+  checkName, 
+  checkRate,
+  checkTalk, 
+  checkToken, 
+  checkedTalk,
+  checkDateFormat,
+} = require('./helper/validationUser');
 
 const app = express();
 app.use(bodyParser.json());
@@ -63,6 +72,27 @@ app.post('/login', (req, res) => {
 
   const token = crypto.randomBytes(8).toString('hex');
   res.status(200).json({ token });
+});
+
+// Requisito 4
+
+app.post('/talker', 
+  checkAge, 
+  checkName,  
+  checkRate,
+  checkTalk, 
+  checkToken, 
+  checkedTalk,
+  checkDateFormat,
+ (req, res) => {
+  const { name, age, talk } = req.body;
+  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+  const idPush = data[data.length - 1].id + 1;
+  const newItem = { id: idPush, name, age, talk };
+
+  data.push(newItem);
+  fs.writeFileSync(fechAPI, JSON.stringify(data));
+  res.status(201).json(newItem);
 });
 
 app.listen(PORT, () => {

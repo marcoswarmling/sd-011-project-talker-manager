@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const data = require('./talker.json');
+const util = require('util');
+const fs = require('fs');
+
+const readFile = util.promisify(fs.readFile);
+const list = require('./talker.json');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,14 +19,16 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1 - GET com todos os talkers
-app.get('/talker', (_req, res) => {
-    res.status('200').json(data);
+app.get('/talker', async (_req, res) => {
+  readFile('./talker.json', 'utf8').then((data) => {
+      res.status('200').json(JSON.parse(data));
+  });
 });
 
 // Requisito2 - GET com endpoint /talker/:id
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const talker = data.find((elem) => elem.id === parseInt(id, 10));
+  const talker = await list.find((e) => e.id === parseInt(id, 10));
   if (!talker) {
     return res.status('400')
       .json({ message: 'Pessoa palestrante não encontrada' });

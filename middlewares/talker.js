@@ -72,4 +72,16 @@ router.put(
   },
 );
 
+// Requisito 6 - Endpoint DELETE /talker/:id
+router.delete('/talker/:id', 
+  validateTalker.checkToken,
+  (req, res) => {
+  const { id } = req.params;
+  const talkers = JSON.parse(fs.readFileSync(list, 'utf-8'));
+  const leftTalkers = talkers.filter((talker) => talker.id !== Number(id));
+
+  fs.writeFileSync(list, JSON.stringify(leftTalkers));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

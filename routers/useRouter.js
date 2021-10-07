@@ -3,22 +3,21 @@ const randonToken = require('random-token');
 const fs = require('fs').promises;
 
 const {
-  isValidtoken,
-  isValidEmail,
-  isValidPassword,
-  isValidName,
-  isValidAge,
-  isvalidateFields,
-  isvalidateTalkObject,
-  isvalidateTalk,
-  isvalidateRate,
+  isValidateEmail,
+  isValidatePassword,
+  isValidatetoken,
+  isValidateName,
+  isValidateAge,
+  isValidateRate,
+  isValidateTalk,
+  isValidateWatchedAt,
 } = require('../middlewares/validations');
 
 // requisito 3
 router.post(
   '/login',
-  isValidEmail,
-  isValidPassword,
+  isValidateEmail,
+  isValidatePassword,
   (_req, res) => {
     const token = randonToken(16);
     res.status(200).json({ token });
@@ -27,12 +26,12 @@ router.post(
 
 // requisito 4
 router.post('/talker',
-  isValidtoken,
-  isValidName, 
-  isValidAge,
-  isvalidateTalk,
-  isvalidateFields,
-  isvalidateTalkObject,
+isValidatetoken,
+isValidateName, 
+isValidateAge,
+isValidateTalk,
+isValidateRate,
+isValidateWatchedAt,
   async (req, res) => {
     const { name, age, talk } = req.body;
 
@@ -42,7 +41,7 @@ router.post('/talker',
       const newTalker = { name, age, id, talk };
       talkers.push(newTalker);
 
-      await fs.writeFile('./talker.json', JSON.stringify(talkers));
+      await fs.writeFileSync('./talker.json', JSON.stringify(talkers));
       return res.status(201).json(newTalker);
     } catch (err) {
       return res.status(400).json({ message: err.message });
@@ -50,32 +49,25 @@ router.post('/talker',
 });
 
 // requisito 5
-router.post('/talker',
-  isValidtoken,
-  isValidName, 
-  isValidAge,
-  isvalidateTalk,
-  isvalidateRate,
-  isvalidateFields,
-  isvalidateTalkObject,
+router.put('/talker/:id',
+  isValidatetoken,
+  isValidateName, 
+  isValidateAge,
+  isValidateTalk,
+  isValidateRate,
+  isValidateWatchedAt,
   async (req, res) => {
     const { id } = req.params;
-    const { name, age, talk } = req.body;
     try {
       const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf8'));
-      const editedTalker = { name, age, talk, id: Number(id) };
-      const newList = talkers.map((talker) => {
-        if (Number(talker.id) === Number(id)) {
-          return editedTalker;
-        }
-        return talker;
-      });
-  
-      fs.writeFileSync('./talker.json', JSON.stringify(newList));
+      const newList = talkers.findIndex((talker) => talker.id === id);
+      if (newList === -1) return res.status(404).json({ message: 'Id não encontrado' });
+      talkers[newList] = { ...req.body, id: Number(id) };
+      await fs.writeFileSync('./talker.json', JSON.stringify(talkers));
       console.log(newList);
-      res.status(200).json(editedTalker);
+      return res.status(200).json(talkers[newList]);
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      return res.status(400).json({ message: err.message });
     }
 });
 

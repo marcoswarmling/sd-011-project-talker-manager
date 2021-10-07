@@ -104,8 +104,8 @@ app.put('/talker/:id',
   nameValid,
   ageValid,
   talkValid,
-  watchValid,
   rateValid,
+  watchValid,
   async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;

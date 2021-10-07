@@ -9,7 +9,7 @@ const talkValid = (req, res, next) => {
     return res.status(HTTP_ERROR_STATUS)
       .json({ message: msg });
   }
-  if (!talk.rate || !talk.watchedAt) {
+  if ([talk.rate, talk.watchedAt].includes(undefined)) {
     return res.status(HTTP_ERROR_STATUS)
       .json({ message: msg });
   }

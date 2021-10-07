@@ -50,12 +50,12 @@ router.post(
   validateToken,
   validateName,
   validateAge,
-  validateWatchedAndRate,
   validateTalk,
+  validateWatchedAndRate,
   (req, res) => {
     const { name, age, talk, id } = req.body;
     const { speakers } = req;
-    speakers.push({ id, name, age, talk });
+    speakers.push({ name, age, id, talk });
     fs.writeFileSync('./talker.json', JSON.stringify(speakers));
     return res.status(201).json({ name, age, id, talk });
   },

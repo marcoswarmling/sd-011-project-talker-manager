@@ -8,10 +8,10 @@ const validEmail = (req, res, next) => {
   const testedEmail = emailRegex.test(String(email).toLowerCase());
 
   if (!email) {
-    return res.status(401).json({ message: 'O campo "email" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (!testedEmail) {
-    return res.status(401).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
 
   next();

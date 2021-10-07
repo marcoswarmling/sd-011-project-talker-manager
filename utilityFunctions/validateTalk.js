@@ -16,16 +16,6 @@ function validateWatchedAtAndDate(talk) {
   return null;
 }
 
-// function validateTalk(talk) {
-//   const emptyTalk = {
-//     message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-//   };
-//   if (!talk || !talk.watchedAt || !talk.rate) return emptyTalk;
-//   const validContent = validateWatchedAtAndDate(talk);
-//   if (validContent !== null) return validContent;
-//   return null;
-// }
-
 function isTalkEmpty(talk) {
   const emptyTalk = {
     message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',

@@ -8,7 +8,7 @@ const { login,
   validDate,
   validRate,
   addTalker, 
-  scanToken,
+  readToken,
   registerTalker,
   deleteTalker } = require('./src');
 
@@ -23,7 +23,7 @@ app.use(router);
 app.post('/login', login);
 
 app.post('/talker', [
-  scanToken,
+  readToken,
   validName,
   validAge,
   validTalk,
@@ -33,7 +33,7 @@ app.post('/talker', [
 ]);
 
 app.put('/talker/:id', [
-  scanToken,
+  readToken,
   validName,
   validAge,
   validTalk,
@@ -42,7 +42,7 @@ app.put('/talker/:id', [
   registerTalker,
 ]);
 
-app.delete('/talker/:id', [scanToken, deleteTalker]);
+app.delete('/talker/:id', [readToken, deleteTalker]);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

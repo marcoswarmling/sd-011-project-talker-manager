@@ -1,7 +1,7 @@
 const error = require('./error');
 const addTalker = require('./addTalker');
 const login = require('./login');
-const scanToken = require('./scanToken');
+const readToken = require('./readToken');
 const validName = require('./validName');
 const validAge = require('./validAge');
 const validDate = require('./validDate');
@@ -19,7 +19,7 @@ module.exports = {
   validTalk,
   validDate,
   validRate,
-  scanToken,
+  readToken,
   registerTalker,
   deleteTalker,
 };

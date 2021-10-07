@@ -1,7 +1,7 @@
 const fs = require('fs');
-const path = require('path');
+/* const path = require('path');
 
-const filePath = path.resolve(__dirname, '..', 'talker.json');
+const filePath = path.resolve(__dirname, '..', 'talker.json'); */
 
 const registerTalker = (req, res, _next) => {
   const id = Number(req.params.id);
@@ -11,7 +11,7 @@ const registerTalker = (req, res, _next) => {
   talker.age = req.body.age;
   talker.talk.watchedAt = req.body.talk.watchedAt;
   talker.talk.rate = +req.body.talk.rate;
-  fs.writeFileSync(filePath, JSON.stringify(talkers));
+  fs.writeFileSync('talker.json', JSON.stringify(talkers));
   res.status(200).json(talker);
 };
 

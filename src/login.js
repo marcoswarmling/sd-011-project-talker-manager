@@ -1,4 +1,12 @@
-const generateToken = require('./createToken');
+const generateToken = (size) => {
+  const allChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let token = '';
+  while (token.length < size) {
+    const randomIndex = Math.floor(Math.random() * allChars.length);
+    token += allChars[randomIndex];
+  }
+  return token;
+}; 
 
 const login = (req, res) => {
   const checkEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;

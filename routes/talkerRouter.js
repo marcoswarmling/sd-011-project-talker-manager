@@ -30,6 +30,17 @@ router.get('/', async (_req, res) => {
   return res.status(HTTP_OK_STATUS).json(JSON.parse(response));
 });
 
+router.get('/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+
+  const response = await fs.readFile(data, 'utf-8');
+  const registeredTalkers = JSON.parse(response);
+
+  const filteredTalkers = registeredTalkers.filter((r) => r.name.includes(q));
+
+  return res.status(HTTP_OK_STATUS).json(filteredTalkers);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 

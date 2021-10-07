@@ -85,7 +85,7 @@ app.post('/talker',
 
 // requisito 5
 
-app.put('/talker/:id');
+// app.put('/talker/:id');
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

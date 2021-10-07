@@ -5,8 +5,6 @@ const { validateEmail, validatePassword } = require('./validacoes');
 const router = express.Router();
 // const fs = require('fs');
 
-const app = express();
-
 router.post('/', validateEmail, validatePassword, (req, res) => {  
   const token = crypto.randomBytes(8).toString('hex');
 

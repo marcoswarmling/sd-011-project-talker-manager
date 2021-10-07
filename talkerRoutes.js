@@ -1,9 +1,15 @@
 const express = require('express');
-
-const app = express();
+const fs = require('fs').promises;
+const { 
+  validateName, 
+  validateAge, 
+  validateTalk, 
+  validateToken,
+  validateWatchedAt,
+  validateRate, 
+} = require('./validacoes');
 
 const router = express.Router();
-const fs = require('fs').promises;
 
 router.get('/', async (req, res) => {
   try {
@@ -35,6 +41,25 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/');
+router.post('/', 
+  validateToken,
+  validateTalk, 
+  validateWatchedAt, 
+  validateRate, 
+  validateName, 
+  validateAge, 
+  async (req, res) => {  
+  try {  
+  const { name, age, talk } = req.body;  
+  let talkers = await fs.readFile('./talker.json', 'utf-8');
+  talkers = JSON.parse(talkers);
+  const newTalker = { id: (talkers.length + 1), name, age, talk };
+  talkers.push(newTalker);
+  fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return res.status(201).send(newTalker);
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 module.exports = router;

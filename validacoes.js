@@ -50,8 +50,84 @@ function validateAge(req, res, next) {
   }
 
   if (age < 18) {
-    return res.status();
+    return res.status(400).send({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
+
+  next();
 }
 
-module.exports = { validateEmail, validatePassword };
+function validateDateFormat(date) {
+  const regexVerifyDate = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
+  const dateTested = regexVerifyDate.test(date);
+  return dateTested;
+}
+
+// eslint-disable-next-line complexity
+function validateTalk(req, res, next) {
+  const { talk } = req.body;  
+  if (!talk) {
+    return res.status(400).send({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });    
+  }
+  
+  next();
+}
+
+function validateWatchedAt(req, res, next) {
+  const { talk } = req.body;
+  const { watchedAt } = talk;
+  if (!watchedAt || watchedAt === '') {
+    return res.status(400).send({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+
+  if (!validateDateFormat(watchedAt)) {
+    return res.status(400).send({ 
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+
+  next();
+}
+
+function validateRate(req, res, next) {
+  const { talk } = req.body;
+  const { rate } = talk;
+  
+  if (!rate || rate === '') {
+    return res.status(400).send({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    }); 
+}
+  
+  if (rate < 1 || rate > 5) {
+    return res.status(400).send({ 
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  next();
+}
+
+function validateToken(req, res, next) {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (authorization.length < 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+
+  next();
+}
+
+module.exports = { 
+  validateEmail, 
+  validatePassword, 
+  validateName, 
+  validateAge, 
+  validateTalk,
+  validateToken,
+  validateWatchedAt,
+  validateRate,
+ };

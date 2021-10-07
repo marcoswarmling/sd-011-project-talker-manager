@@ -173,7 +173,7 @@ validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {
   const idInt = Number(id);
   fileDataJson[talkIndex] = { id: idInt, name, age, talk };
   fs.writeFile('./talker.json', JSON.stringify(fileDataJson));
-    return res.status(200).send(fileDataJson[talkIndex]);
+    return res.status(200).json(fileDataJson[talkIndex]);
 });
 
 // Crie o endpoint DELETE /talker/:id

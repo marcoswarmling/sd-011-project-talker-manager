@@ -122,7 +122,7 @@ const searchTerm = (req, res) => {
   console.log(q);
   const { talkers } = req;
   const talkersFiltered = talkers.filter((talker) => talker.name.includes(q));
-  console.log(talkersFiltered)
+  console.log(talkersFiltered);
   if (talkersFiltered.length === 0) return res.status(404).json({ message: 'Not found' });
   res.status(200).json(talkersFiltered);
 };

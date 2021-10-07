@@ -2,6 +2,7 @@ const express = require('express');
 const talkersRead = require('./talkersRead');
 const talkersWrite = require('./talkersWrite');
 const talkerEdit = require('./talkerEdit');
+const talkerDelete = require('./talkerDelete');
 
 const router = express.Router();
 
@@ -119,6 +120,14 @@ validationAddTalkerTalkWatchedAt, async (req, res) => {
   const { name, age, talk } = req.body;
   const talkersEdited = await talkerEdit(id, name, age, talk);
   if (talkersEdited) return res.status(200).json({ id: parseInt(id, 10), name, age, talk });
+});
+
+router.delete('/:id', authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  await talkerDelete(id);
+  return res.status(200).json({ 
+    message: 'Pessoa palestrante deletada com sucesso'
+   });
 });
 
 module.exports = router;

@@ -9,7 +9,6 @@ const talkerEdit = (id, name, age, talk) => {
       const talkerIndex = talkers.findIndex((talker) => talker.id === parseInt(id, 10));
       if (talkerIndex !== -1) {
         talkers[talkerIndex] = ({ ...talkers[talkerIndex], name, age, talk });
-        console.log(talkers);
         fs.writeFile('./talker.json', JSON.stringify(talkers));
         resolve(talkers[talkerIndex]);
       } else {

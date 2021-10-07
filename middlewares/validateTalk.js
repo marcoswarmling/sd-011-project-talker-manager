@@ -1,4 +1,4 @@
-const validateTalk = (req, res, next) => {
+function validateTalk(req, res, next) {
   const { talk } = req.body;
 
   if (!talk || talk === '') {
@@ -7,6 +7,6 @@ const validateTalk = (req, res, next) => {
     }); 
   }
   next();
-};
+}
 
 module.exports = validateTalk;

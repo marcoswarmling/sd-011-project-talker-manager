@@ -1,4 +1,4 @@
-const validateEmail = (req, res, next) => {
+function validateEmail(req, res, next) {
   const { email } = req.body;
 
   const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.([a-z]+))?$/i;
@@ -12,6 +12,6 @@ const validateEmail = (req, res, next) => {
   }
 
   next();
-};
+}
 
 module.exports = validateEmail;

@@ -1,4 +1,4 @@
-const ValidateTalkObject = (req, res, next) => {
+function ValidateTalkObject(req, res, next) {
   const { talk } = req.body;
   const expDateValidate = /^\d{2}\/\d{2}\/\d{4}$/;
 
@@ -11,6 +11,6 @@ const ValidateTalkObject = (req, res, next) => {
   }
 
   next();
-};
+}
 
 module.exports = ValidateTalkObject;

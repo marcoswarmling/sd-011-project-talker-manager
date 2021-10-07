@@ -1,4 +1,4 @@
-const validateName = (req, res, next) => {
+function validateName(req, res, next) {
   const { name } = req.body;
 
   if (!name || name === '') {
@@ -10,6 +10,6 @@ const validateName = (req, res, next) => {
   }
 
   next();
-};
+}
 
 module.exports = validateName;

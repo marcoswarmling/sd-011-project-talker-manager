@@ -7,8 +7,7 @@ const missingMessages = {
   token: 'Token não encontrado',
   name: 'O campo "name" é obrigatório',
   age: 'O campo "age" é obrigatório',
-  watchedAt: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-  rate: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+  talk: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
 };
 
 const invalidMessages = {
@@ -82,19 +81,25 @@ function validateAge(age) {
 
 function validateWatchedAt(date) {
   const regex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
-  const isValidWatchedAt = regex.test(date);
+  const isValidWatchedAt = date && regex.test(date);
   return isValidWatchedAt;
-}
-
-function validateTalk(talk) {
-  const isValidTalk = (talk.rate && talk.watchedAt);
-  return isValidTalk;
 }
 
 function validateRate(rate) {
   const MAX_RATE = 5;
   const MIN_RATE = 1;
-  const isValidTalk = (rate <= MAX_RATE && rate >= MIN_RATE && rate % 1 === 0);
+  const rateNumber = Number(rate);
+  const isValidTalk = (
+    rate && rateNumber <= MAX_RATE && rateNumber >= MIN_RATE && rateNumber % 1 === 0
+  );
+  return isValidTalk;
+}
+
+function validateTalk(talk) {
+  const isValidTalk = (talk);
+  if (!talk || !talk.watchedAt || !talk.rate) {
+    return { message: missingMessages.talk };
+  }
   return isValidTalk;
 }
 
@@ -104,11 +109,11 @@ module.exports = {
   readFileTalker,
   generateToken,
   validateToken,
+  validateWatchedAt,
+  validateRate,
   validateCredentials,
   validateAge,
   validateName,
   validateTalk,
-  validateWatchedAt,
-  validateRate,
   writeFileTalker,
 };

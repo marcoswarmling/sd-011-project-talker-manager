@@ -10,8 +10,8 @@ router.post(
   mid.validateToken,
   mid.validateName,
   mid.validateAge,
-  mid.validateRate,
   mid.validateTalk,
+  mid.validateRate,
   mid.validateWatchedAt,
   mid.insertData,
 );

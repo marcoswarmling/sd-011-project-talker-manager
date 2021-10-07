@@ -8,6 +8,10 @@ const emailValid = require('./middleware/validationEmail');
 const passwordValid = require('./middleware/validationPassword');
 const tokenValid = require('./middleware/validationToken');
 const nameValid = require('./middleware/validationName');
+const ageValid = require('./middleware/validationAge');
+const talkValid = require('./middleware/validationTalk');
+const watchRateValid = require('./middleware/validationWatchRate');
+const newData = require('./middleware/newData');
 
 const app = express();
 app.use(bodyParser.json());
@@ -56,7 +60,7 @@ app.post('/login', emailValid, passwordValid, token);
 
 // requisito 4
 
-app.post('/talker', tokenValid, nameValid);
+app.post('/talker', tokenValid, nameValid, ageValid, talkValid, watchRateValid, newData);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

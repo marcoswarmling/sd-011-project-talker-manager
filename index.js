@@ -140,8 +140,6 @@ app.delete('/talker/:id', tokenValid, async (req, res) => {
   return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-
-
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);
 });

@@ -5,7 +5,7 @@ const talkerRouter = require('./routers/talkerRouter'); // req. 1
 const talkerIdRouter = require('./routers/talkerIdRouter'); // req. 2
 const loginRouter = require('./routers/loginRouter'); // req. 3
 const addTalker = require('./routers/addTalker'); // req. 4
-
+const editTalker = require('./routers/editTalker'); // req. 5
 const deleteTalker = require('./routers/deleteTalker'); // req. 6
 const queryTalker = require('./routers/queryTalker'); // req. 7
 
@@ -34,6 +34,9 @@ app.use('/login', loginRouter);
 
 // req. 4
 app.use('/talker', addTalker);
+
+// req. 5
+app.use('/talker', editTalker);
 
 // req. 6
 app.use('/talker', deleteTalker);

@@ -95,7 +95,7 @@ function validateWatchedAndRate(req, res, next) {
 
 function validateTalk(req, res, next) {
   const { talk } = req.body;
-  if (talk === undefined) {
+  if (talk === undefined || !talk.rate || !talk.watchedAt) {
     return res.status(400).json({
       message:
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',

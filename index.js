@@ -7,6 +7,7 @@ const token = require('./middleware/token');
 const emailValid = require('./middleware/validationEmail');
 const passwordValid = require('./middleware/validationPassword');
 const tokenValid = require('./middleware/validationToken');
+const nameValid = require('./middleware/validationName');
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,10 +17,16 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
+
+app.get('/', (_request, response) => {
+  response.status(HTTP_OK_STATUS).send();
+});
+
+// requisito 1
+
 app.get('/talker', async (_request, response) => {
   try {
     const data = await fs.readFile('./talker.json', 'utf-8');
-    // requisito 1
     response.status(HTTP_OK_STATUS).json(JSON.parse(data));
   } catch (error) {
     response.status(400).json({ message: `Erro ${error.code}` });
@@ -49,7 +56,7 @@ app.post('/login', emailValid, passwordValid, token);
 
 // requisito 4
 
-app.post('/talker', tokenValid);
+app.post('/talker', tokenValid, nameValid);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

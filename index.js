@@ -38,7 +38,6 @@ app.put('/talker/:id', [
   validTalk,
   validDate,
   validRate,
-  addTalker,
   registerTalker,
 ]);
 

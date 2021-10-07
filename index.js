@@ -31,9 +31,9 @@ app.listen(PORT, () => {
 app.get('/talker', async (_req, res) => {
   try {
   const talker = await fs.readFile(file, 'utf-8');
-  res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
+  return res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
 } catch (err) {
-  res.status(400).json({ message: err.message });
+  return res.status(400).json({ message: err.message });
 }
 });
 
@@ -43,18 +43,17 @@ app.get('/talker/:id', async (req, res) => {
     const talker = await fs.readFile(file, 'utf-8');
     const dados = JSON.parse(talker).find((p) => p.id === Number(id));
     if (!dados) {
-      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
-    res.status(HTTP_OK_STATUS).json(dados);
+    return res.status(HTTP_OK_STATUS).json(dados);
 } catch (err) {
-  res.status(404).json({ message: err.message });
+  return res.status(404).json({ message: err.message });
 }
 });
 
-app.post('/login', validateEmail, validatePassword, (_req, res) => {
+app.post('/login', validateEmail, validatePassword, (_req, res) => 
  // const token = crypto.randomBytes(8).toString('hex');
-  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
-});
+   res.status(200).json({ token: '7mqaVRXJSp886CGr' }));
 
 app.post('/talker',
 validationToken,
@@ -67,14 +66,39 @@ validateRate,
 async (req, res) => {
   try {
     const { name, age, talk } = req.body;
-    const talker = await JSON.parse(fs.readFile(file, 'utf8'));
+
+    const talker = JSON.parse(await fs.readFile(file, 'utf-8'));
 
     const newTalker = { age, id: talker.length + 1, name, talk };
     talker.push(newTalker);
 
     await fs.writeFile(file, JSON.stringify(talker));
-    res.status(201).json(newTalker);
+    return res.status(201).json(newTalker);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
+  }
+});
+
+app.put('/talker/:id',
+validationToken,
+validateName, 
+validateAge,
+validateTalk,
+validateWatchedAt,
+validateRate,
+
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  try {
+    const talker = JSON.parse(await fs.readFile(file, 'utf-8'));
+    const talkerIndex = talker.findIndex((talkerID) => talkerID.id === Number(id));
+    const person = { name, age, talk, id: Number(id) };
+    if (talkerIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
+    talker[talkerIndex] = person;
+    await fs.writeFile(file, JSON.stringify(talker));
+    return res.status(200).json(talker[talkerIndex]);
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
   }
 });

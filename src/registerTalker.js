@@ -1,18 +1,20 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs').promises;
 
-const filePath = path.resolve(__dirname, '..', 'talker.json');
+async function readTalkerJson() {
+  const fileData = await fs.readFile('../talker.json', 'utf8');
+  return fileData;
+}
 
-const registerTalker = (req, res, _next) => {
-  const id = Number(req.params.id);
-  const talkers = JSON.parse(fs.readFileSync('talker.json'));
-  const talker = talkers.find((tal) => tal.id === id);
-  talker.name = req.body.name;
-  talker.age = req.body.age;
-  talker.talk.watchedAt = req.body.talk.watchedAt;
-  talker.talk.rate = +req.body.talk.rate;
-  fs.writeFileSync(filePath, JSON.stringify(talkers));
-  res.status(200).json(talker);
+const registerTalker = async (req, res, _next) => {
+  const { id } = req.params;
+  const idInt = Number(id);
+  const fileData = await readTalkerJson();
+  const data = JSON.parse(fileData);
+  const { name, talk, age } = req.body;
+  const talkerIndex = data.findIndex((tal) => tal.id === parseInt(id, 10));
+  data[talkerIndex] = { id: idInt, name, age, talk };
+  fs.writeFile('../talker.json', JSON.stringify(data));
+  return res.status(200).json(data[talkerIndex]);
 };
 
 module.exports = registerTalker;

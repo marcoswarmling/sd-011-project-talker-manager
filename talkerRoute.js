@@ -19,8 +19,12 @@ O endpoint deve retornar uma pessoa palestrante com base no id da rota. Devendo 
 /* Caso não seja encontrada uma pessoa palestrante com base no id da rota, o endpoint deve retornar o status 404 */
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  const selectedSpeaker = req.speakers.filter((e) => e.id === parseInt(id));
-  if (!id || selectedSpeaker.length === 0) return res.status(400).json({"message": "Pessoa palestrante não encontrada"});
+  const selectedSpeaker = req.speakers.filter((e) => e.id === parseInt(id, 10));
+  if (!id || selectedSpeaker.length === 0) {
+ return res
+      .status(400)
+      .json({ message: 'Pessoa palestrante não encontrada' }); 
+}
   return res.status(200).json(selectedSpeaker[0]);
 });
 

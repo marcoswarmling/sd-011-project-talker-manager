@@ -1,10 +1,15 @@
 const validationToken = (req, res, next) => {
-  const token = req.headers.authorization;
-  const tokenRegex = !/^[a-zA-Z0-9]{16}$/;
+  const { authorization } = req.headers;
+
+  if (!authorization || authorization === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  if (authorization !== '7mqaVRXJSp886CGr') {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  next();
+};
   
-  if (!token || tokenRegex.test(token)) return res.status(401).json({ message: 'invalid token' });
-  
-    next();
-  };
-  
-  module.exports = validationToken;
+module.exports = validationToken;

@@ -84,4 +84,17 @@ router.delete('/talker/:id',
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
+// Requisito 7 - Endpoint GET /talker/search?q=searchTerm
+router.get('/talker/search',
+  validateTalker.checkToken,
+  (req, res) => {
+  const { q } = req.query;
+  const talkers = JSON.parse(fs.readFileSync(list, 'utf-8'));
+  if (!q) return res.status(200).json(talkers);
+
+  const foundTalkers = talkers.filter((talker) => talker.name.includes(q));
+
+  res.status(200).json(foundTalkers);
+});
+
 module.exports = router;

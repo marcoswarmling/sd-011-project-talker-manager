@@ -14,45 +14,16 @@ async function readTalker() {
   return fileData;
 }
 
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
-});
-
-// Crie o endpoint GET /talker
-app.get('/talker', async (_request, response) => {
-  const fileData = await readTalker();  
-    if (!fileData) {
-      response.status(HTTP_OK_STATUS).send([]);
-    }    
-      response.status(HTTP_OK_STATUS).send(JSON.parse(fileData));  
-});
-
-// Crie o endpoint GET /talker/:id
-app.get('/talker/:id', async (req, response) => {
-  const { id } = req.params;
-  const fileData = await readTalker();
-    const people = JSON.parse(fileData).find((p) => p.id === Number(id));
-    if (people) {
-      response.status(HTTP_OK_STATUS).send(people);
-    } else {
-      response.status(404).send({
-        message: 'Pessoa palestrante não encontrada',
-      });    
-    }
-});
-
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
   const reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
   if (!email) {
-    res.status(400).send({
+    return res.status(400).send({
       message: 'O campo "email" é obrigatório',
     });
   }
   if (!reg.test(email)) {
-    console.log(reg.test(email));
-    res.status(400).send({ 
+    return res.status(400).send({ 
       message: 'O "email" deve ter o formato "email@email.com"',
   });
   }
@@ -62,12 +33,12 @@ const validateEmail = (req, res, next) => {
 const validatePassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
-    res.status(400).send({ 
+    return res.status(400).send({ 
       message: 'O campo "password" é obrigatório',
   });
   }
   if (password.length < 6) {
-    res.status(400).send({ 
+    return res.status(400).send({ 
       message: 'O "password" deve ter pelo menos 6 caracteres',
   });
   }
@@ -77,7 +48,7 @@ const validatePassword = (req, res, next) => {
 // Crie o endpoint POST /login
 app.post('/login', validateEmail, validatePassword, (_req, response) => {
   const token = crypto.randomBytes(8).toString('hex');
-    response.status(HTTP_OK_STATUS).send({
+    return response.status(HTTP_OK_STATUS).send({
       token,
     });
 });
@@ -141,6 +112,44 @@ const validateWathedAtAndRate = (req, res, next) => {
   next();
 };
 
+// Crie o endpoint GET /talker/search
+app.get('/talker/search', validateToken, async (req, res) => {
+  const fileData = await readTalker();
+  const fileDataJson = JSON.parse(fileData);
+  const { q } = req.query;
+  const search = fileDataJson.filter((t) => t.name.includes(q));
+  if (!q || q === '') {
+    return res.status(200).send(fileDataJson);
+  }
+    return res.status(200).send(search);
+});
+
+// não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
+
+// Crie o endpoint GET /talker
+app.get('/talker', async (_request, response) => {
+  const fileData = await readTalker();  
+    if (!fileData) {
+      return response.status(HTTP_OK_STATUS).send([]);
+    }    
+    return response.status(HTTP_OK_STATUS).send(JSON.parse(fileData));  
+});
+
+// Crie o endpoint GET /talker/:id
+app.get('/talker/:id', async (req, response) => {
+  const { id } = req.params;
+  const fileData = await readTalker();
+    const people = JSON.parse(fileData).find((p) => p.id === Number(id));
+    if (people) {
+      response.status(HTTP_OK_STATUS).send(people);
+    } else {
+      return response.status(404).send({
+        message: 'Pessoa palestrante não encontrada',
+      });    
+    }
+});
+
 // Crie o endpoint POST /talker
 app.post('/talker', validateToken, validateName,
   validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {  
@@ -155,13 +164,25 @@ app.post('/talker', validateToken, validateName,
 
 app.put('/talker/:id', validateToken, validateName,
 validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {
+  const { id } = req.params;
   const fileData = await readTalker();
   const fileDataJson = JSON.parse(fileData);
   const { name, talk, age } = req.body;
-  const talkIndex = fileDataJson.findIndex((t) => t.id === req.params.id);
-  fileData[talkIndex] = { ...fileData[talkIndex], name, age, talk };
-  fs.writeFile('./talker.json', JSON.stringify(fileData));
-    return res.status(200).send(fileData[talkIndex]);
+  const talkIndex = fileDataJson.findIndex((t) => t.id === parseInt(id, 10));
+  const idInt = Number(id);
+  fileDataJson[talkIndex] = { id: idInt, name, age, talk };
+  fs.writeFile('./talker.json', JSON.stringify(fileDataJson));
+    return res.status(200).send(fileDataJson[talkIndex]);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const idInt = parseInt(id, 10);
+  const fileData = await readTalker();
+  const fileDataJson = JSON.parse(fileData);
+  const newFileDataJson = fileDataJson.filter((t) => t.id !== idInt);
+  fs.writeFile('./talker.json', JSON.stringify(newFileDataJson));
+    return res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {

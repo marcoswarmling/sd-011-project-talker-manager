@@ -61,6 +61,7 @@ router.post('/', registerOrEditTalkers, async (req, res) => {
 router.put('/:id', registerOrEditTalkers, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk: { rate, watchedAt } } = req.body;
+
   const talkers = { id: Number(req.params.id), name, age, talk: { rate, watchedAt } };
   const response = await fs.readFile(data, 'utf-8');
   const registeredTalkers = JSON.parse(response);
@@ -70,6 +71,18 @@ router.put('/:id', registerOrEditTalkers, async (req, res) => {
   await fs.writeFile(data, JSON.stringify(registeredTalkers));
 
   return res.status(HTTP_OK_STATUS).json(talkers);
+});
+
+router.delete('/:id', isValidToken, async (req, res) => {
+  const { id } = req.params;
+
+  const response = await fs.readFile(data, 'utf-8');
+  const registeredTalkers = JSON.parse(response);
+
+  const newRegisteredTalkers = registeredTalkers.filter((t) => Number(t.id) !== Number(id));
+  await fs.writeFile(data, JSON.stringify(newRegisteredTalkers));
+
+  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

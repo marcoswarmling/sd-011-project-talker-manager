@@ -26,9 +26,9 @@ router.get('/', async (_req, res) => {
 router.get('/search', tokenValidation, async (req, res) => {
   const { q } = req.query;
   const response = await fs.readFile(db, 'utf-8');
-  const registredTalkers = JSON.parse(response);
-  if (!q || q === '') return res.status(200).json(registredTalkers);
-  const filteredTalkers = registredTalkers
+  const registeredTalkers = JSON.parse(response);
+  if (!q || q === '') return res.status(200).json(registeredTalkers);
+  const filteredTalkers = registeredTalkers
   .filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
   res.status(200).json(filteredTalkers);
 });
@@ -47,11 +47,11 @@ router.post('/', registerOrEditValidations, async (req, res) => {
   const { name, age, talk } = req.body;
   const { watchedAt, rate } = talk;
   const response = await fs.readFile(db, 'utf-8');
-  const registredTalkers = JSON.parse(response);
-  const id = registredTalkers.length + 1;
+  const registeredTalkers = JSON.parse(response);
+  const id = registeredTalkers.length + 1;
   const person = { id, name, age, talk: { watchedAt, rate } };
-  registredTalkers.push(person);
-  await fs.writeFile(db, JSON.stringify(registredTalkers));
+  registeredTalkers.push(person);
+  await fs.writeFile(db, JSON.stringify(registeredTalkers));
   return res.status(201).json(person);
 });
 
@@ -61,21 +61,21 @@ router.put('/:id', registerOrEditValidations, async (req, res) => {
   const { watchedAt, rate } = talk;
   const person = { id: Number(id), name, age, talk: { watchedAt, rate } };
   const response = await fs.readFile(db, 'utf-8');
-  const registredTalkers = JSON.parse(response);
-  const indexOfTalkerToEdit = registredTalkers
+  const registeredTalkers = JSON.parse(response);
+  const indexOfTalkerToEdit = registeredTalkers
   .findIndex((talker) => Number(talker.id) === Number(id));
-  registredTalkers[indexOfTalkerToEdit] = person;
-  await fs.writeFile(db, JSON.stringify(registredTalkers));
+  registeredTalkers[indexOfTalkerToEdit] = person;
+  await fs.writeFile(db, JSON.stringify(registeredTalkers));
   return res.status(200).json(person);
 });
 
 router.delete('/:id', deleteValidations, async (req, res) => {
   const { id } = req.params;  
   const response = await fs.readFile(db, 'utf-8');
-  const registredTalkers = JSON.parse(response);
-  const newRegistredTalkers = registredTalkers
+  const registeredTalkers = JSON.parse(response);
+  const newregisteredTalkers = registeredTalkers
   .filter((talkers) => Number(talkers.id) !== Number(id));
-  await fs.writeFile(db, JSON.stringify(newRegistredTalkers));
+  await fs.writeFile(db, JSON.stringify(newregisteredTalkers));
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 

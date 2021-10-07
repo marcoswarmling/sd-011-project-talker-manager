@@ -23,7 +23,7 @@
   };
 
   // requisito 4
-  const isValidatetoken = (req, res, next) => {
+  const isValidateToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (token === '' || token === undefined) {
     return res.status(401).json({ message: 'Token não encontrado' }); 
@@ -97,7 +97,7 @@
   module.exports = {
     isValidateEmail,
     isValidatePassword,
-    isValidatetoken,
+    isValidateToken,
     isValidateName,
     isValidateAge,
     isValidateRate,

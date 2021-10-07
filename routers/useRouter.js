@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const {
   isValidateEmail,
   isValidatePassword,
-  isValidatetoken,
+  isValidateToken,
   isValidateName,
   isValidateAge,
   isValidateRate,
@@ -26,7 +26,7 @@ router.post(
 
 // requisito 4
 router.post('/talker',
-isValidatetoken,
+isValidateToken,
 isValidateName, 
 isValidateAge,
 isValidateTalk,
@@ -50,7 +50,7 @@ isValidateWatchedAt,
 
 // requisito 5
 router.put('/talker/:id',
-  isValidatetoken,
+  isValidateToken,
   isValidateName, 
   isValidateAge,
   isValidateTalk,
@@ -70,5 +70,17 @@ router.put('/talker/:id',
       return res.status(400).json({ message: err.message });
     }
 });
+
+// requisito 6
+router.delete('/talker/:id',
+  isValidateToken,
+  async (req, res) => {
+    const { id } = req.params;
+      const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf8'));
+      const newList = talkers.findIndex((talker) => talker.id === +id);
+      talkers.splice(newList, 1);
+      await fs.writeFile('./talker.json', JSON.stringify(talkers));
+      return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const talkersRead = require('./talkersRead');
 const talkersWrite = require('./talkersWrite');
+const talkerEdit = require('./talkerEdit');
 
 const router = express.Router();
 
@@ -109,6 +110,15 @@ router.post('/', authMiddleware, validationAddTalkerName, validationAddTalkerAge
   };
   await talkersWrite(newTalker);
   res.status(201).json(newTalker);
+});
+
+router.put('/:id', authMiddleware, validationAddTalkerName, validationAddTalkerAge,
+validationAddTalkerTalk, validationAddTalkerTalkRate, 
+validationAddTalkerTalkWatchedAt, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkersEdited = await talkerEdit(name, age, id, talk);
+  if (talkersEdited) return res.status(200).json(talkersEdited);
 });
 
 module.exports = router;

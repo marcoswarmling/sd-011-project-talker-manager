@@ -25,9 +25,9 @@ router.get('/:id', (req, res) => {
     const { id } = req.params;
     const talkers = fs.readFileSync(talkerFile, 'utf8');
     const talker = JSON.parse(talkers).find((t) => Number(t.id) === Number(id));
-    return talker 
-    ? res.status(200).json(talker) 
-    : res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    return talker
+      ? res.status(200).json(talker)
+      : res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   } catch (err) {
     res.status(404).json({ error: err.message });
   }
@@ -55,8 +55,8 @@ router.post('/',
       res.status(201).json(newTalker);
     } catch (err) {
       res.status(400).json({ message: err.message });
-    }    
-});
+    }
+  });
 
 router.put('/:id',
   validateToken,
@@ -76,12 +76,28 @@ router.put('/:id',
         }
         return talker;
       });
-  
+
       fs.writeFileSync(talkerFile, 'utf8', JSON.stringify(newList));
       res.status(200).json(editedTalker);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
   });
+
+router.delete('/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+    const newList = talkers.filter((talker) => Number(talker.id) !== Number(id));
+
+    fs.writeFileSync(talkerFile, JSON.stringify(newList));
+    res.status(200).json({
+      message: 'Pessoa palestrante deletada com sucesso',
+    });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
 module.exports = router;

@@ -16,6 +16,10 @@ const talkerRouter = require('./talkerRoute.js');
 
 app.use('/talker', talkerRouter);
 
+const loginRouter = require('./loginRoute.js');
+
+app.use('/login', loginRouter);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

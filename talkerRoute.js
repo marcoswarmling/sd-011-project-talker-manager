@@ -5,7 +5,7 @@ O endpoint deve retornar um array com todas as pessoas palestrantes cadastradas.
 const express = require('express');
 
 const router = express.Router();
-const loadSpeakers = require('./utils');
+const { loadSpeakers } = require('./utils');
 
 router.use(loadSpeakers);
 

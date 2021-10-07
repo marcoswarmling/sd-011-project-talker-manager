@@ -70,4 +70,14 @@ await fs.writeFile(aiDento, JSON.stringify(talkParse));
 return res.status(200).json(talkEdited);
 });
 
+router.delete('/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await fs.readFile(aiDento, 'utf-8');
+  const talkersParse = JSON.parse(talkers);
+  const talkerDeleted = talkersParse.filter((elem) => elem.id !== Number(id));
+  await fs.writeFile('talker.json', JSON.stringify(talkerDeleted));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

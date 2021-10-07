@@ -13,6 +13,7 @@ const {
   TokenVerification,
   ratedVerification,
   EmailVerification,
+  searchFieldChecker,
   PasswordVerification,
   watchedAtVerification,
 } = require('../authTalkers');
@@ -20,6 +21,10 @@ const {
 // Requisito 1
 
 router.get('/talker', getAllTalkers);
+
+// Requisito 7
+
+router.get('/talker/search', TokenVerification, searchFieldChecker);
 
 // Requisito 2
 

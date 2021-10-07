@@ -190,6 +190,14 @@ const deleteTalker = async (req, res) => {
   res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchFieldChecker = async (req, res) => {
+  const { q } = req.query;
+  const talkers = await fs.readFile(JSON_PATH, 'utf8');
+  const result = JSON.parse(talkers);
+  const response = result.filter((field) => field.name.includes(q));
+  res.status(200).json(response);
+};
+
 module.exports = {
   AgeVerify,
   nameVerify,
@@ -203,6 +211,7 @@ module.exports = {
   EmailVerification,
   TokenVerification,
   ratedVerification,
+  searchFieldChecker,
   PasswordVerification,
   watchedAtVerification,
 };

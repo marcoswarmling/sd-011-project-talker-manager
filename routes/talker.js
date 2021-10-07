@@ -13,6 +13,17 @@ const db = './talker.json';
 const validatedTalker = [validToken, validName, 
   validAge, validNewTalker, validRate, validWatchedAt];
 
+router.get('/search', validToken, async (req, res) => {
+  const talkers = await fs.readFile(db, 'utf-8');
+  const parsedTalkers = JSON.parse(talkers);
+  const searchParam = req.query.q;
+
+  if (!searchParam || searchParam === '') return res.status(200).json(parsedTalkers);
+  const queryResult = parsedTalkers.filter((elem) => elem.name.includes(searchParam));
+
+  res.status(200).json(queryResult);
+});
+
 router.get('/', async (_req, res) => {
   const talkers = await fs.readFile(db, 'utf-8');
   

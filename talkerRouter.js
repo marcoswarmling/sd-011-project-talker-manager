@@ -3,6 +3,7 @@ const talkersRead = require('./talkersRead');
 const talkersWrite = require('./talkersWrite');
 const talkerEdit = require('./talkerEdit');
 const talkerDelete = require('./talkerDelete');
+const talkerSearch = require('./talkerSearch');
 
 const router = express.Router();
 
@@ -89,6 +90,15 @@ router.get('/', async (req, res) => {
   res.status(200).json([]);
 });
 
+router.get('/search', authMiddleware, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await talkersRead();
+  if (!q) return res.status(200).json(talkers);
+  const talkerFiltered = await talkerSearch(q);
+  if (q.length === 0) return res.status(200).json([]);
+  res.status(200).json(talkerFiltered);
+});
+
 router.get('/:id', async (req, res) => {
   const talkersPersons = await talkersRead();
   const { id } = req.params;
@@ -126,7 +136,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   const { id } = req.params;
   await talkerDelete(id);
   return res.status(200).json({ 
-    message: 'Pessoa palestrante deletada com sucesso'
+    message: 'Pessoa palestrante deletada com sucesso',
    });
 });
 

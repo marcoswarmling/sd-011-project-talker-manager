@@ -93,7 +93,7 @@ const validateTalk = (req, res, next) => {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     } 
   const { watchedAt, rate } = talk;
-  if (!watchedAt || !rate) {
+  if (watchedAt === undefined || rate === undefined) {
     return res.status(400).send({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -112,6 +112,9 @@ const validateWathedAtAndRate = (req, res, next) => {
   next();
 };
 
+// Não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
+
 // Crie o endpoint GET /talker/search
 app.get('/talker/search', validateToken, async (req, res) => {
   const fileData = await readTalker();
@@ -124,27 +127,24 @@ app.get('/talker/search', validateToken, async (req, res) => {
     return res.status(200).send(search);
 });
 
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
-
 // Crie o endpoint GET /talker
-app.get('/talker', async (_request, response) => {
+app.get('/talker', async (_req, res) => {
   const fileData = await readTalker();  
     if (!fileData) {
-      return response.status(HTTP_OK_STATUS).send([]);
+      return res.status(HTTP_OK_STATUS).send([]);
     }    
-    return response.status(HTTP_OK_STATUS).send(JSON.parse(fileData));  
+    return res.status(HTTP_OK_STATUS).send(JSON.parse(fileData));  
 });
 
 // Crie o endpoint GET /talker/:id
-app.get('/talker/:id', async (req, response) => {
+app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const fileData = await readTalker();
     const people = JSON.parse(fileData).find((p) => p.id === Number(id));
     if (people) {
-      response.status(HTTP_OK_STATUS).send(people);
+      res.status(HTTP_OK_STATUS).send(people);
     } else {
-      return response.status(404).send({
+      return res.status(404).send({
         message: 'Pessoa palestrante não encontrada',
       });    
     }
@@ -162,6 +162,7 @@ app.post('/talker', validateToken, validateName,
    return res.status(201).send(newTalk);
 });
 
+// Crie o endpoint PUT /talker/:id
 app.put('/talker/:id', validateToken, validateName,
 validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {
   const { id } = req.params;
@@ -175,6 +176,7 @@ validateAge, validateTalk, validateWathedAtAndRate, async (req, res) => {
     return res.status(200).send(fileDataJson[talkIndex]);
 });
 
+// Crie o endpoint DELETE /talker/:id
 app.delete('/talker/:id', validateToken, async (req, res) => {
   const { id } = req.params;
   const idInt = parseInt(id, 10);

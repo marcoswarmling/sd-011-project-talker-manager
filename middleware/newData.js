@@ -6,6 +6,7 @@ const newData = async (req, res) => {
   const { name, age, talk } = req.body;
   const fetch = await fs.readFile('../talker.json', 'utf-8');
   const parseFetch = await JSON.parse(fetch);
+  res.status(HTTP_OK_STATUS).json(parseFetch);
   const obj = {
     id: parseFetch.length + 1,
     name,

@@ -11,7 +11,7 @@ const nameValid = require('./middleware/validationName');
 const ageValid = require('./middleware/validationAge');
 const talkValid = require('./middleware/validationTalk');
 const watchRateValid = require('./middleware/validationWatchRate');
-const newData = require('./middleware/newData');
+// const newData = require('./middleware/newData');
 
 const app = express();
 app.use(bodyParser.json());
@@ -60,7 +60,29 @@ app.post('/login', emailValid, passwordValid, token);
 
 // requisito 4
 
-app.post('/talker', tokenValid, nameValid, ageValid, talkValid, watchRateValid, newData);
+app.post('/talker',
+  tokenValid,
+  nameValid,
+  ageValid,
+  talkValid,
+  watchRateValid,
+  async (req, res) => {
+  const { name, age, talk } = req.body;
+  const fetch = await fs.readFile('./talker.json', 'utf-8');
+  const parseFetch = await JSON.parse(fetch);
+  const obj = {
+    id: parseFetch.length + 1,
+    name,
+    age,
+    talk,
+  };
+  parseFetch.push(obj);
+  await fs.writeFile('./talker.json', JSON.stringify(parseFetch));
+
+  return res.status(HTTP_OK_STATUS).json(obj);
+});
+
+// requisito 5
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

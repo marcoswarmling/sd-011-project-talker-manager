@@ -15,9 +15,21 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', async (_req, res) => {
   const talkers = await getTalkers();
-  console.log(talkers);
 
   res.status(200).json(talkers);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const talkers = await getTalkers();
+  const { id } = req.params;
+
+  const talkerId = talkers.find((talker) => talker.id === parseInt(id, 10));
+
+  if (!talkerId) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  return res.status(200).json(talkerId);
 });
 
 app.listen(PORT, () => {

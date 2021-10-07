@@ -4,12 +4,12 @@ function ValidateTalkObject(req, res, next) {
 
   if (!talk.watchedAt || expDateValidate.test(talk.watchedAt)) {
     return res.status(400).json({
-       message: 'O campo \"watchedAt\" deve ter o formato \"dd/mm/aaaa\"', 
+       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', 
     });
 }
 
   if (talk.rate < 0 || talk.rate > 5) {
-    return res.status(400).json({ message: 'O campo \"rate\" deve ser um inteiro de 1 à 5' });
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   next();

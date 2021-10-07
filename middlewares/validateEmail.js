@@ -1,17 +1,17 @@
-function validateEmail(req, res, next) {
+const validateEmail = (req, res, next) => {
   const { email } = req.body;
 
-  const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.([a-z]+))?$/i;
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/igm;
+  const testedEmail = emailRegex.test(String(email).toLowerCase());
 
-  if (!email || email === '') {
+  if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
-
-  if (!regexEmail.test(email)) {
+  if (!testedEmail) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
 
   next();
-}
+}; 
 
 module.exports = validateEmail;

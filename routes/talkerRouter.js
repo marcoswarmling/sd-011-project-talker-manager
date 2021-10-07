@@ -1,6 +1,4 @@
-const express = require('express');
-
-const router = express.Router();
+const router = require('express').Router();
 const fs = require('fs');
 const validateTalk = require('../middlewares/validateTalk');
 const validateTalkObject = require('../middlewares/validateTalkObject');
@@ -12,7 +10,7 @@ const validateRate = require('../middlewares/validateRate');
 
 const talkerFile = './talker.json';
 
-router.get('/', (_req, res) => {
+router.get('/talker', (_req, res) => {
   try {
     const talkers = fs.readFileSync(talkerFile, 'utf8');
     res.status(200).json(JSON.parse(talkers));
@@ -21,7 +19,7 @@ router.get('/', (_req, res) => {
   }
 });
 
-router.get('/search', validateToken, (req, res) => {
+router.get('/talker/search', validateToken, (req, res) => {
   const { q } = req.query;
   try {
     const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
@@ -36,7 +34,7 @@ router.get('/search', validateToken, (req, res) => {
   res.status(200).end();
 });
 
-router.get('/:id', (req, res) => {
+router.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   try {
     const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
@@ -49,9 +47,9 @@ router.get('/:id', (req, res) => {
   }
 });
 
-router.post('/',
+router.post('/talker',
   validateToken,
-  validateName, 
+  validateName,
   validateAge,
   validateTalk,
   validateFields,
@@ -72,7 +70,7 @@ router.post('/',
     }
 });
 
-router.put('/:id',
+router.put('/talker/:id',
   validateToken,
   validateName, 
   validateAge,
@@ -99,7 +97,7 @@ router.put('/:id',
   }
 });
 
-router.delete('/:id', validateToken, (req, res) => {
+router.delete('/talker/:id', validateToken, (req, res) => {
   const { id } = req.params;
 
   try {

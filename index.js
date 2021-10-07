@@ -15,7 +15,6 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', (req, res) => {
-  if (!talkers) { res.status(HTTP_OK_STATUS).json([]); }
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 

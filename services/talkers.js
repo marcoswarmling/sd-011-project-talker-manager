@@ -60,6 +60,7 @@ const deleteTalker = async (id) => {
   const index = talker.id - 1;
   talkers.splice(index, 1);
   await fs.writeFile(DATA_PATH, JSON.stringify(talkers));
+  return true;
 };
 
 const searchTalker = async (term) => {

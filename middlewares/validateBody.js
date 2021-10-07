@@ -1,9 +1,10 @@
 const validName = (name, res) => {
-  if (!name || name === '') res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!name || name === '') {
+    return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  }
   if (name.length < 3) {
     return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
-  return true;
 };
 
 const validAge = (age, res) => {
@@ -12,7 +13,6 @@ const validAge = (age, res) => {
   if (age < MINIMUM_AGE) {
     return res.status(400).send({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
-  return true;
 };
 
 const validWatchedAt = (watchedAt, res) => {
@@ -21,14 +21,12 @@ const validWatchedAt = (watchedAt, res) => {
   if (!regexCheck.test(watchedAt)) {
     return res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  return true;
 };
 
 const validRate = (rate, res) => {
   if (rate < 1 || rate > 5) {
     return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  return true;
 };
 
 const validTalkInfos = (talk, res) => {
@@ -36,7 +34,6 @@ const validTalkInfos = (talk, res) => {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  return true;
 };
 
 const validateBody = (req, res, next) => {

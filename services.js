@@ -20,6 +20,10 @@ const invalidMessages = {
   rate: 'O campo "rate" deve ser um inteiro de 1 à 5',
 };
 
+const successMessages = {
+  delete: 'Pessoa palestrante deletada com sucesso',
+};
+
 const TALKER_PATH = './talker.json';
 
 const readFileTalker = () => {
@@ -90,7 +94,7 @@ function validateRate(rate) {
   const MIN_RATE = 1;
   const rateNumber = Number(rate);
   const isValidTalk = (
-    rate && rateNumber <= MAX_RATE && rateNumber >= MIN_RATE && rateNumber % 1 === 0
+    rateNumber <= MAX_RATE && rateNumber >= MIN_RATE && rateNumber % 1 === 0
   );
   return isValidTalk;
 }
@@ -104,6 +108,7 @@ function validateTalk(talk) {
 }
 
 module.exports = {
+  successMessages,
   missingMessages,
   invalidMessages,
   readFileTalker,

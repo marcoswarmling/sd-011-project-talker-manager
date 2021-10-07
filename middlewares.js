@@ -1,6 +1,6 @@
 const services = require('./services');
 
-const { missingMessages, invalidMessages } = services;
+const { successMessages, missingMessages, invalidMessages } = services;
 
 const getAllTalkers = (req, res) => {
   const { talkers } = req;
@@ -23,7 +23,6 @@ const getToken = (req, res) => {
   const token = services.generateToken();
   const { email, password } = req.body;
   const isValidCredentials = services.validateCredentials(email, password);
-  console.log(isValidCredentials);
   if (isValidCredentials.message) {
     return res.status(400).json({ message: isValidCredentials.message });
   }
@@ -32,7 +31,6 @@ const getToken = (req, res) => {
 
 const validateToken = (req, res, next) => {
   const token = req.headers.authorization;
-  console.log(token);
   if (!token || token === '') return res.status(401).json({ message: missingMessages.token });
   const isValidToken = services.validateToken(token);
   if (!isValidToken) return res.status(401).json({ message: invalidMessages.token });
@@ -57,9 +55,11 @@ const validateAge = (req, res, next) => {
 
 const validateRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
+  console.log(rate);
   const isValidRate = services.validateRate(rate);
+  const missingRate = (rate === undefined || rate === '');
   
-  if (!rate || rate === '') return res.status(400).json({ message: missingMessages.talk });
+  if (missingRate) return res.status(400).json({ message: missingMessages.talk });
   if (!isValidRate) return res.status(400).json({ message: invalidMessages.rate });
   next();
 };
@@ -78,6 +78,7 @@ const validateWatchedAt = (req, res, next) => {
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
   const isValidTalk = services.validateTalk(talk);
+  console.log(talk);
   
   if (!talk) {
     return res.status(400).json({ message: missingMessages.talk });
@@ -96,6 +97,26 @@ const insertData = (req, res) => {
   res.status(201).json(newTalker);
 };
 
+const updateData = (req, res) => {
+  const data = req.body;
+  const { talkers } = req;
+  const { id } = req.params;
+  const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+  if (talkerIndex === -1) return res.status(404).json({ message: 'Not found' });
+  talkers[talkerIndex] = { id: Number(id), ...data };
+  services.writeFileTalker(talkers);
+  res.status(200).json(talkers[talkerIndex]);
+};
+
+const deleteData = (req, res) => {
+  const { talkers } = req;
+  const { id } = req.params;
+  const newTalkers = talkers.filter((talker) => talker.id !== Number(id));
+  if (newTalkers.length === talkers.length) return res.status(404).json({ message: 'Not found' });
+  services.writeFileTalker(newTalkers);
+  res.status(200).json({ message: successMessages.delete });
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
@@ -107,4 +128,6 @@ module.exports = {
   validateRate,
   validateTalk,
   insertData,
+  updateData,
+  deleteData,
 };

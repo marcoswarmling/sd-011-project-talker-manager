@@ -89,4 +89,21 @@ router.delete('/talker/:id',
       return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   });
 
+// requisito 7
+
+router.get('/talker/search',
+  isValidateToken,
+  async (req, res) => {
+    const { q } = req.query;
+    try {
+      const talkerDate = await fs.readFile(talker, 'utf8');
+      const talkers = JSON.parse(talkerDate);
+      const filteredTalker = talkers
+      .filter((result) => result.name.toLowerCase().includes(q.toLowerCase()));
+      return res.status(200).json(filteredTalker);
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  });
+
 module.exports = router;

@@ -150,6 +150,18 @@ const deleteTalker = async (req, res) => {
   }
 };
 
+const searchTalker = async (req, res) => {
+  const { q } = req.query;
+  try {
+    const content = await fs.readFile(pathFile, 'utf-8');
+    const response = JSON.parse(content);
+    const searchTalk = response.filter((item) => item.name.includes(q));
+    res.status(200).json(searchTalk); 
+  } catch (error) {
+    return res.status(400).json(error);
+  } 
+};
+
   module.exports = {
     getRandomToken,
     validateEmail,
@@ -163,4 +175,5 @@ const deleteTalker = async (req, res) => {
     postTalker,
     putTalker,
     deleteTalker,
+    searchTalker,
   };

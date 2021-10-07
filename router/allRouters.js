@@ -16,7 +16,10 @@ const {
   postTalker,
   putTalker,
   deleteTalker,
+  searchTalker,
 } = require('../middleware/validations');
+
+router.get('/talker/search', validateToken, searchTalker);
 
 router.post('/login', validateEmail, validatePassword, getRandomToken);
 router.post('/talker',

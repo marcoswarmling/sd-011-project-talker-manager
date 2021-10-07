@@ -9,7 +9,8 @@ const { login,
   validRate,
   addTalker, 
   scanToken,
-  registerTalker } = require('./src');
+  registerTalker,
+  deleteTalker } = require('./src');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,6 +41,8 @@ app.put('/talker/:id', [
   validRate,
   registerTalker,
 ]);
+
+app.delete('/talker/:id', [scanToken, deleteTalker]);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

@@ -1,5 +1,6 @@
 const express = require('express');
-const fs = require('fs').promises;
+const talker = require('./desafios/talker');
+// const login = require('./desafios/login');
 
 const app = express();
 app.use(express.json());
@@ -12,24 +13,9 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const talker = await fs.readFile('./talker.json', 'utf8');
-  const findId = JSON.parse(talker).find((element) => element.id === Number(id));
-  if (!findId) {
-    return res
-      .status(404)
-      .json({ message: 'Pessoa palestrante não encontrada' });
-  }
-  return res.status(200).json(findId);
-});
+app.use('/talker', talker);
 
-app.get('/talker', async (_req, res) => {
-  const data = await fs.readFile('./talker.json', 'utf8');
-  const talker = JSON.parse(data);
-
-  return res.status(200).json(talker);
-});
+// app.use('/login', login);
 
 app.listen(PORT, () => {
   console.log('Online');

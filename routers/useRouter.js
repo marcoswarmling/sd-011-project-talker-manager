@@ -13,6 +13,8 @@ const {
   isValidateWatchedAt,
 } = require('../middlewares/validations');
 
+const talker = './talker.json';
+
 // requisito 3
 router.post(
   '/login',
@@ -36,12 +38,14 @@ isValidateWatchedAt,
     const { name, age, talk } = req.body;
 
     try {
-      const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf8'));
-      const id = talkers.length + 1;
+      const talkerDate = await fs.readFile(talker, 'utf8');
+      const talkers = JSON.parse(talkerDate);
+      const lastTalker = talkers[talkers.length - 1];
+      const id = lastTalker.id + 1;
       const newTalker = { name, age, id, talk };
       talkers.push(newTalker);
 
-      await fs.writeFileSync('./talker.json', JSON.stringify(talkers));
+      await fs.writeFile(talker, JSON.stringify(talkers));
       return res.status(201).json(newTalker);
     } catch (err) {
       return res.status(400).json({ message: err.message });
@@ -59,11 +63,12 @@ router.put('/talker/:id',
   async (req, res) => {
     const { id } = req.params;
     try {
-      const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf8'));
-      const newList = talkers.findIndex((talker) => talker.id === id);
+      const talkerDate = await fs.readFile(talker, 'utf8');
+      const talkers = JSON.parse(talkerDate);
+      const newList = talkers.findIndex((user) => user.id === +id);
       if (newList === -1) return res.status(404).json({ message: 'Id não encontrado' });
       talkers[newList] = { ...req.body, id: Number(id) };
-      await fs.writeFileSync('./talker.json', JSON.stringify(talkers));
+      await fs.writeFile(talker, JSON.stringify(talkers));
       console.log(newList);
       return res.status(200).json(talkers[newList]);
     } catch (err) {
@@ -76,10 +81,11 @@ router.delete('/talker/:id',
   isValidateToken,
   async (req, res) => {
     const { id } = req.params;
-      const talkers = await JSON.parse(fs.readFile('./talker.json', 'utf8'));
-      const newList = talkers.findIndex((talker) => talker.id === +id);
+      const talkerDate = await fs.readFile(talker, 'utf8');
+      const talkers = JSON.parse(talkerDate);
+      const newList = talkers.findIndex((user) => user.id === +id);
       talkers.splice(newList, 1);
-      await fs.writeFile('./talker.json', JSON.stringify(talkers));
+      await fs.writeFile(talker, JSON.stringify(talkers));
       return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   });
 

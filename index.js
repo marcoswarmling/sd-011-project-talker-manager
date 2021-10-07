@@ -15,12 +15,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// requisito 1
-app.get('/talker', async (_req, res) => {
-  const talker = await fs.readFile('./talker.json', 'utf8');
-  if (!talker) return res.status(HTTP_OK_STATUS).json([]);
-  res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
-});
+app.use('/', userRouter);
 
 // requisito 2
 app.get('/talker/:id', async (req, res) => {
@@ -32,7 +27,12 @@ app.get('/talker/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(data);
 });
 
-app.use('/', userRouter);
+// requisito 1
+app.get('/talker', async (_req, res) => {
+  const talker = await fs.readFile('./talker.json', 'utf8');
+  if (!talker) return res.status(HTTP_OK_STATUS).json([]);
+  res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
+});
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -1,6 +1,6 @@
 const express = require('express');
-const talker = require('./desafios/talker');
-const login = require('./desafios/login');
+const talker = require('./routes/talker');
+const login = require('./routes/login');
 
 const app = express();
 app.use(express.json());

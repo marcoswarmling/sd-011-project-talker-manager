@@ -10,6 +10,4 @@ const passwordValidation = (req, res, next) => {
   next();
 };
 
-// O lint deu xablau!
-
 module.exports = passwordValidation;

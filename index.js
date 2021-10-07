@@ -3,10 +3,13 @@ const fs = require('fs').promises;
 const bodyParser = require('body-parser');
 const { 
   talkerDataMiddleware,
-  authMiddleware,
   getToken,
-  authPostMiddleware,
   authDeleteMiddleware,
+  validateName,
+  validateAge,
+  validateTalk,
+  authEmail,
+  authPassword,
 } = require('./talkerData');
 
 const app = express();
@@ -23,22 +26,35 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.post('/talker', authDeleteMiddleware, authPostMiddleware, (req, res) => {
-  const { data } = req;
-  const { body } = req;
-  const { name, age, talk } = body;
-  const id = data[data.length - 1].id + 1;
-  data.push({ name, id, age, talk });
-  fs.writeFile(TALKER, JSON.stringify(data))
-    .then(() => {
-      res.status(201).json({ name, id, age, talk });
-    })
-    .catch((err) => {
-      res.status(400).json({ message: `Erro ao escrever o arquivo: ${err.message}` });
-    });
-});
+app.post(
+  '/talker',
+  authDeleteMiddleware,
+  validateName,
+  validateAge,
+  validateTalk,
+  (req, res) => {
+    const { data } = req;
+    const { body } = req;
+    const { name, age, talk } = body;
+    const id = data[data.length - 1].id + 1;
+    data.push({ name, id, age, talk });
+    fs.writeFile(TALKER, JSON.stringify(data))
+      .then(() => {
+        res.status(201).json({ name, id, age, talk });
+      })
+      .catch((err) => {
+        res.status(400).json({ message: `Erro ao escrever o arquivo: ${err.message}` });
+      });
+  },
+);
 
-app.put('/talker/:id', authDeleteMiddleware, authPostMiddleware, (req, res) => {
+app.put(
+  '/talker/:id',
+  authDeleteMiddleware,
+  validateName,
+  validateAge,
+  validateTalk,
+  (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const { data } = req;
@@ -56,7 +72,8 @@ app.put('/talker/:id', authDeleteMiddleware, authPostMiddleware, (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: `Erro ao escrever o arquivo: ${err.message}` });
     });
-});
+  },
+);
 
 app.delete('/talker/:id', authDeleteMiddleware, (req, res) => {
   const { id } = req.params;
@@ -103,7 +120,7 @@ app.get('/talker/:id', (req, res) => {
   res.status(200).json(talker);
 });
 
-app.post('/login', authMiddleware, (req, res) => {
+app.post('/login', authEmail, authPassword, (req, res) => {
   res.status(200).json({
     token: getToken(),
   });

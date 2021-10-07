@@ -61,11 +61,11 @@ router.post('/', registerOrEditTalkers, async (req, res) => {
 router.put('/:id', registerOrEditTalkers, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk: { rate, watchedAt } } = req.body;
-  const talkers = { id, name, age, talk: { rate, watchedAt } };
+  const talkers = { id: Number(req.params.id), name, age, talk: { rate, watchedAt } };
   const response = await fs.readFile(data, 'utf-8');
   const registeredTalkers = JSON.parse(response);
 
-  const indexOfEditedTalkers = registeredTalkers.findIndex((t) => t.id === Number(id));
+  const indexOfEditedTalkers = registeredTalkers.findIndex((t) => Number(t.id) === Number(id));
   registeredTalkers[indexOfEditedTalkers] = talkers;
   await fs.writeFile(data, JSON.stringify(registeredTalkers));
 

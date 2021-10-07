@@ -2,7 +2,7 @@ const hasEmail = (req, res, next) => {
     const { email } = req.body;
   if (
       !email || email === ''
-    ) res.status(400).json({ message: 'O campo "email" é obrigatório' });
+      ) res.status(400).json({ message: 'O campo "email" é obrigatório' });
     next();
   };
 

@@ -4,6 +4,7 @@ const mid = require('./middlewares');
 const router = express.Router();
 
 router.get('/', mid.getAllTalkers);
+router.get('/search', mid.validateToken, mid.searchTerm);
 router.get('/:id', mid.getTalkerById);
 
 router.post('/',

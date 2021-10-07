@@ -20,7 +20,7 @@ app.use(cors());
 const HTTP_OK_STATUS = 200;
 const HTTP_TALKER_OK_STATUS = 201;
 const PORT = '3000';
-
+const URL = './talker.json';
 // não remova esse endpoint, e para o avaliador funcionar
 
 app.get('/', (_request, response) => {
@@ -31,7 +31,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', async (_request, response) => {
   try {
-    const data = await fs.readFile('./talker.json', 'utf-8');
+    const data = await fs.readFile(URL, 'utf-8');
     response.status(HTTP_OK_STATUS).json(JSON.parse(data));
   } catch (error) {
     response.status(400).json({ message: `Erro ${error.code}` });
@@ -43,7 +43,7 @@ app.get('/talker', async (_request, response) => {
 app.get('/talker/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await fs.readFile('./talker.json', 'utf-8');
+    const data = await fs.readFile(URL, 'utf-8');
     const findData = await JSON.parse(data);
     const findId = findData.find((e) => e.id === parseInt(id, 10) && [e]);
     if (!findId) {
@@ -69,23 +69,48 @@ app.post('/talker',
   watchRateValid,
   async (req, res) => {
   const { name, age, talk } = req.body;
-  const fetch = await fs.readFile('./talker.json', 'utf-8');
+  const fetch = await fs.readFile(URL, 'utf-8');
   const parseFetch = await JSON.parse(fetch);
   const obj = {
     id: parseFetch.length + 1,
     name,
-    age,
+    age: parseInt(age, 10),
     talk,
   };
   parseFetch.push(obj);
-  await fs.writeFile('./talker.json', JSON.stringify(parseFetch));
+  await fs.writeFile(URL, JSON.stringify(parseFetch));
 
   return res.status(HTTP_TALKER_OK_STATUS).json(obj);
 });
 
 // requisito 5
 
-// app.put('/talker/:id');
+app.put('/talker/:id',
+  tokenValid,
+  nameValid,
+  ageValid,
+  talkValid,
+  watchRateValid,
+  async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+
+  const data = await fs.readFile(URL, 'utf-8');
+  const findData = await JSON.parse(data);
+  const findIdex = findData.find((e) => e.id === parseInt(id, 10) && [e]);
+
+  findData[findIdex] = { id: parseInt(id, 10), name, age: parseInt(age, 10), talk };
+  const update = findData.map((e) => {
+    if (e.id === parseInt(id, 10)) {
+      return findData[findIdex];
+    }
+    return e;
+  });
+  
+  await fs.writeFile(URL, JSON.stringify(update));
+
+  return res.status(HTTP_OK_STATUS).json(findData[findIdex]);
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta: ${PORT}`);

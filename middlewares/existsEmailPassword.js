@@ -3,7 +3,7 @@ const existsEmailPassword = (req, res, next) => {
   
   if ([email, password].includes(undefined)) {
     const verification = !email ? 'email' : 'password';
-    return res.status(400).json({ message: `O campo ${verification} é obrigatório` });
+    return res.status(400).json({ message: `O campo "${verification}" é obrigatório` });
   }
   
   next();

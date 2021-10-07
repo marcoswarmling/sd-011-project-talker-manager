@@ -8,7 +8,7 @@ let randomToken = '';
 router.post('/', existsEmailPassword, regexEmailPassword, (_req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   randomToken = token;
-  res.status(200).json({ randomToken });
+  res.status(200).json({ token: `${randomToken}` });
 });
 
 module.exports = { 

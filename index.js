@@ -7,6 +7,7 @@ const loginRouter = require('./routers/loginRouter'); // req. 3
 const addTalker = require('./routers/addTalker'); // req. 4
 
 const deleteTalker = require('./routers/deleteTalker'); // req. 6
+const queryTalker = require('./routers/queryTalker'); // req. 7
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,6 +19,9 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+// req. 7
+app.use('/talker', queryTalker);
 
 // req. 1
 app.use('/talker', talkerRouter);

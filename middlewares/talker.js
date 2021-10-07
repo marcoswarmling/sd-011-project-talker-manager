@@ -15,6 +15,20 @@ router.get('/talker', (_req, res) => {
   res.status(200).json(talkers);
 });
 
+// O requisito 7 tem que ser colocado antes por causa do path /talker/:id que engloba o '/talker/search'
+// Requisito 7 - Endpoint GET /talker/search?q=searchTerm
+router.get('/talker/search',
+  validateTalker.checkToken,
+  (req, res) => {
+  const { q } = req.query;
+  const talkers = JSON.parse(fs.readFileSync(list, 'utf-8'));
+  if (!q) return res.status(200).json(talkers);
+
+  const foundTalkers = talkers.filter((talker) => talker.name.includes(q));
+
+  res.status(200).json(foundTalkers);
+});
+
 // Requisito 2 - GET com endpoint /talker/:id
 router.get('/talker/:id', (req, res) => {
   const { id } = req.params;
@@ -82,19 +96,6 @@ router.delete('/talker/:id',
 
   fs.writeFileSync(list, JSON.stringify(leftTalkers));
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
-});
-
-// Requisito 7 - Endpoint GET /talker/search?q=searchTerm
-router.get('/talker/search',
-  validateTalker.checkToken,
-  (req, res) => {
-  const { q } = req.query;
-  const talkers = JSON.parse(fs.readFileSync(list, 'utf-8'));
-  if (!q) return res.status(200).json(talkers);
-
-  const foundTalkers = talkers.filter((talker) => talker.name.includes(q));
-
-  res.status(200).json(foundTalkers);
 });
 
 module.exports = router;

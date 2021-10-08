@@ -3,6 +3,13 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 
 const { makeid, validateEmail, validatePassword } = require('./checkInFunctions');
+const { 
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalk2,
+ } = require('./addTalkerFunctions');
 
 async function readTalker() {
   const talker = await fs.readFile('./talker.json');
@@ -32,10 +39,14 @@ app.get('/talker/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).send(resultado);
 });
 app.post('/login', validateEmail, validatePassword, (req, res) => {
-  // const { email, password } = req.body;
-  console.log(req.body);
   const token = makeid();
   res.status(HTTP_OK_STATUS).json({ token });
+});
+
+app.post('/talker', validateToken, validateName, validateAge,
+validateTalk, validateTalk2, (req, res) => {
+  const { id, name, age, talk } = req.body;
+  res.status(201).json({ id, name, age, talk });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

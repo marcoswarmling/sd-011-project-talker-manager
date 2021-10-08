@@ -23,7 +23,6 @@ function validateEmail(req, res, next) {
 }
   next();
 }
-console.log(makeid());
 
 function validatePassword(req, res, next) {
   const { password } = req.body;

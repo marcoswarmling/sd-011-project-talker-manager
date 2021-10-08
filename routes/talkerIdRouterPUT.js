@@ -21,8 +21,8 @@ const editTalkerById = [
 ];
 
 router.put('/:id', editTalkerById, (req, res) => {
-  const content = fs.readFileSync('./talker.json');
-  const talkersList = JSON.parse(content);
+  const array = fs.readFileSync('./talker.json');
+  const talkersList = JSON.parse(array);
 
   const { name, age, talk } = req.body;
   const { id } = req.params;

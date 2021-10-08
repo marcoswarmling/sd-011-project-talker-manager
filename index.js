@@ -9,6 +9,8 @@ const {
   validateTalkerData,
 } = require('./middlewares');
 
+const FILE_PATH = './talkers.json';
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -20,14 +22,14 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_request, response) => {
-  const data = await fs.readFile('./talker.json');
+  const data = await fs.readFile(FILE_PATH);
   const talkers = JSON.parse(data);
   response.status(HTTP_OK_STATUS).json(talkers);
 });
 
 app.get('/talker/:id', async (request, response) => {
   const talkerId = Number(request.params.id);
-  const data = await fs.readFile('./talker.json');
+  const data = await fs.readFile(FILE_PATH);
   const talkers = JSON.parse(data);
   const talker = talkers.find((t) => t.id === talkerId);
   if (!talker) {
@@ -46,7 +48,7 @@ app.post('/login',
 
 app.post('/talker', authentication, ...validateTalkerData, async (request, response) => {
   const { name, age, talk } = request.body;
-  const data = await fs.readFile('./talker.json');
+  const data = await fs.readFile(FILE_PATH);
   const talkers = JSON.parse(data);
   const newTalker = { 
     name,
@@ -58,7 +60,7 @@ app.post('/talker', authentication, ...validateTalkerData, async (request, respo
     ...talkers,
     newTalker,
   ];
-  await fs.writeFile('./talker.json', JSON.stringify(newData));
+  await fs.writeFile(FILE_PATH, JSON.stringify(newData));
   return response.status(HTTP_CREATED_STATUS).json(newTalker);
 });
 
@@ -66,7 +68,7 @@ app.put('/talker/:id', authentication, ...validateTalkerData, async (request, re
   const { name, age, talk } = request.body;
   const talkerId = Number(request.params.id);
 
-  const data = await fs.readFile('./talker.json');
+  const data = await fs.readFile(FILE_PATH);
   const talkers = JSON.parse(data);
   const talkerIndex = talkers.findIndex((t) => t.id === talkerId);
   if (talkerIndex < 0) {
@@ -79,7 +81,7 @@ app.put('/talker/:id', authentication, ...validateTalkerData, async (request, re
     talk,
   };
   talkers[talkerIndex] = updatedTalker;
-  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  await fs.writeFile(FILE_PATH, JSON.stringify(talkers));
   return response.status(HTTP_OK_STATUS).json(updatedTalker);
 });
 

@@ -5,7 +5,6 @@ function setTalkers(newTalker) {
 }
 function validateToken(req, res, next) {
   const { authorization } = req.headers;
-  console.log(authorization);
   if (!authorization) res.status(401).json({ message: 'Token não encontrado' });
   if (authorization.length !== 16) res.status(401).json({ message: 'Token inválido' });
   next();
@@ -19,7 +18,6 @@ function validateName(req, res, next) {
     message: 'O "name" deve ter pelo menos 3 caracteres', 
   }); 
 }
-console.log('validou name');
   next();
 }
 function validateAge(req, res, next) {
@@ -30,7 +28,6 @@ function validateAge(req, res, next) {
       message: 'A pessoa palestrante deve ser maior de idade', 
     }); 
   }
-  console.log('validou age');
   next();
 }
 
@@ -40,7 +37,6 @@ function notEmptyFunc(watchedAt, rate) {
 
 function validateTalk(req, res, next) {
   const { talk } = req.body;
-  console.log(talk);
   if (!talk) {
     res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
@@ -52,7 +48,6 @@ function validateTalk(req, res, next) {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
     }); 
   }
-  console.log(talk, talk.watchedAt, talk.rate);
   next();
 }
 function validateTalk2(req, res, next) {

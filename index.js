@@ -58,6 +58,15 @@ validateTalk, validateTalk2, rescue(async (req, res) => {
   res.status(201).json(newTalker);
 }));
 
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const array = await readTalker();
+  const { id } = req.params;
+  console.log(`o ${id}, é um ${typeof id}`);
+  const newArray = array.filter((talk) => talk.id !== Number(id));
+  await setTalkers(newArray);
+  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.get('/talker/search?q=searchTerm', (req, res) => {
   console.log(req.query);
   res.status(500).send('ta aqui');

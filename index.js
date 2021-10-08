@@ -30,18 +30,34 @@ app.listen(PORT, () => {
 
 app.get('/talker', async (_req, res) => {
   try {
-  const talker = await fs.readFile(file, 'utf-8');
-  return res.status(HTTP_OK_STATUS).json(JSON.parse(talker));
+  const talker = JSON.parse(await fs.readFile(file, 'utf-8'));
+  return res.status(HTTP_OK_STATUS).json(talker);
 } catch (err) {
   return res.status(400).json({ message: err.message });
 }
 });
 
+app.get('/talker/search',
+validationToken,
+
+async (req, res) => {
+  const { q } = req.query;
+  try {
+   const talker = JSON.parse(await fs.readFile(file, 'utf-8'));
+    const filteredTalker = talker.filter((n) => n.name.includes(q));
+    if (!q) return res.status(HTTP_OK_STATUS).json([]);
+  if (filteredTalker.length === 0) return res.status(HTTP_OK_STATUS).json(talker);  
+  return res.status(HTTP_OK_STATUS).json(filteredTalker);
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const talker = await fs.readFile(file, 'utf-8');
-    const dados = JSON.parse(talker).find((p) => p.id === Number(id));
+    const talker = JSON.parse(await fs.readFile(file, 'utf-8'));
+    const dados = talker.find((p) => p.id === Number(id));
     if (!dados) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }

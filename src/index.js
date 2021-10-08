@@ -1,4 +1,3 @@
-const error = require('./error');
 const addTalker = require('./addTalker');
 const login = require('./login');
 const readToken = require('./readToken');
@@ -12,7 +11,6 @@ const deleteTalker = require('./deleteTalker');
 
 module.exports = {
   addTalker,
-  error,
   login,
   validName,
   validAge,

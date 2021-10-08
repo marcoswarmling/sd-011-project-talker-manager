@@ -1,3 +1,8 @@
+const fs = require('fs/promises');
+
+function setTalkers(newTalker) {
+  return fs.writeFile('./talker.json', JSON.stringify(newTalker));
+}
 function validateToken(req, res, next) {
   const { authorization } = req.headers;
   console.log(authorization);
@@ -72,4 +77,5 @@ module.exports = {
   validateAge,
   validateTalk,
   validateTalk2,
+  setTalkers,
 };

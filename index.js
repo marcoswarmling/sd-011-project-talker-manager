@@ -9,7 +9,7 @@ const {
   validateTalkerData,
 } = require('./middlewares');
 
-const FILE_PATH = './talkers.json';
+const FILE_PATH = './talker.json';
 
 const app = express();
 app.use(bodyParser.json());
@@ -83,6 +83,21 @@ app.put('/talker/:id', authentication, ...validateTalkerData, async (request, re
   talkers[talkerIndex] = updatedTalker;
   await fs.writeFile(FILE_PATH, JSON.stringify(talkers));
   return response.status(HTTP_OK_STATUS).json(updatedTalker);
+});
+
+app.delete('/talker/:id', authentication, async (request, response) => {
+  const talkerId = Number(request.params.id);
+  const data = await fs.readFile(FILE_PATH);
+  const talkers = JSON.parse(data);
+  const talkerIndex = talkers.findIndex((t) => t.id === talkerId);
+  if (talkerIndex < 0) {
+    return response.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  talkers.splice(talkerIndex, 1);
+  await fs.writeFile(FILE_PATH, JSON.stringify(talkers));
+  return response.status(HTTP_OK_STATUS).json({
+    message: 'Pessoa palestrante deletada com sucesso',
+  });
 });
 
 app.listen(PORT, () => {

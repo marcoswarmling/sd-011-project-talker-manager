@@ -6,7 +6,7 @@ const {
   validateEmail,
   validatePassword,
   authentication,
-  validateNewTalker,
+  validateTalkerData,
 } = require('./middlewares');
 
 const app = express();
@@ -44,7 +44,7 @@ app.post('/login',
   return response.status(HTTP_OK_STATUS).json({ token });
 });
 
-app.post('/talker', authentication, ...validateNewTalker, async (request, response) => {
+app.post('/talker', authentication, ...validateTalkerData, async (request, response) => {
   const { name, age, talk } = request.body;
   const data = await fs.readFile('./talker.json');
   const talkers = JSON.parse(data);
@@ -60,6 +60,27 @@ app.post('/talker', authentication, ...validateNewTalker, async (request, respon
   ];
   await fs.writeFile('./talker.json', JSON.stringify(newData));
   return response.status(HTTP_CREATED_STATUS).json(newTalker);
+});
+
+app.put('/talker/:id', authentication, ...validateTalkerData, async (request, response) => {
+  const { name, age, talk } = request.body;
+  const talkerId = Number(request.params.id);
+
+  const data = await fs.readFile('./talker.json');
+  const talkers = JSON.parse(data);
+  const talkerIndex = talkers.findIndex((t) => t.id === talkerId);
+  if (talkerIndex < 0) {
+    return response.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  const updatedTalker = {
+    name,
+    age,
+    id: talkers[talkerIndex].id,
+    talk,
+  };
+  talkers[talkerIndex] = updatedTalker;
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return response.status(HTTP_OK_STATUS).json(updatedTalker);
 });
 
 app.listen(PORT, () => {

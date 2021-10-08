@@ -83,7 +83,7 @@ const validateAge = (request, response, next) => {
 
 const validateTalk = (request, response, next) => {
   const { talk } = request.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return response.status(HTTP_BAD_REQUEST).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -114,7 +114,7 @@ const validateTalkRate = (request, response, next) => {
   return next();
 };
 
-const validateNewTalker = [
+const validateTalkerData = [
   validateName,
   validateAge,
   validateTalk,
@@ -126,5 +126,5 @@ module.exports = {
   validateEmail,
   validatePassword,
   authentication,
-  validateNewTalker,
+  validateTalkerData,
 };

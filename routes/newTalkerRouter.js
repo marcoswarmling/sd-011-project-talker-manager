@@ -30,7 +30,7 @@ router.post('/', newTalkerValidations, async (req, res) => {
   const newTalker = { name, age, id, talk: { watchedAt, rate } };
 
   talkerListJson.push(newTalker);
-  console.log(talkerListJson);
+
   const newTalkerList = JSON.stringify(talkerListJson);
   await fs.writeFile('./talker.json', newTalkerList);
 

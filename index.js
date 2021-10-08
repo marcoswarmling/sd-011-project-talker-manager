@@ -7,6 +7,7 @@ const loginRouter = require('./routes/loginRouter');
 const newTalkerRouter = require('./routes/newTalkerRouter');
 const editTalker = require('./routes/talkerIdRouterPUT');
 const deleteTalker = require('./routes/deleteTalker');
+const talkerByQuery = require('./routes/talkerByQuery');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,6 +19,9 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+// Requisito 7
+app.use('/talker', talkerByQuery); // É o primeiro para não atrapalhar a ordem das rotas.
 
 // Requisito 01
 app.use('/talker', talkerRouter);

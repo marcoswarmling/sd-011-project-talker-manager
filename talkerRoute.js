@@ -1,8 +1,8 @@
 /* 1 - Crie o endpoint GET /talker
 Os seguintes pontos serão avaliados:
 O endpoint deve retornar um array com todas as pessoas palestrantes cadastradas. Devendo retornar o status 200, com o seguinte corpo: */
-const express = require("express");
-const fs = require("file-system");
+const express = require('express');
+const fs = require('file-system');
 
 const router = express.Router();
 const {
@@ -12,11 +12,11 @@ const {
   validateAge,
   validateTalk,
   validateWatchedAndRate,
-} = require("./utils");
+} = require('./utils');
 
 router.use(loadSpeakers);
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   if (req.speakers.length === 0) return res.status(200).json([]);
   res.status(200).json(req.speakers);
 });
@@ -26,10 +26,9 @@ Os seguintes pontos serão avaliados:
 O endpoint deve retornar um array de palestrantes que contenham em seu nome o termo pesquisado no queryParam da URL. 
 */
 
-router.get("/search", validateToken, (req, res) => {
+router.get('/search', validateToken, (req, res) => {
   const selectedSpeaker = req.speakers.filter((e) =>
-    e.name.includes(req.query.q)
-  );
+    e.name.includes(req.query.q));
   if (req.query.q === undefined) return res.status(200).json(req.speakers);
   res.status(200).json(selectedSpeaker);
 });
@@ -37,13 +36,13 @@ router.get("/search", validateToken, (req, res) => {
 /* 2 - Crie o endpoint GET /talker/:id
 O endpoint deve retornar uma pessoa palestrante com base no id da rota. Devendo retornar o status 200 ao fazer uma requisição /talker/1 */
 /* Caso não seja encontrada uma pessoa palestrante com base no id da rota, o endpoint deve retornar o status 404 */
-router.get("/:id", (req, res) => {
+router.get('/:id', (req, res) => {
   const { id } = req.params;
   const selectedSpeaker = req.speakers.filter((e) => e.id === parseInt(id, 10));
   if (!id || selectedSpeaker.length === 0) {
     return res
       .status(404)
-      .json({ message: "Pessoa palestrante não encontrada" });
+      .json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).json(selectedSpeaker[0]);
 });
@@ -59,7 +58,7 @@ A chave rate deve ser um inteiro de 1 à 5.
 Caso esteja tudo certo, retorne o status 201 e a pessoa cadastrada.
  */
 router.post(
-  "/",
+  '/',
   validateToken,
   validateName,
   validateAge,
@@ -70,9 +69,9 @@ router.post(
     const { speakers } = req;
     const id = speakers.length + 1;
     speakers.push({ name, age, id, talk });
-    fs.writeFileSync("./talker.json", JSON.stringify(speakers));
+    fs.writeFileSync('./talker.json', JSON.stringify(speakers));
     return res.status(201).json({ name, age, id, talk });
-  }
+  },
 );
 
 /* 5 - Crie o endpoint PUT /talker/:id
@@ -80,7 +79,7 @@ Os seguintes pontos serão avaliados:
 O endpoint deve ser capaz de editar uma pessoa palestrante com base no id da rota, sem alterar o id registrado. */
 
 router.put(
-  "/:id",
+  '/:id',
   validateToken,
   validateName,
   validateAge,
@@ -91,7 +90,7 @@ router.put(
     const { name, age, talk } = req.body;
     const { speakers } = req;
     const selectedSpeakerIndex = speakers.findIndex(
-      (e) => e.id === parseInt(id, 10)
+      (e) => e.id === parseInt(id, 10),
     );
     id = parseInt(id, 10);
     speakers[selectedSpeakerIndex] = {
@@ -101,24 +100,24 @@ router.put(
       talk,
       id,
     };
-    fs.writeFileSync("./talker.json", JSON.stringify(speakers));
+    fs.writeFileSync('./talker.json', JSON.stringify(speakers));
     return res.status(200).json({ name, age, id, talk });
-  }
+  },
 );
 
 /* 6 - Crie o endpoint DELETE /talker/:id */
 
-router.delete("/:id", validateToken, (req, res) => {
+router.delete('/:id', validateToken, (req, res) => {
   const { id } = req.params;
   const { speakers } = req;
   const selectedSpeakerIndex = speakers.findIndex(
-    (e) => e.id === parseInt(id, 10)
+    (e) => e.id === parseInt(id, 10),
   );
   speakers.splice(selectedSpeakerIndex, 1);
-  fs.writeFileSync("./talker.json", JSON.stringify(speakers));
+  fs.writeFileSync('./talker.json', JSON.stringify(speakers));
   return res
     .status(200)
-    .json({ message: "Pessoa palestrante deletada com sucesso" });
+    .json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

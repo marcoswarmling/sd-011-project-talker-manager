@@ -70,17 +70,19 @@ router.put(
   validateTalk,
   validateWatchedAndRate,
   (req, res) => {
-    const { id } = req.params;
+    let { id } = req.params;
     const { name, age, talk } = req.body;
     const { speakers } = req;
     const selectedSpeakerIndex = speakers.findIndex(
       (e) => e.id === parseInt(id, 10),
     );
+    id = parseInt(id, 10);
     speakers[selectedSpeakerIndex] = {
       ...speakers[selectedSpeakerIndex],
       name,
       age,
       talk,
+      id,
     };
     fs.writeFileSync('./talker.json', JSON.stringify(speakers));
     return res.status(200).json({ name, age, id, talk });

@@ -39,7 +39,7 @@ router.post(
   isValidatePassword,
   (_req, res) => {
     const token = randonToken(16);
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
   },
 );
 

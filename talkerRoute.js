@@ -62,6 +62,10 @@ router.post(
   },
 );
 
+/* 5 - Crie o endpoint PUT /talker/:id
+Os seguintes pontos serão avaliados:
+O endpoint deve ser capaz de editar uma pessoa palestrante com base no id da rota, sem alterar o id registrado. */
+
 router.put(
   '/:id',
   validateToken,
@@ -86,6 +90,21 @@ router.put(
     };
     fs.writeFileSync('./talker.json', JSON.stringify(speakers));
     return res.status(200).json({ name, age, id, talk });
+  },
+);
+
+router.delete(
+  '/:id',
+  validateToken,
+  (req, res) => {
+    const { id } = req.params;
+    const { speakers } = req;
+    const selectedSpeakerIndex = speakers.findIndex(
+      (e) => e.id === parseInt(id, 10),
+    );
+    speakers.splice(selectedSpeakerIndex, 1);
+    fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 

@@ -53,7 +53,7 @@ app.get('/talker/:id', async (req, res) => {
 
 app.post('/login', validateEmail, validatePassword, (_req, res) => 
  // const token = crypto.randomBytes(8).toString('hex');
-   res.status(200).json({ token: '7mqaVRXJSp886CGr' }));
+   res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' }));
 
 app.post('/talker',
 validationToken,
@@ -97,7 +97,24 @@ async (req, res) => {
     if (talkerIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
     talker[talkerIndex] = person;
     await fs.writeFile(file, JSON.stringify(talker));
-    return res.status(200).json(talker[talkerIndex]);
+    return res.status(HTTP_OK_STATUS).json(person);
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+});
+
+app.delete('/talker/:id',
+validationToken,
+
+async (req, res) => {
+  const { id } = req.params;
+  try {
+    const talker = JSON.parse(await fs.readFile(file, 'utf-8'));
+    const talkerFind = talker.find((talkerID) => talkerID.id === Number(id));
+    talker.splice(talkerFind, 1);
+
+    await fs.writeFile(file, JSON.stringify(talkerFind));
+    return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }

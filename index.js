@@ -17,7 +17,7 @@ const readFile = async () => {
   const fileContent = await fs.readFile('./talker.json', 'utf8');
   const palestrantes = JSON.parse(fileContent);
   return palestrantes;
-}
+};
 
 app.get('/talker', async (req, res) => {
   try {
@@ -26,6 +26,16 @@ app.get('/talker', async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: 'Erro na leitura do arquivo!' });
   }
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const file = await readFile();
+  const findById = file.find((person) => person.id === Number(id));
+
+  if (!findById) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+
+  res.status(200).json(findById);
 });
 
 app.listen(PORT, () => {

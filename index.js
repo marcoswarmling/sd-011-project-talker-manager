@@ -94,6 +94,19 @@ app.put('/talker/:id',
   return res.status(200).json(editPerson);
 });
 
+// npm run test deleteTalker.test.js
+app.delete('/talker/:id', 
+  validateToken,
+  (req, res) => {
+  const { id } = req.params;
+
+  const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+  const talkerId = talker.filter((t) => t.id !== Number(id));
+  talker.push(talkerId);
+  fs.writeFileSync(talkerFile, JSON.stringify(talkerId));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

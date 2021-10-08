@@ -2,7 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
-const { validateLogin, genToken } = require('./middlewareNFunc');
+const {
+  validateLogin,
+  genToken,
+  validateToken,
+  validateName,
+  validateAge,
+  validateData,
+  validateRate,
+  validateTalk,
+} = require('./middlewareNFunc');
 
 const talkerFile = './talker.json';
 
@@ -48,10 +57,22 @@ app.get('/talker/:id', (req, res) => {
 
 // test login.test.js
 app.post('/login', validateLogin, (req, res) => {
-  // if (validatedEmail && validatedPassword) {
     const token = genToken();
     return res.status(200).json({ token });
-  // }
+});
+
+// test createTalker.test.js
+app.post('/talker', validateToken, validateName,
+  validateAge,
+  validateData,
+  validateRate,
+  validateTalk, (req, res) => {
+  const { name, age, talk } = req.body;
+  const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+  const newPerson = { id: talker.length + 1, name, age, talk };
+  talker.push(newPerson);
+  fs.writeFileSync(talkerFile, JSON.stringify(talker));
+  return res.status(201).json(newPerson);
 });
 
 app.listen(PORT, () => {

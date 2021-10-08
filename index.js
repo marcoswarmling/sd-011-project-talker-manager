@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const util = require('util');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,93 +12,35 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-const readFilePromise = util.promisify(fs.readFile);
+// 1 - Crie o endpoint GET /talker
+const talkerRouter = require('./router/talkerRouter');
 
-app.get('/talker', async (_request, response) => {
-  try {
-    const content = await readFilePromise('talker.json');
-    const talker = JSON.parse(content);
-    response.status(HTTP_OK_STATUS).json(talker);
-  } catch (err) {
-    response.status(HTTP_OK_STATUS).json([]);
-  }
-});
+app.use('/talker', talkerRouter);
 
-app.get('/talker/:id', async (request, response) => {
-  const { id } = request.params;
-  const content = await readFilePromise('talker.json');
-  const talkerJson = JSON.parse(content);
-  const idTalker = talkerJson.find((talker) => talker.id === +id);
-  if (!idTalker) {
-    return response.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
-  }
-  return response.status(HTTP_OK_STATUS).json(idTalker);
-});
+// 2 - Crie o endpoint GET /talker/:id
+const getTalkerId = require('./router/getTalkerId');
 
-// https://stackoverflow.com/questions/8532406/create-a-random-token-in-javascript-based-on-user-details
-const tokenGenerator = () => {
-  const length = 16;
-  const a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');
-  const b = [];  
-  for (let i = 0; i < length; i += 1) {
-      const j = (Math.random() * (a.length - 1)).toFixed(0);
-      b[i] = a[j];
-  }
-  return b.join('');
-};
+app.use('/:id', getTalkerId);
 
-const emailExists = (req, res, next) => {
-  const { email } = req.body;
-  if (!email) {
- return res.status(400).json({
-    message: 'O campo "email" é obrigatório',
-  }); 
-}
-  next();
-};
+// 3 - Crie o endpoint POST /login
+const loginRouter = require('./router/loginRouter');
 
-const validateEmail = (req, res, next) => {
-  const recevedEmail = new RegExp('\\S+@\\S+\\.\\S+');
-  const { email } = req.body;
-  const validate = recevedEmail.test(email);
-  if (!validate || validate === '') {
- return res.status(400).json({
-    message: 'O "email" deve ter o formato "email@email.com"',
-  }); 
-}
-  next();
-};
+app.use('/login', loginRouter);
 
-const passwordExists = (req, res, next) => {
-  const { password } = req.body;
-  if (!password) {
- return res.status(400).json({
-    message: 'O campo "password" é obrigatório',
-  }); 
-}
-  next();
-};
+// 4 - Crie o endpoint POST /talker
+const postTalker = require('./router/postTalker');
 
-const validatePassword = (req, res, next) => {
-  const { password } = req.body;
-  if (password.length < 6) {
- return res.status(400).json({
-    message: 'O "password" deve ter pelo menos 6 caracteres',
-  }); 
-}
-  next();
-};
+app.use('/talker', postTalker);
 
-const validations = [
-  emailExists,
-  validateEmail,
-  passwordExists,
-  validatePassword,
-];
+// 5 - Crie o endpoint PUT /talker/:id
+const putTalker = require('./router/putTalkerId');
 
-app.post('/login', validations, (_req, res) => {
-  res.status(HTTP_OK_STATUS).json({ token: tokenGenerator() });
-});
+app.use('/:id', putTalker);
+
+// 6 - Crie o endpoint DELETE /talker/:id
+const deleteTalker = require('./router/deleteTalkerId');
+
+app.use('/:id', deleteTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

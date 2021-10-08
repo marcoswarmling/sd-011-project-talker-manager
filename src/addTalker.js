@@ -1,7 +1,4 @@
 const fs = require('fs');
-/* const path = require('path');
-
-const filePath = path.resolve(__dirname, '..', 'talker.json'); */
 
 const addTalker = (req, res, _next) => {
   const talker = JSON.parse(fs.readFileSync('talker.json'));

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const talkersRouter = require('./routers/talkersRouter');
 const userRouter = require('./routers/userRouter');
+const insertTalkersRouter = require('./routers/insertTalkersRouter');
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,9 @@ app.use('/talker/:id', talkersRouter);
 
 // Requisito 03:
 app.use('/login', userRouter);
+
+// Requisito 04:
+app.use('/talker', insertTalkersRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

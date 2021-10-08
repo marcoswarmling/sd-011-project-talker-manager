@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { readContentFile } = require('../helpers/readFile');
+const { readContentFile } = require('../helpers/useFile');
 
 const PATH_FILE = './talker.json';
 

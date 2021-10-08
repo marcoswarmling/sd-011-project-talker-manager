@@ -13,11 +13,16 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+const readFile = async () => {
+  const fileContent = await fs.readFile('./talker.json', 'utf8');
+  const palestrantes = JSON.parse(fileContent);
+  return palestrantes;
+}
+
 app.get('/talker', async (req, res) => {
   try {
-    const fileContent = await fs.readFile('./talker.json', 'utf8');
-    const palestrantes = JSON.parse(fileContent);
-    return res.status(200).json(palestrantes);
+    const file = await readFile();
+    return res.status(200).json(file);
   } catch (error) {
     return res.status(500).json({ message: 'Erro na leitura do arquivo!' });
   }

@@ -22,7 +22,9 @@ function validateName(req, res, next) {
 }
 function validateAge(req, res, next) {
   const { age } = req.body;
-  if (!age || age === '') res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  if (age === undefined || age === '') { 
+    res.status(400).json({ message: 'O campo "age" é obrigatório' }); 
+}
   if (age < 18) {
     res.status(400).json({ 
       message: 'A pessoa palestrante deve ser maior de idade', 
@@ -32,7 +34,7 @@ function validateAge(req, res, next) {
 }
 
 function notEmptyFunc(watchedAt, rate) {
-  return watchedAt !== '' && rate !== '' && watchedAt && rate;
+  return watchedAt !== '' && rate !== '' && watchedAt && rate !== undefined;
 }
 
 function validateTalk(req, res, next) {
@@ -54,7 +56,8 @@ function validateTalk2(req, res, next) {
   const { talk: { watchedAt, rate } } = req.body;
   // rege pego do site :https://www.regextester.com/99555
   const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
-  if (rate > 5 || rate < 1) {
+  const newRate = Number(rate);
+  if (newRate > 5 || newRate < 1) {
  res.status(400).json({
     message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
 }

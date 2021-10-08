@@ -23,7 +23,8 @@ router.get("/", (req, res) => {
 
 /* 7 - Crie o endpoint GET /talker/search?q=searchTerm
 Os seguintes pontos serão avaliados:
-O endpoint deve retornar um array de palestrantes que contenham em seu nome o termo pesquisado no queryParam da URL. */
+O endpoint deve retornar um array de palestrantes que contenham em seu nome o termo pesquisado no queryParam da URL. 
+*/
 
 router.get("/search", validateToken, (req, res) => {
   const selectedSpeaker = req.speakers.filter((e) =>

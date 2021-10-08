@@ -45,6 +45,34 @@ app.post('/login', middlewares.validateEmail, middlewares.validatePassword, (req
   res.status(200).json({ token: getToken });
 });
 
+app.post('/talker',
+  middlewares.validateToken,
+  middlewares.validateName,
+  middlewares.validateAge,
+  middlewares.validateDate,
+  middlewares.validateRate,
+  middlewares.validateTalk,
+  async (req, res) => {
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+
+    const file = await readFile();
+
+    const newTalker = {
+      name,
+      age,
+      talk: {
+        watchedAt,
+        rate,
+      },
+    };
+
+    file.push(newTalker);
+
+    await fs.writeFile('./talker.json', JSON.stringify(file));
+
+    res.status(201).json(newTalker);
+  });
+
 app.listen(PORT, () => {
   console.log('Online');
 });

@@ -17,7 +17,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', (_req, res) => {
   const getTalkers = talkers.getTalkers();
-  res.status(HTTP_OK_STATUS).json(getTalkers);
+    res.status(HTTP_OK_STATUS).json(getTalkers);
 });
 
 app.get('/talker/:id', (req, res) => {
@@ -46,6 +46,10 @@ app.post('/login', (req, res) => {
   }
   const token = generateToken();
   res.status(200).json({ token });
+});
+
+app.post('/talker', (req, res) => {
+
 });
 
 app.listen(PORT, () => {

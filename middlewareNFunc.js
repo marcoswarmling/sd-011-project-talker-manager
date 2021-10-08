@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable quotes */
 const crypto = require('crypto');
 
 const genToken = () => crypto.randomBytes(8).toString('hex'); // double
@@ -25,7 +23,7 @@ function validateLogin(req, res, next) {
 }
 
 function validateToken(req, res, next) {
-  const { authorization } = req.headers; // authorization
+  const { authorization } = req.headers;
   const regex = /^[\w]{16}$/i;
   const validToken = regex.test(authorization); // retorna true or false
 
@@ -60,7 +58,6 @@ function validateAge(req, res, next) {
   next();
 }
 
-// || !talk.watchedAt || (!talk.rate && talk.rate !== 0))
 function validateTalk(req, res, next) {
   const { talk } = req.body;
   if (!talk || talk.length === 0) {
@@ -84,10 +81,10 @@ function validateRate(req, res, next) {
  next();
 }
 
-function validateData(req, res, next) {
+function validateDate(req, res, next) {
   const { talk: { watchedAt } } = req.body;
   const regexWatchedAt = /^\d{2}\/\d{2}\/\d{4}$/; // formato da data
-  const validDate = regexWatchedAt.test(watchedAt); // exec?
+  const validDate = regexWatchedAt.test(watchedAt);
   if (!watchedAt) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
@@ -105,7 +102,7 @@ module.exports = {
   validateToken,
   validateName,
   validateAge,
-  validateData,
+  validateDate,
   validateRate,
   validateTalk,
 };

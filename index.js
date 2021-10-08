@@ -8,7 +8,7 @@ const {
   validateToken,
   validateName,
   validateAge,
-  validateData,
+  validateDate,
   validateRate,
   validateTalk,
 } = require('./middlewareNFunc');
@@ -27,6 +27,19 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 // --------------------------------------------------------//
+
+// npm run test searchTalker.test.js
+app.get('/talker/search', validateToken, (req, res) => {
+  const { talker } = req.query;
+  const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+
+  if (!talker) { return res.status(200).json(talkers); }
+ 
+  const talkerTerm = talkers.filter((t) => t.name.includes(t) === talker);
+
+  if (!talkerTerm.length) { return res.status(200).json({ message: [] }); }
+  if (talkerTerm.length) { return res.status(200).json(talkerTerm); }
+});
 
 // test getAllTalkers.test.js
 app.get('/talker', (_req, res) => {
@@ -56,7 +69,7 @@ app.get('/talker/:id', (req, res) => {
 });
 
 // test login.test.js
-app.post('/login', validateLogin, (req, res) => {
+app.post('/login', validateLogin, (_req, res) => {
     const token = genToken();
     return res.status(200).json({ token });
 });
@@ -64,7 +77,7 @@ app.post('/login', validateLogin, (req, res) => {
 // test createTalker.test.js
 app.post('/talker', validateToken, validateName,
   validateAge,
-  validateData,
+  validateDate,
   validateRate,
   validateTalk, (req, res) => {
   const { name, age, talk } = req.body;
@@ -81,7 +94,7 @@ app.put('/talker/:id',
   validateName,
   validateAge,
   validateTalk,
-  validateData,
+  validateDate,
   validateRate, (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;

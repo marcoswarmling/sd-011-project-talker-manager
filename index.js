@@ -12,6 +12,11 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// 7 - Crie o endpoint GET /talker/search?q=searchTerm
+const getTalkerSearch = require('./router/getTalkerSearch');
+
+app.use('/talker/search', getTalkerSearch);
+
 // 1 - Crie o endpoint GET /talker
 const talkerRouter = require('./router/talkerRouter');
 

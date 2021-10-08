@@ -25,11 +25,11 @@ const validatePassword = (req, res, next) => {
 };
 
 const validateToken = (req, res, next) => {
-  const token1 = req.headers.authorization;
-  if (!token1) {
+  const token = req.headers.authorization;
+  if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token1.length !== 16) {
+  if (token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
   next();
@@ -50,16 +50,16 @@ const validateAge = (req, res, next) => {
   const { age } = req.body;
 
   if (!age) return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  if (age < 18) {
+  if (Number(age) < 18) {
     return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
 
 const validateDate = (req, res, next) => {
-  const { talk: { watchedAt } } = req.body;
+  const { talk } = req.body;
   const dataFormat = /^\d{2}\/\d{2}\/\d{4}$/;
-  const dateIsCorrect = dataFormat.test(watchedAt);
+  const dateIsCorrect = dataFormat.test(talk.watchedAt);
 
   if (!dateIsCorrect) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -68,18 +68,18 @@ const validateDate = (req, res, next) => {
 };
 
 const validateRate = (req, res, next) => {
-  const { talk: { rate } } = req.body;
+  const { talk } = req.body;
 
-  if (!(Number(rate) <= 5 && Number(rate) >= 1)) {
+  if (!(Number(talk.rate) >= 1 && Number(talk.rate) <= 5)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
 
 const validateTalk = (req, res, next) => {
-  const { talk: { watchedAt, rate } } = req.body;
+  const { talk } = req.body;
 
-  if (!(watchedAt || rate)) {
+  if (!talk || !talk.watchedAt || !talk.rate) {
     return res.status(400)
       .json(
         { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },

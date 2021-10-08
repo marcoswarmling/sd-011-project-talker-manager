@@ -49,21 +49,18 @@ app.post('/talker',
   middlewares.validateToken,
   middlewares.validateName,
   middlewares.validateAge,
+  middlewares.validateTalk,
   middlewares.validateDate,
   middlewares.validateRate,
-  middlewares.validateTalk,
   async (req, res) => {
-    const { name, age, talk: { watchedAt, rate } } = req.body;
-
+    const { name, age, talk } = req.body;
     const file = await readFile();
-
+    const id = file.length + 1;
     const newTalker = {
+      id,
       name,
       age,
-      talk: {
-        watchedAt,
-        rate,
-      },
+      talk,
     };
 
     file.push(newTalker);

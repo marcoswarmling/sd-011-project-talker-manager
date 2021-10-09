@@ -25,6 +25,19 @@ router.get('/', (_req, res) => {
   }
 });
 
+router.get('/search', validateTokenAuthorization, (req, res) => {
+  try {
+    const { q } = req.query;
+    const data = JSON.parse((fs.readFileSync(DATA_PATH, 'utf8')));
+    if (!q) return res.status(HTTP_OK_STATUS).json(data);
+    const talker = data.filter((t) => t.name.includes(q));
+    if (!talker) return res.status(HTTP_OK_STATUS).json([]);
+    return res.status(HTTP_OK_STATUS).json(talker);
+  } catch (err) {
+    return res.status(BAD_RESQUEST_STATUS).json({ message: err.message });
+  }
+});
+
 router.get('/:id', (req, res) => {
   try {
     const { id } = req.params;
@@ -105,4 +118,5 @@ router.delete('/:id', validateTokenAuthorization, (req, res) => {
     return res.status(BAD_RESQUEST_STATUS).json({ message: err.message });
   }
 });
+
 module.exports = router;

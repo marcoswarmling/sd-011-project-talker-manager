@@ -127,3 +127,22 @@ app.post('/talker',
   await fs.writeFile('./talker.json', JSON.stringify(addTalker));
   return res.status(201).send({ name, age, id, talk });
 });
+
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validatewatchedAt,
+  validateRate,
+ async (req, res) => {
+const readFile = await fs.readFile('./talker.json', 'utf-8');
+const talkers = JSON.parse(readFile);
+const { id } = req.params;
+const bodyTalker = req.body;
+bodyTalker.id = id;
+const talkerIdRemoved = talkers.filter((talker) => talker.id !== Number(id));
+const updatedTalkers = [...talkerIdRemoved, bodyTalker];
+await fs.writeFile('./talker.json', JSON.stringify(updatedTalkers));
+return res.status(200).json(bodyTalker);
+});

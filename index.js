@@ -140,7 +140,7 @@ const readFile = await fs.readFile('./talker.json', 'utf-8');
 const talkers = JSON.parse(readFile);
 const { id } = req.params;
 const bodyTalker = req.body;
-bodyTalker.id = id;
+bodyTalker.id = Number(id);
 const talkerIdRemoved = talkers.filter((talker) => talker.id !== Number(id));
 const updatedTalkers = [...talkerIdRemoved, bodyTalker];
 await fs.writeFile('./talker.json', JSON.stringify(updatedTalkers));

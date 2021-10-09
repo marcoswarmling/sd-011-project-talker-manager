@@ -68,4 +68,30 @@ router.post('/',
   }
 });
 
+router.put('/:id', validateTokenAuthorization,
+validateName,
+validateAge,
+validateTalkInfos,
+validateRate,
+validateWatchedAt, (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const data = JSON.parse((fs.readFileSync(DATA_PATH, 'utf8')));
+    const talker = data.find((t) => t.id === Number(id));
+    const uptadedTalkerInfo = {
+      name,
+      age,
+      id: talker.id,
+      talk,
+    };
+
+    data[`${talker.id}`] = uptadedTalkerInfo; 
+    fs.writeFileSync(DATA_PATH, JSON.stringify(data));
+    return res.status(HTTP_OK_STATUS).json(uptadedTalkerInfo);
+  } catch (err) {
+    return res.status(BAD_RESQUEST_STATUS).json({ message: err.message });
+  }
+});
+
 module.exports = router;

@@ -1,4 +1,3 @@
-
 const { readFile, writeFile } = require('fs').promises;
 
 const readFileTalker = () => readFile('./talker.json', 'utf-8')

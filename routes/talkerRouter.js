@@ -61,7 +61,6 @@ router.post('/',
     };
     const updatedTalkers = [...talkers, newTalker];
     fs.writeFileSync(DATA_PATH, JSON.stringify(updatedTalkers));
-    console.log('newTalker', newTalker, 'upadate', updatedTalkers);
     return res.status(HTTP_CREATED_STATUS).json(newTalker);
   } catch (err) {
     return res.status(BAD_RESQUEST_STATUS).json({ message: err.message });
@@ -85,7 +84,6 @@ validateWatchedAt, (req, res) => {
       id: talker.id,
       talk,
     };
-
     data[`${talker.id}`] = uptadedTalkerInfo; 
     fs.writeFileSync(DATA_PATH, JSON.stringify(data));
     return res.status(HTTP_OK_STATUS).json(uptadedTalkerInfo);
@@ -94,4 +92,17 @@ validateWatchedAt, (req, res) => {
   }
 });
 
+router.delete('/:id', validateTokenAuthorization, (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = JSON.parse((fs.readFileSync(DATA_PATH, 'utf8')));
+    const talker = data.find((t) => t.id === Number(id));
+    const index = talker.id - 1;
+    data.splice(index, 1);
+    fs.writeFileSync(DATA_PATH, JSON.stringify(data));
+    return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (err) {
+    return res.status(BAD_RESQUEST_STATUS).json({ message: err.message });
+  }
+});
 module.exports = router;

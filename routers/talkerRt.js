@@ -1,10 +1,15 @@
 const express = require('express');
-// const fs = require('file-system');
+const fs = require('file-system');
 
 const router = express.Router();
 
 const {
-  loadSpeakers,
+  loadSpeakers, 
+  valToken,
+  valAge,
+  valName,
+  valTalker,
+  valWatchedRated,
 } = require('../utils/utils');
 
 router.use(loadSpeakers);
@@ -26,6 +31,17 @@ router.get('/:id', (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).json(spkfilter[0]);
+});
+
+// task 4
+router.post('/', valToken, valAge, valName, valTalker, valWatchedRated,
+  (req, res) => {
+    const { name, age, talk } = req.body;
+    const { speakers } = req;
+    const id = speakers.length + 1;
+    speakers.push({ name, age, id, talk });
+    fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+    return res.status(201).json({ name, age, id, talk });
 });
 
 module.exports = router;

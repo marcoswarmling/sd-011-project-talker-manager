@@ -12,6 +12,12 @@ const loadSpeakers = (req, res, next) => {
   next();
 };
 
+const createToken = (req, res, next) => {
+  req.newToken = (Math.random().toString(36).substr(2, 8)) * 2;
+  next();
+};
+
 module.exports = {
   loadSpeakers,
+  createToken,
 };

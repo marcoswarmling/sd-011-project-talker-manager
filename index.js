@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const randomToken = require('random-token');
 
+const talkerDocument = ('./talker.json');
+
 const app = express(); // dou o nome de app para o express(), para que fique mais facil de fazer o get, post, put e delete só chamando app Ex. app.get(), que é igual à express().get() 
 app.use(bodyParser.json());
 
@@ -19,13 +21,13 @@ app.listen(PORT, () => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const getTalkers = await fs.readFile('./talker.json', 'utf-8');
+  const getTalkers = await fs.readFile(talkerDocument, 'utf-8');
   const getTalkersTransf = JSON.parse(getTalkers);
   return res.status(200).json(getTalkersTransf);
 });
 
 app.get('/talker/:id', async (req, res) => {
-  const getTalkers = await fs.readFile('./talker.json', 'utf-8');
+  const getTalkers = await fs.readFile(talkerDocument, 'utf-8');
   const getTalkersTransf = JSON.parse(getTalkers);
   const { id } = req.params;
   const talkerId = getTalkersTransf.find((talker) => talker.id === Number(id));
@@ -120,11 +122,11 @@ app.post('/talker',
   validatewatchedAt,
   validateRate, async (req, res) => {
   const { name, age, talk } = req.body;
-  const readFile = await fs.readFile('./talker.json', 'utf-8');
+  const readFile = await fs.readFile(talkerDocument, 'utf-8');
   const talkers = JSON.parse(readFile);
   const id = talkers.length + 1;
   const addTalker = [...talkers, { name, age, id, talk }];
-  await fs.writeFile('./talker.json', JSON.stringify(addTalker));
+  await fs.writeFile(talkerDocument, JSON.stringify(addTalker));
   return res.status(201).send({ name, age, id, talk });
 });
 
@@ -136,13 +138,13 @@ app.put('/talker/:id',
   validatewatchedAt,
   validateRate,
  async (req, res) => {
-const readFile = await fs.readFile('./talker.json', 'utf-8');
+const readFile = await fs.readFile(talkerDocument, 'utf-8');
 const talkers = JSON.parse(readFile);
 const { id } = req.params;
 const bodyTalker = req.body;
 bodyTalker.id = Number(id);
 const talkerIdRemoved = talkers.filter((talker) => talker.id !== Number(id));
 const updatedTalkers = [...talkerIdRemoved, bodyTalker];
-await fs.writeFile('./talker.json', JSON.stringify(updatedTalkers));
+await fs.writeFile(talkerDocument, JSON.stringify(updatedTalkers));
 return res.status(200).json(bodyTalker);
 });

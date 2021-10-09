@@ -11,7 +11,6 @@ const newTalker = require('./postTalker');
 const editTalker = require('./putTalker');
 const deleteTalker = require('./deleteTalker');
 
-
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 

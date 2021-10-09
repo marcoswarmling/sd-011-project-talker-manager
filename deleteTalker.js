@@ -1,4 +1,3 @@
-
 const readFile = require('./models/utils');
 
 const HTTP_OK_STATUS = 200;

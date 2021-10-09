@@ -10,6 +10,7 @@ const validations = require('./middleware/validations');
 const newTalker = require('./postTalker');
 const editTalker = require('./putTalker');
 const deleteTalker = require('./deleteTalker');
+const searchTalker = require('./getSearch');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -41,6 +42,9 @@ app.put('/talker/:id',
 app.delete('/talker/:id',
   newTalker.authorizationToken,
   deleteTalker.deleteTalker);
+app.get('/talker/search',
+  newTalker.authorizationToken,
+  searchTalker.searchTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

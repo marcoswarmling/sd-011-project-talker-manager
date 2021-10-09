@@ -148,3 +148,12 @@ const updatedTalkers = [...talkerIdRemoved, bodyTalker];
 await fs.writeFile(talkerDocument, JSON.stringify(updatedTalkers));
 return res.status(200).json(bodyTalker);
 });
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const readFile = await fs.readFile(talkerDocument, 'utf-8');
+  const talkers = JSON.parse(readFile);
+  const { id } = req.params;
+  const deletedTalker = talkers.filter((talker) => talker.id !== Number(id));
+  await fs.writeFile(talkerDocument, JSON.stringify(deletedTalker));
+return res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
+});

@@ -50,8 +50,7 @@ app.post('/talker',
   middlewares.validateName,
   middlewares.validateAge,
   middlewares.validateTalk,
-  middlewares.validateDate,
-  middlewares.validateRate,
+  middlewares.validateTalkAttributes,
   async (req, res) => {
     const { name, age, talk } = req.body;
     const file = await readFile();
@@ -68,6 +67,22 @@ app.post('/talker',
     await fs.writeFile('./talker.json', JSON.stringify(file));
 
     res.status(201).json(newTalker);
+  });
+
+app.put('/talker/:id',
+  middlewares.validateToken,
+  middlewares.validateName,
+  middlewares.validateAge,
+  middlewares.validateTalk,
+  middlewares.validateTalkAttributes,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const file = await readFile();
+    const talkerIndex = file.findIndex((item) => item.id === Number(id));
+    file[talkerIndex] = { ...file[talkerIndex], name, age, talk };
+    await fs.writeFile('./talker.json', JSON.stringify(file));
+    res.status(200).json(file[talkerIndex]);
   });
 
 app.listen(PORT, () => {

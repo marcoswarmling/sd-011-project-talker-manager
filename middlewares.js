@@ -56,10 +56,14 @@ const validateAge = (req, res, next) => {
   next();
 };
 
-const validateDate = (req, res, next) => {
+const validateTalkAttributes = (req, res, next) => {
   const { talk } = req.body;
   const dataFormat = /^\d{2}\/\d{2}\/\d{4}$/;
   const dateIsCorrect = dataFormat.test(talk.watchedAt);
+
+  if ((Number(talk.rate) < 1 || Number(talk.rate) > 5)) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
 
   if (!dateIsCorrect) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -67,19 +71,10 @@ const validateDate = (req, res, next) => {
   next();
 };
 
-const validateRate = (req, res, next) => {
-  const { talk } = req.body;
-
-  if (!(Number(talk.rate) >= 1 && Number(talk.rate) <= 5)) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-  next();
-};
-
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return res.status(400)
       .json(
         { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
@@ -94,7 +89,6 @@ module.exports = {
   validateToken,
   validateName,
   validateAge,
-  validateDate,
-  validateRate,
+  validateTalkAttributes,
   validateTalk,
 };

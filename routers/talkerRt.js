@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('file-system');
+const fs = require('fs');
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ const {
 router.use(loadSpeakers);
 
 // task 1
+// status(200) = Request Success
 router.get('/', (req, res) => {
   if (req.speakers.length === 0) {
     return res.status(200).json([]);
@@ -34,7 +35,8 @@ router.get('/:id', (req, res) => {
 });
 
 // task 4
-router.post('/', valToken, valAge, valName, valTalker, valWatchedRated,
+// status(201) = New Resource Created & Request Successful
+router.post('/', valToken, valName, valAge, valTalker, valWatchedRated,
   (req, res) => {
     const { name, age, talk } = req.body;
     const { speakers } = req;
@@ -42,6 +44,25 @@ router.post('/', valToken, valAge, valName, valTalker, valWatchedRated,
     speakers.push({ name, age, id, talk });
     fs.writeFileSync('./talker.json', JSON.stringify(speakers));
     return res.status(201).json({ name, age, id, talk });
+});
+
+// task 5
+router.put('/:id', valToken, valName, valAge, valTalker, valWatchedRated,
+ (req, res) => {
+   let { id } = req.params;
+   const { name, age, talk } = req.body;
+   const { speakers } = req;
+   const spkIndex = speakers.findIndex((e) => e.id === parseInt(id, 10));
+   id = parseInt(id, 10);
+   speakers[spkIndex] = {
+     ...speakers[spkIndex],
+     name,
+     age,
+     talk,
+     id,
+   };
+   fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+   return res.status(200).json({ name, age, id, talk });
 });
 
 module.exports = router;

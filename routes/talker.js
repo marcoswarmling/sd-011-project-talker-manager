@@ -19,6 +19,16 @@ router.get('/', async (_req, res) => {
   res.status(200).json(JSON.parse(talkers));
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+
+  const talkers = await fs.readFile(db, 'utf-8');
+  const resultTalkers = JSON.parse(talkers);
+  const talkerFilter = resultTalkers.filter((e) => e.name.includes(q));
+
+  res.status(200).json(talkerFilter);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talkers = await fs.readFile(db, 'utf-8');

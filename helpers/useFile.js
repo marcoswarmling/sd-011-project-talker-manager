@@ -9,17 +9,17 @@ const readContentFile = async (path) => {
   }
 };
 
-const writeContentFile = async (path, content) => {
-  try {
-    const arrContent = await readContentFile(path);
+// const writeContentFile = async (path, content) => {
+//   try {
+//     const arrContent = await readContentFile(path);
 
-    arrContent.push(content);
-    await fs.writeFile(path, JSON.stringify(arrContent));
+//     arrContent.push(content);
+//     await fs.writeFile(path, JSON.stringify(content));
 
-    return content;
-  } catch (err) {
-    return ({ message: err.message, code: err.code });
-  }
-};
+//     return content;
+//   } catch (err) {
+//     return ({ message: err.message, code: err.code });
+//   }
+// };
 
-module.exports = { readContentFile, writeContentFile };
+module.exports = { readContentFile };

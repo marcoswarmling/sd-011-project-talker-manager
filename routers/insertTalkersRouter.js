@@ -1,29 +1,42 @@
 const express = require('express');
 
-const routerPost = express.Router();
-const { writeContentFile } = require('../helpers/useFile');
+const fs = require('fs/promises');
+
+const router = express.Router();
+const { readContentFile } = require('../helpers/useFile');
 const {
   validationToken,
   validationName, 
-  validationAge } = require('../middlewares/validateNewTalker');
+  validationAge, 
+  validationTalk,
+  validationWatched,
+  validationRate } = require('../middlewares/validateNewTalker');
 
 const PATH_FILE = './talker.json';
 
-routerPost.post(
+router.post(
   '/', 
+  validationToken,
   validationName,
   validationAge,
-  validationToken,
+  validationTalk,
+  validationWatched,
+  validationRate,
   async (req, res) => {
-    const newTalker = {
-        ...req.body,
-        rate: req.body.talk.rate.Number(),
-    };
-
-    const talker = await writeContentFile(PATH_FILE, newTalker);
-
-    res.status(201).json(talker);
+    try {
+      const { name, age, talk } = req.body;
+      
+      const talker = await readContentFile(PATH_FILE);
+      const newTalker = { id: talker.length + 1, name, age, talk };
+      talker.push(newTalker);
+      
+      await fs.writeFile(PATH_FILE, JSON.stringify(talker));
+      
+      res.status(201).json(newTalker);
+    } catch (error) {
+      return ({ message: error.message, code: error.code });
+    }
   },
 );
-
-module.exports = routerPost;
+  
+module.exports = router;

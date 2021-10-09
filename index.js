@@ -18,7 +18,7 @@ app.use('/talker', talkerRt);
 
 const loginRt = require('./routers/loginRt.js');
 
-app.use('./login', loginRt);
+app.use('/login', loginRt);
 
 app.listen(PORT, () => {
   console.log('Online');

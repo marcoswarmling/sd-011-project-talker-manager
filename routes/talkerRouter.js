@@ -2,12 +2,14 @@ const router = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 
+// const { validateTokenAuthorization } = require('../middlewares/validateToken');
+
 const DATA_PATH = path.join(__dirname, '../', 'talker.json');
 const HTTP_OK_STATUS = 200;
 const BAD_RESQUEST_STATUS = 400;
 const NOT_FOUND_STATUS = 404;
 
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   try {
     const data = fs.readFileSync(DATA_PATH, 'utf8');
     const talkers = JSON.parse(data);

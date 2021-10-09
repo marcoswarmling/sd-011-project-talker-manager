@@ -1,5 +1,6 @@
 const fs = require('file-system');
 
+// load Speakers
 const loadSpeakers = (req, res, next) => {
   let speakers = [];
   try {
@@ -12,13 +13,14 @@ const loadSpeakers = (req, res, next) => {
   next();
 };
 
+// create Token
 const createToken = (req, res, next) => {
   req.newToken = (Math.random().toString(36).substr(2, 8)) * 2;
   next();
 };
 
+// Validate Email
 // status(400) Bad Request
-
 function valEmail(req, res, next) {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: 'O campo "email é obrigatório' });
@@ -28,6 +30,7 @@ function valEmail(req, res, next) {
   next();
 }
 
+// Validate Password
 function valPassword(req, res, next) {
   const { password } = req.body;
   if (!password) res.status(400).json({ message: 'O campo "password" é obrigatório' });
@@ -37,9 +40,19 @@ function valPassword(req, res, next) {
   next();
 }
 
+// Validate Token
+// status(401) = Unauthorized Request
+function valToken(req, res, next) {
+  const { authorization: token } = req.headers;
+  if (!token) res.status(401).json({ message: 'Token não encontrado' });
+  if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  next();
+}
+
 module.exports = {
   loadSpeakers,
   createToken,
   valEmail,
   valPassword,
+  valToken,
 };

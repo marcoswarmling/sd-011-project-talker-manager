@@ -5,11 +5,11 @@ const { createToken, valEmail, valPassword } = require('../utils/utils.js');
 
 router.use(createToken);
 
-// status(200) = Sucess request
+// status(200) = Success request
 
 router.post('/', valEmail, valPassword,
-  (req, res) => {
-    res.status(200).json({ token: `${req.newToken}` });
+    (req, res) => {
+      res.status(200).json({ token: `${req.newToken}` });
 });
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 const router = express.Router();
 const { readContentFile } = require('../helpers/useFile');

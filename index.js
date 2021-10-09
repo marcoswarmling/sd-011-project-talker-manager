@@ -1,11 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 const talkers = require('./allTalkers');
+const validateToken = require('./middlewares/validateToken');
 const generateToken = require('./generateToken');
+const validateName = require('./middlewares/validateName');
+const validateAge = require('./middlewares/validateAge');
+const validateDate = require('./middlewares/validateDate');
+const validateRate = require('./middlewares/validateRate');
+const validateTalk = require('./middlewares/validateTalk');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -48,8 +56,26 @@ app.post('/login', (req, res) => {
   res.status(200).json({ token });
 });
 
-app.post('/talker', (req, res) => {
-
+app.post('/talker',
+validateToken,
+validateName,
+validateAge,
+validateDate,
+validateRate,
+validateTalk,
+(req, res) => {
+  const { name, age, talk } = req.body;
+  const fileTalkers = talkers.getTalkers();
+  const addTalker = {
+    name,
+    age,
+    id: fileTalkers.length + 1,
+    talk,
+  };
+  fileTalkers.push(addTalker);
+  fs.writeFileSync('./talker.json', JSON.stringify(fileTalkers));
+  
+  res.status(201).json(addTalker);
 });
 
 app.listen(PORT, () => {

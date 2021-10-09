@@ -8,6 +8,7 @@ const getTalkers = require('./getTalker');
 const getTalkerId = require('./getTalkerId'); 
 const validations = require('./middleware/validations');
 const newTalker = require('./postTalker');
+const editTalker = require('./putTalker');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -28,6 +29,14 @@ app.post('/talker',
   newTalker.checkWatchedAt,
   newTalker.checkRate,
   newTalker.createdTalker);
+app.put('/talker/:id',
+  newTalker.authorizationToken,
+  newTalker.checkName,
+  newTalker.checkAge,
+  newTalker.checkTalk,
+  newTalker.checkWatchedAt,
+  newTalker.checkRate,
+  editTalker.editTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

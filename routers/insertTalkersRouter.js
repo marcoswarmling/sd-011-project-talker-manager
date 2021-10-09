@@ -3,7 +3,7 @@ const express = require('express');
 const fs = require('fs').promises;
 
 const router = express.Router();
-const { readContentFile } = require('../helpers/useFile');
+// const { readContentFile } = require('../helpers/useFile');
 const {
   validationToken,
   validationName, 
@@ -26,13 +26,13 @@ router.post(
     try {
       const { name, age, talk } = req.body;
       
-      const talker = await readContentFile(PATH_FILE);
-      const newTalker = { id: talker.length + 1, name, age, talk };
-      talker.push(newTalker);
+      const talkers = JSON.parse(await fs.readFile(PATH_FILE, 'utf-8'));
+      const newTalker = { id: talkers.length + 1, name, age, talk };
+      talkers.push(newTalker);
       
-      await fs.writeFile(PATH_FILE, JSON.stringify(talker));
+      await fs.writeFile(PATH_FILE, JSON.stringify(talkers));
       
-      res.status(201).json(newTalker);
+      return res.status(201).json(newTalker);
     } catch (error) {
       return ({ message: error.message, code: error.code });
     }

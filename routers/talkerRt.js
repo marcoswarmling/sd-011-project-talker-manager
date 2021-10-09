@@ -65,4 +65,21 @@ router.put('/:id', valToken, valName, valAge, valTalker, valWatchedRated,
    return res.status(200).json({ name, age, id, talk });
 });
 
+// task 6
+router.delete('/:id', valToken, (req, res) => {
+  const { id } = req.params;
+  const { speakers } = req;
+  const spkIndex = speakers.findIndex((e) => e.id === parseInt(id, 10));
+  speakers.splice(spkIndex, 1);
+  fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+// task 7
+router.get('/search', valToken, (req, res) => {
+  const spkfilter = req.speakers.filter((e) => e.name.includes(req.query.q));
+  if (req.query.q === undefined) return res.status(200).json(req.speakers);
+  res.status(200).json(spkfilter);
+});
+
 module.exports = router;

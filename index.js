@@ -13,9 +13,11 @@ app.get('/', (_request, response) => {
 });
 
 const talkerRt = require('./routers/talkerRt.js');
+
 app.use('/talker', talkerRt);
 
 const loginRt = require('./routers/loginRt.js');
+
 app.use('./login', loginRt);
 
 app.listen(PORT, () => {

@@ -19,7 +19,7 @@ router.use(loadSpeakers);
 // task 1
 // status(200) = Request Success
 router.get('/', (req, res) => {
-  if (req.speakers.length <= 0) {
+  if (req.speakers.length === 0) {
     return res.status(200).json([]);
   }
 
@@ -43,7 +43,7 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   const spkfilter = req.speakers.filter((e) => e.id === parseInt(id, 10)); // decimal radix
 
-  if (!id || spkfilter.length <= 0) {
+  if (!id || spkfilter.length === 0) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
 
@@ -58,13 +58,11 @@ router.post('/', valToken, valName, valAge, valTalker, valWatchedRated,
     const { speakers } = req;
     const id = speakers.length + 1;
 
-    const aux = { name, age, id, talk };
-
-    speakers.push(aux);
+    speakers.push({ name, age, id, talk });
 
     fs.writeFileSync('./talker.json', JSON.stringify(speakers));
 
-    return res.status(201).json(aux);
+    return res.status(201).json({ name, age, id, talk });
 });
 
 // task 5

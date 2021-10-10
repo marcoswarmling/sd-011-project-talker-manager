@@ -12,6 +12,7 @@ const createTalker = async (req, res) => {
     age,
     talk,
   };
+  
   fetchData.push(newData);
   await fs.writeFile('./talker.json', JSON.stringify(fetchData));
 

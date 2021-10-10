@@ -3,10 +3,10 @@ const fs = require('fs').promises;
 const HTTP_OK_STATUS = 200;
 
 const updateTalker = async (req, res) => {
-  const data = await fs.readFile('./talker.json', 'utf-8');
-  const fetchData = await JSON.parse(data);
   const { name, age, talk } = req.body;
   const { id } = req.params;
+  const data = await fs.readFile('./talker.json', 'utf-8');
+  const fetchData = await JSON.parse(data);
   const talkerId = {
     id: Number(id),
     name,

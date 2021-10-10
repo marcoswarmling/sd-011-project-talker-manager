@@ -41,6 +41,15 @@ const validadeFieldName = (name, res) => {
   }
 };
 
+const validateFieldAge = (age, res) => {
+  if (!Number.isInteger(age)) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+};
+
 const validateWatchedField = (res, watchedAt) => {
   if (watchedAt) {
     if (!(/^..\/..\/....$/).test(watchedAt)) {
@@ -56,7 +65,7 @@ const validadeFieldTalk = (talk, res) => {
   validateWatchedField(res, watchedAt);
 
   if (rate) {
-    if (!Number.isInteger(rate) || (rate < 1 || rate > 5)) {
+    if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
   } else {
@@ -68,12 +77,7 @@ const validationAddTalker = (params) => {
   const { res, authorization, name, age, talk } = params;
   validadeHeaderAuthorization(authorization, res);
   validadeFieldName(name, res);
-  if (!Number.isInteger(age)) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
+  validateFieldAge(age, res);
   if (talk) {
     validadeFieldTalk(talk, res);
   } else {
@@ -151,6 +155,26 @@ app.post('/talker', (req, res) => {
   fs.writeFileSync('./talker.json', JSON.stringify(talkers));
 
   res.status(201).json(getLastTalkerInserted());
+});
+
+// Requisito 5:
+app.put('/talker/:id', (req, res) => {
+  const { authorization } = req.headers;
+  const { id, name, age, talk } = req.body;
+  validationAddTalker({ res, authorization, name, age, talk });
+  const talkers = getTalkers();
+  const talker = talkers.find((item) => item.id === id);
+  const obj = {
+    id,
+    name,
+    age,
+    talk: {
+      watchedAt: talk.watchedAt,
+      rate: talk.rate,
+    },
+  };
+  talkers.splice(talkers.indexof(talker), 1, obj);
+  fs.writeFileSync('./talker.json', JSON.stringify(talkers));
 });
 
 app.listen(PORT, () => {

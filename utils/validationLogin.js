@@ -14,7 +14,7 @@ const validationEmail = (email) => {
 const validationPassword = (password) => {
   if (!password) throw err({ status: 400, message: 'O campo "password" é obrigatório' });
   if (password.length <= 5) {
-    throw err({ status: 400, message: 'O  "password" deve ter pelo menos 6 caracteres' });
+    throw err({ status: 400, message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 };
 

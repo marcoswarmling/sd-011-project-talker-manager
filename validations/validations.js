@@ -32,7 +32,7 @@ const passValidation = (req, res, next) => {
 };
 
 const tokenGenerate = (req, _res, next) => {
-  const token = uuidv4().slice(16);
+  const token = uuidv4().slice(-16);
   req.token = token;
   next();
 };

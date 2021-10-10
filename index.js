@@ -19,8 +19,6 @@ app.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).json(fetchData);
 });
 
-app.post('/talker');
-
 app.listen(PORT, () => {
   console.log('Online');
 });

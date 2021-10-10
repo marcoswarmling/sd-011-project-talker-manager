@@ -1,5 +1,5 @@
-const fs = require('fs');
+// const fs = require('fs');
 
-const deletePerson = async (req, res, next) => {
-  const { id }
-}
+// const deletePerson = async (req, res, next) => {
+//   const { id }
+// }

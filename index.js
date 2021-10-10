@@ -9,9 +9,9 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 const messageTalkError = {
-  message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
-};
+  message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' };
 
+const messageWatchedAtInvalid = { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
 
 const getTalkers = () => JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
 
@@ -41,15 +41,19 @@ const validadeFieldName = (name, res) => {
   }
 };
 
-const validadeFieldTalk = (talk, res) => {
-  const { watchedAt, rate } = talk;
+const validateWatchedField = (res, watchedAt) => {
   if (watchedAt) {
     if (!(/^..\/..\/....$/).test(watchedAt)) {
-      return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+      return res.status(400).json(messageWatchedAtInvalid);
     }
   } else {
     return res.status(400).json(messageTalkError);
   }
+};
+
+const validadeFieldTalk = (talk, res) => {
+  const { watchedAt, rate } = talk;
+  validateWatchedField(res, watchedAt);
 
   if (rate) {
     if (!Number.isInteger(rate) || (rate < 1 || rate > 5)) {
@@ -60,17 +64,35 @@ const validadeFieldTalk = (talk, res) => {
   }
 };
 
+const validationAddTalker = (params) => {
+  const { res, authorization, name, age, talk } = params;
+  validadeHeaderAuthorization(authorization, res);
+  validadeFieldName(name, res);
+  if (!Number.isInteger(age)) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  if (talk) {
+    validadeFieldTalk(talk, res);
+  } else {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+};
+
 const generateIdTalker = () => {
   let talker = getTalkers();
   talker = talker[talker.length - 1];
   return talker.id + 1;
 };
 
-
 const getLastTalkerInserted = () => {
-  let talker = getTalkers();
+  const talker = getTalkers();
   return talker[talker.length - 1];
-}
+};
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -113,29 +135,8 @@ app.post('/login', (req, res) => {
 app.post('/talker', (req, res) => {
   const { authorization } = req.headers;
   const { name, age, talk } = req.body;
-  validadeHeaderAuthorization(authorization, res);
-
-  validadeFieldName(name, res);
-
-  if (!Number.isInteger(age)) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
-
-  if (talk) {
-    validadeFieldTalk(talk, res);
-  } else {
-    return res.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
-    });
-  }
-  
-
+  validationAddTalker({ res, authorization, name, age, talk });
   const id = generateIdTalker();
-
   const obj = {
     name,
     age,
@@ -151,7 +152,6 @@ app.post('/talker', (req, res) => {
 
   res.status(201).json(getLastTalkerInserted());
 });
-
 
 app.listen(PORT, () => {
   console.log('Online');

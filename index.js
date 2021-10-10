@@ -119,10 +119,6 @@ checkRate,
    return res.status(200).json(person);
  });
 
-app.listen(PORT, () => {
-  console.log('Online');
-});
-
 // Requisito 6
 
 app.delete('/talker/:id', checkToken, (req, res) => {
@@ -135,10 +131,6 @@ app.delete('/talker/:id', checkToken, (req, res) => {
   fs.writeFileSync(fechAPI, JSON.stringify(dataFind));
    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
  });
-
-app.listen(PORT, () => {
-  console.log('Online');
-});
 
 // Requisito 7
 

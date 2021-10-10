@@ -13,12 +13,12 @@ app.get('/', (_request, response) => {
 });
 
 // talker router
-const talkerRt = require('./routers/talkerRt.js');
+const talkerRt = require('./routers/talkerRouter.js');
 
 app.use('/talker', talkerRt);
 
 // login router
-const loginRt = require('./routers/loginRt.js');
+const loginRt = require('./routers/loginRouter.js');
 
 app.use('/login', loginRt);
 

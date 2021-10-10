@@ -3,15 +3,13 @@ const fs = require('fs');
 
 const router = express.Router();
 
-// utils functions
-const {
-  loadSpeakers, 
-  valToken,
-  valAge,
-  valName,
-  valTalker,
-  valWatchedRated,
-} = require('../modules/utils');
+// modules imports
+const { loadSpeakers } = require('../modules/loadSpeakers.js');
+const { valToken } = require('../modules/validateToken.js');
+const { valName } = require('../modules/validateName.js');
+const { valAge } = require('../modules/validateAge.js');
+const { valTalker } = require('../modules/validateTalker.js');
+const { valWatchedRated } = require('../modules/validateWatched.js');
 
 // load speakears
 router.use(loadSpeakers);

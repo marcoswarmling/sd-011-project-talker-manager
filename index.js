@@ -62,15 +62,22 @@ const validateWatchedField = (res, watchedAt) => {
   }
 };
 
-const validadeFieldTalk = (talk, res) => {
-  const { watchedAt, rate } = talk;
-  console.log(rate);
-  validateWatchedField(res, watchedAt);
-  if (!rate || rate < 1 || rate > 5) {
+const validadeRateField = (res, rate) => {
+  if (rate === undefined || rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  } 
+  }
+};
 
-  return res.status(400).json(messageTalkError);
+const validadeFieldTalk = (talk, res) => {
+  if (talk !== undefined && talk.rate !== undefined && talk.watchedAt !== undefined) {
+    const { watchedAt, rate } = talk;
+    validadeRateField(res, rate);
+    validateWatchedField(res, watchedAt);
+  } else {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
 };
 
 const validationTalker = (params) => {
@@ -78,14 +85,7 @@ const validationTalker = (params) => {
   validadeHeaderAuthorization(authorization, res);
   validadeFieldName(name, res);
   validateFieldAge(age, res);
-  console.log(talk);
-  if (Object.keys(talk).length > 0) {
-    validadeFieldTalk(talk, res);
-  } else {
-    return res.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
+  validadeFieldTalk(talk, res);
 };
 
 const generateIdTalker = () => {
@@ -125,7 +125,6 @@ app.get('/talker/:id', (req, res) => {
 // Requisito 3
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   let message = '';
   // email:
   if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
@@ -170,7 +169,6 @@ app.delete('/talker/:id', (req, res) => {
   validadeHeaderAuthorization(authorization, res);
   const talkers = getTalkers();
   const talker = talkers.find((item) => item.id === id);
-  console.log(talkers.indexOf(talker));
   talkers.splice(talkers.indexOf(talker), 1);
   fs.writeFileSync('./talker.json', JSON.stringify(talkers));
   res.status(200).json(messageDeleteSuccessfull);

@@ -105,6 +105,14 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// Requisito 7
+app.get('/talker/search', (req, res) => {
+  const { q } = req.query;
+  const regexp = RegExp(q);
+  const filteredTalkers = getTalkers().filter((item) => regexp.test(item.name));
+  res.status(200).json(filteredTalkers);
+});
+
 // Requisito 1:
 app.get('/talker', (_req, res) => {
   res.status(200).json(getTalkers());

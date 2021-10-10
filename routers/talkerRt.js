@@ -11,7 +11,7 @@ const {
   valName,
   valTalker,
   valWatchedRated,
-} = require('../utils/utils');
+} = require('../modules/utils');
 
 // load speakears
 router.use(loadSpeakers);

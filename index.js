@@ -27,8 +27,8 @@ const fechAPI = './talker.json';
 
 // Requisito 1
 
-app.get('/talker', async (_req, res) => {
-  const data = await JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+app.get('/talker', (_req, res) => {
+  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
 
   if (!data) {
     return res.status(200).json([]);
@@ -39,8 +39,8 @@ app.get('/talker', async (_req, res) => {
 
 // Requisito 2
 
-app.get('/talker/:id', async (req, res) => {
-  const data = await JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+app.get('/talker/:id', (req, res) => {
+  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
 
   const { id } = req.params;
 
@@ -83,19 +83,15 @@ checkTalk,
 checkDateFormat,
 checkRate,
 
- async (req, res) => {
-   try {
-     const { name, age, talk } = req.body;
-     const data = JSON.parse(await fs.readFileSync(fechAPI, 'utf-8'));
-     const idPush = data[data.length - 1].id + 1;
-     const newItem = { id: idPush, name, age, talk };
-   
-     data.push(newItem);
-     await fs.writeFileSync(fechAPI, JSON.stringify(data));
-    return res.status(201).json(newItem);
-   } catch (err) {
-      return res.status(400).json({ message: err.message });
-   }
+(req, res) => {
+  const { name, age, talk } = req.body;
+  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+  const idPush = data[data.length - 1].id + 1;
+  const newItem = { id: idPush, name, age, talk };
+
+  data.push(newItem);
+  fs.writeFileSync(fechAPI, JSON.stringify(data));
+  return res.status(201).json(newItem);
 });
 
 // Requisito 5
@@ -108,18 +104,18 @@ checkTalk,
 checkDateFormat,
 checkRate,
 
- async (req, res) => {
+ (req, res) => {
    const { id } = req.params;
    const { name, age, talk } = req.body;
 
-   const data = JSON.parse(await fs.readFileSync(fechAPI, 'utf-8'));
+   const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
    const dataIndex = data.findIndex((item) => item.id === Number(id));
    const person = { name, age, talk, id: Number(id) };
 
    if (dataIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
    data[dataIndex] = person;
 
-   await fs.writeFileSync(fechAPI, JSON.stringify(data));
+   fs.writeFileSync(fechAPI, JSON.stringify(data));
    return res.status(200).json(person);
  });
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const rescue = require('express-rescue');
+// const rescue = require('express-rescue');
 
 const getAll = require('./middlewares/talker/getAll');
 const getID = require('./middlewares/talker/getID');
@@ -23,7 +23,7 @@ app.get('/', (_request, response) => {
 
 app.post('/login', login);
 
-app.post('/talker', rescue(addNewPerson));
+app.post('/talker', addNewPerson);
 
 app.get('/talker', getAll);
 

@@ -9,9 +9,8 @@ const {
   checkRate,
   checkTalk, 
   checkToken, 
-  checkedTalk,
   checkDateFormat,
-} = require('./helper/validationUser');
+} = require('./middlewares/validationUser');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,8 +27,8 @@ const fechAPI = './talker.json';
 
 // Requisito 1
 
-app.get('/talker', (_req, res) => {
-  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+app.get('/talker', async (_req, res) => {
+  const data = await JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
 
   if (!data) {
     return res.status(200).json([]);
@@ -40,8 +39,8 @@ app.get('/talker', (_req, res) => {
 
 // Requisito 2
 
-app.get('/talker/:id', (req, res) => {
-  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+app.get('/talker/:id', async (req, res) => {
+  const data = await JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
 
   const { id } = req.params;
 
@@ -77,23 +76,52 @@ app.post('/login', (req, res) => {
 // Requisito 4
 
 app.post('/talker', 
-  checkAge, 
-  checkName,  
-  checkRate,
-  checkTalk, 
-  checkToken, 
-  checkedTalk,
-  checkDateFormat,
- (req, res) => {
-  const { name, age, talk } = req.body;
-  const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
-  const idPush = data[data.length - 1].id + 1;
-  const newItem = { id: idPush, name, age, talk };
+checkToken, 
+checkName, 
+checkAge, 
+checkTalk, 
+checkDateFormat,
+checkRate,
 
-  data.push(newItem);
-  fs.writeFileSync(fechAPI, JSON.stringify(data));
-  res.status(201).json(newItem);
+ async (req, res) => {
+   try {
+     const { name, age, talk } = req.body;
+     const data = JSON.parse(await fs.readFileSync(fechAPI, 'utf-8'));
+     const idPush = data[data.length - 1].id + 1;
+     const newItem = { id: idPush, name, age, talk };
+   
+     data.push(newItem);
+     await fs.writeFileSync(fechAPI, JSON.stringify(data));
+     res.status(201).json(newItem);
+   } catch (err) {
+      return res.status(400).json({ message: err.message });
+   }
 });
+
+// Requisito 5
+
+app.put('/talker/:id', 
+checkToken, 
+checkName, 
+checkAge, 
+checkTalk, 
+checkDateFormat,
+checkRate,
+
+ async (req, res) => {
+   const { id } = req.params;
+   const { name, age, talk } = req.body;
+
+   const data = JSON.parse(await fs.readFileSync(fechAPI, 'utf-8'));
+   const dataIndex = data.findIndex((item) => item.id === Number(id));
+   const person = { name, age, talk, id: Number(id) };
+
+   if (dataIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
+   data[dataIndex] = person;
+
+   await fs.writeFileSync(fechAPI, JSON.stringify(data));
+   return res.status(200).json(person);
+ });
 
 app.listen(PORT, () => {
   console.log('Online');

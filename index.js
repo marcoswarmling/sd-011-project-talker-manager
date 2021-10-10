@@ -27,6 +27,19 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// d7
+app.get('/talker/search', tokenRequest, (req, res) => {
+  const { q } = req.query;
+  try {
+    const data = JSON.parse(fs.readFileSync(talkers, 'utf-8'));
+    if (!q || q === '') return res.status(200).json(JSON.stringify(data));
+    const filtalker = data.filter((t) => t.name.includes(q));
+    return res.status(200).json(filtalker);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 // d1
 app.get('/talker', (_req, res) => {
   try {
@@ -124,7 +137,7 @@ app.delete('/talker/:id', tokenRequest, (req, res) => {
     const talker = data.findIndex((person) => person.id === Number(id));
 
     if (talker === -1) {
-      return res.status(404).json({ message: 'Talker not found!' });
+      return res.status(401).json({ message: 'Talker not found!' });
     }
 
     data.splice(talker, 1);
@@ -132,20 +145,7 @@ app.delete('/talker/:id', tokenRequest, (req, res) => {
     
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-});
-
-// d7
-app.get('/talker/search', tokenRequest, (req, res) => {
-  const { q } = req.query;
-  try {
-    const data = JSON.parse(fs.readFileSync(talkers, 'utf-8'));
-    const filtaker = data.filter((t) => t.name.toLowerCase().includes(q.toLowerCase()));
-
-    return res.status(200).json(filtaker);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(401).json({ message: error.message });
   }
 });
 

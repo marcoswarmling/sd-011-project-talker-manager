@@ -37,6 +37,16 @@ app.get('/talker', (_req, res) => {
   res.status(200).json(data);
 });
 
+// Requisito 7
+
+app.get('/talker/search', checkToken, (req, res) => {
+  const { q } = req.query;
+
+   const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+   const dataFiltered = data.filter((item) => item.name.includes(q));
+   res.status(200).json(dataFiltered);
+});
+
 // Requisito 2
 
 app.get('/talker/:id', (req, res) => {
@@ -131,19 +141,6 @@ app.delete('/talker/:id', checkToken, (req, res) => {
   fs.writeFileSync(fechAPI, JSON.stringify(dataFind));
    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
  });
-
-// Requisito 7
-
-app.get('/talker/search', checkToken, (req, res) => {
-  const { q } = req.query;
-
-   const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
-   const dataFiltered = data.filter((item) => item.name.includes(q));
-   if (!q) return res.status(200).json([]);
-
-   if (dataFiltered.length === 0) return res.status(200).json(data);
-   return res.status(200).json(dataFiltered);
-});
 
 app.listen(PORT, () => {
  console.log('Online'); 

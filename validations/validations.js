@@ -5,7 +5,7 @@ const emailValidation = (req, res, next) => {
   const { email } = req.body;
   if (!email || email === '') {
     return res.status(400).json({
-      message: 'O "email" deve ter o formato "email@email.com"',
+      message: 'O campo "email" é obrigatório',
     });
   }
   if (!email.match(regex)) {
@@ -73,7 +73,7 @@ const ageValidation = (req, res, next) => {
 const talkValidation = (req, res, next) => {
   const { talk } = req.body;
   const { watchedAt, rate } = talk;
-  if (!talk || !watchedAt || !rate) {
+  if (!talk || !watchedAt || rate === undefined) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });

@@ -113,7 +113,7 @@ app.put(
       fs.writeFileSync(talkers, JSON.stringify(data));
       return res.status(200).json(data[talker]);
     } catch (error) {
-      return res.status(500).json({
+      return res.status(400).json({
         message: error.message,
       });
     }

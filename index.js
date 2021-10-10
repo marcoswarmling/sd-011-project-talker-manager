@@ -4,12 +4,12 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { checkEmail, checkPassword } = require('./helper/validation');
 const {
-  checkAge, 
-  checkName, 
-  checkRate,
-  checkTalk, 
   checkToken, 
+  checkName, 
+  checkAge, 
+  checkTalk, 
   checkDateFormat,
+  checkRate,
 } = require('./middlewares/validationUser');
 
 const app = express();
@@ -121,6 +121,23 @@ checkRate,
 
    await fs.writeFileSync(fechAPI, JSON.stringify(data));
    return res.status(200).json(person);
+ });
+
+app.listen(PORT, () => {
+  console.log('Online');
+});
+
+// Requisito 6
+
+app.delete('/talker/:id', checkToken, (req, res) => {
+   const { id } = req.params;
+
+    const data = JSON.parse(fs.readFileSync(fechAPI, 'utf-8'));
+    const dataFind = data.findIndex((item) => item.id === Number(id));
+    data.splice(dataFind, 1);
+
+  fs.writeFileSync(fechAPI, JSON.stringify(dataFind));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
  });
 
 app.listen(PORT, () => {

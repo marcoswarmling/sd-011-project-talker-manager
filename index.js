@@ -11,7 +11,7 @@ const {
   validateTalk,
   validateTalk2,
   setTalkers,
- } = require('./addTalkerFunctions');
+} = require('./addTalkerFunctions');
 
 async function readTalker() {
   const talker = await fs.readFile('./talker.json');
@@ -27,6 +27,14 @@ const PORT = '3000';
 app.get('/talker', async (req, res) => {
   const talker = await readTalker();
   res.status(HTTP_OK_STATUS).json(talker);
+});
+
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const array = await readTalker();
+  if (!q) return res.status(HTTP_OK_STATUS).send(array);
+  const newArray = array.filter((obj) => obj.name.includes(q));
+  res.status(HTTP_OK_STATUS).send(newArray);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -85,10 +93,6 @@ validateAge, validateTalk, validateTalk2, async (req, res) => {
   });
 });
 
-app.get('/talker/search?q=searchTerm', (req, res) => {
-  console.log(req.query);
-  res.status(500).send('ta aqui');
-});
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();

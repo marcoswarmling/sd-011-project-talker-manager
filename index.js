@@ -15,3 +15,11 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+const fs = require('fs/promises');
+
+app.get('/talker', async (req, res) => {
+  const talkers = await fs.readFile('./talker.json', 'utf-8');
+
+  res.status(HTTP_OK_STATUS).json(JSON.parse(talkers));
+});

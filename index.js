@@ -13,6 +13,8 @@ const messageTalkError = {
 
 const messageWatchedAtInvalid = { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
 
+const messageDeleteSuccessfull = { message: 'Pessoa palestrante deletada com sucesso' };
+
 const getTalkers = () => JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
 
 const isEmailValid = (email) => (/^[\w.]+@[a-z]+\.\w{2,3}$/g).test(email);
@@ -73,7 +75,7 @@ const validadeFieldTalk = (talk, res) => {
   }
 };
 
-const validationAddTalker = (params) => {
+const validationTalker = (params) => {
   const { res, authorization, name, age, talk } = params;
   validadeHeaderAuthorization(authorization, res);
   validadeFieldName(name, res);
@@ -139,7 +141,7 @@ app.post('/login', (req, res) => {
 app.post('/talker', (req, res) => {
   const { authorization } = req.headers;
   const { name, age, talk } = req.body;
-  validationAddTalker({ res, authorization, name, age, talk });
+  validationTalker({ res, authorization, name, age, talk });
   const id = generateIdTalker();
   const obj = {
     name,
@@ -160,8 +162,9 @@ app.post('/talker', (req, res) => {
 // Requisito 5:
 app.put('/talker/:id', (req, res) => {
   const { authorization } = req.headers;
-  const { id, name, age, talk } = req.body;
-  validationAddTalker({ res, authorization, name, age, talk });
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  validationTalker({ res, authorization, name, age, talk });
   const talkers = getTalkers();
   const talker = talkers.find((item) => item.id === id);
   const obj = {
@@ -175,6 +178,20 @@ app.put('/talker/:id', (req, res) => {
   };
   talkers.splice(talkers.indexof(talker), 1, obj);
   fs.writeFileSync('./talker.json', JSON.stringify(talkers));
+});
+
+// Requisito 6:
+app.delete('/talker/:id', (req, res) => {
+  const { authorization } = req.headers;
+  let { id } = req.params;
+  id = parseInt(id, 10);
+  validadeHeaderAuthorization(authorization, res);
+  const talkers = getTalkers();
+  const talker = talkers.find((item) => item.id === id);
+  console.log(talkers.indexOf(talker));
+  talkers.splice(talkers.indexOf(talker), 1);
+  fs.writeFileSync('./talker.json', JSON.stringify(talkers));
+  res.status(200).json(messageDeleteSuccessfull);
 });
 
 app.listen(PORT, () => {

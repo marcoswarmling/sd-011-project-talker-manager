@@ -1,5 +1,5 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const {
   emailValidation,
@@ -13,8 +13,8 @@ const {
 } = require('./validations/validations');
 
 const app = express();
-// app.use(bodyParser.json());
-app.use(express.json());
+app.use(bodyParser.json());
+// app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const HTTP_ERROR_STATUS = 500;
@@ -25,10 +25,6 @@ const talkers = 'talker.json';
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
-});
-
-app.listen(PORT, () => {
-  console.log('Online');
 });
 
 // d1
@@ -151,4 +147,8 @@ app.get('/talker/search', tokenRequest, (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
+});
+
+app.listen(PORT, () => {
+  console.log('Online');
 });

@@ -100,7 +100,7 @@ app.put(
   talkDetailsValidation,
   (req, res) => {
     const { id } = req.params;
-    const { name, age, talk} = req.body;
+    const { name, age, talk } = req.body;
     try {
       const data = JSON.parse(fs.readFileSync(talkers, 'utf-8'));
       const talker = data.findIndex((person) => person.id === Number(id));

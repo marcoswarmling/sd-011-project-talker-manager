@@ -32,6 +32,10 @@ app.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).json(fetchData);
 });
 
+app.get('/talker/search',
+authToken,
+searchTalker);
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const data = await fs.readFile('./talker.json', 'utf-8');
@@ -43,7 +47,10 @@ app.get('/talker/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(idTalker);
 });
 
-app.post('/login', emailValidation, passwordValidation, tokenGeneration);
+app.post('/login',
+emailValidation,
+passwordValidation,
+tokenGeneration);
 
 app.post('/talker',
 authToken,
@@ -53,10 +60,6 @@ talkValidation,
 rateValidation,
 watchedAtValidation,
 createTalker);
-
-app.get('/talker/search',
-authToken,
-searchTalker);
 
 app.put('/talker/:id', 
 authToken,

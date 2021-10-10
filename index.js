@@ -47,7 +47,7 @@ app.get('/talker/:id', async (req, res) => {
   const dataFind = data.find((item) => item.id === Number(id));
   
   if (!dataFind) res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(200).json(dataFind);
+   return res.status(200).json(dataFind);
 });
 
 // Requisito 3 
@@ -92,7 +92,7 @@ checkRate,
    
      data.push(newItem);
      await fs.writeFileSync(fechAPI, JSON.stringify(data));
-     res.status(201).json(newItem);
+    return res.status(201).json(newItem);
    } catch (err) {
       return res.status(400).json({ message: err.message });
    }
@@ -137,7 +137,7 @@ app.delete('/talker/:id', checkToken, (req, res) => {
     data.splice(dataFind, 1);
 
   fs.writeFileSync(fechAPI, JSON.stringify(dataFind));
-  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
  });
 
 app.listen(PORT, () => {
@@ -158,5 +158,5 @@ app.get('/talker/search', checkToken, (req, res) => {
 });
 
 app.listen(PORT, () => {
- console.log('Online');
+ console.log('Online'); 
 });

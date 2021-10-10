@@ -4,6 +4,13 @@ const fs = require('fs').promises;
 const emailValidation = require('./middleware/emailValidation');
 const passwordValidation = require('./middleware/passwordValidation');
 const tokenGeneration = require('./middleware/tokenGeneration');
+const authToken = require('./middleware/authToken');
+const nameValidation = require('./middleware/nameValidation');
+const ageValidation = require('./middleware/ageValidation');
+const watchedAtValidation = require('./middleware/watchedAtValidation');
+const rateValidation = require('./middleware/rateValidation');
+const talkValidation = require('./middleware/talkValidation');
+const createTalker = require('./middleware/createTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -34,6 +41,15 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', emailValidation, passwordValidation, tokenGeneration);
+
+app.post('/talker',
+authToken,
+nameValidation,
+ageValidation,
+watchedAtValidation,
+rateValidation,
+talkValidation,
+createTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

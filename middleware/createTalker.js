@@ -7,9 +7,9 @@ const createTalker = async (req, res) => {
   const data = await fs.readFile('./talker.json', 'utf-8');
   const fetchData = await JSON.parse(data);
   const newData = {
-    id: fetchData.length + 1,
     name,
     age,
+    id: fetchData.length + 1,
     talk,
   };
   fetchData.push(newData);

@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const emailValidation = require('./middleware/emailValidation');
+const passwordValidation = require('./middleware/passwordValidation');
+const tokenGeneration = require('./middleware/tokenGeneration');
 
 const app = express();
 app.use(bodyParser.json());
@@ -29,6 +32,8 @@ app.get('/talker/:id', async (req, res) => {
 
   res.status(HTTP_OK_STATUS).json(idTalker);
 });
+
+app.post('/login', emailValidation, passwordValidation, tokenGeneration);
 
 app.listen(PORT, () => {
   console.log('Online');

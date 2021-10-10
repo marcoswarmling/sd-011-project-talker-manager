@@ -4,7 +4,9 @@ const err = (code) => {
 };
 
 const validationName = (name) => {
-  if (!name) throw err({ status: 400, message: 'O campo "name" é obrigatório' });
+  if (!name) {
+    throw err({ status: 400, message: 'O campo "name" é obrigatório' });
+  }
   if (name.length <= 2) {
     throw err({ status: 400, message: 'O "name" deve ter pelo menos 3 caracteres' });
   }

@@ -60,9 +60,9 @@ app.post('/talker',
 validateToken,
 validateName,
 validateAge,
+validateTalk,
 validateDate,
 validateRate,
-validateTalk,
 (req, res) => {
   const { name, age, talk } = req.body;
   const fileTalkers = talkers.getTalkers();

@@ -25,3 +25,22 @@ async function talkersList(_req, res) {
 }
 
 app.get('/talker', talkersList);
+
+async function talkerID(req, res) {
+  const id = parseInt(req.params.id);
+  console.log(typeof id);
+  const talkers = await fs
+    .readFile('./talker.json', 'utf-8')
+    .then((file) => JSON.parse(file));
+  const findId = talkers.find((talker) => {
+    console.log(talker.id === id, talker.id, id)
+    return talker.id === id;
+  });
+  console.log(findId);
+  if (!findId) {
+    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(200).json(findId);
+}
+
+app.get('/talker/:id', talkerID);

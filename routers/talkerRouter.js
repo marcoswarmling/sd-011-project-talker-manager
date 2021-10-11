@@ -58,10 +58,6 @@ router.put('/:id',
   const { name, age, talk } = req.body;
   const talkers = JSON.parse(await fs.readFile(talkerJSON, 'utf-8'));
 
-  // const talkerIndex = talkers.findIndex((talker) => talker.id === parseInt(id, 10));
-
-  // if (talkerIndex === -1) return res.status(500).json({ message: 'Talker not found!' });
-
   const editedTalker = { id: Number(id), name, age, talk };
 
   const updatedTalkers = talkers.map((talker) => {

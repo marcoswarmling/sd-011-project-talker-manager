@@ -5,10 +5,10 @@ const { validateEmail, validatePassword } = require('./validacoes');
 const router = express.Router();
 // const fs = require('fs');
 
-router.post('/', validateEmail, validatePassword, (req, res) => {  
+router.post('/', validateEmail, validatePassword, (_req, res) => {  
   const token = crypto.randomBytes(8).toString('hex');
 
-  return res.status(200).send({ token });
+  res.status(200).json({ token });
 });
 
 module.exports = router;

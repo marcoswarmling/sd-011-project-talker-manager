@@ -17,7 +17,7 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   try {
     const fileContent = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
-    const data = fileContent.find((t) => t.id === id);
+    const data = fileContent.find((t) => t.id === Number(id));
     if (!data) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     return res.status(200).json(data);
   } catch (error) {

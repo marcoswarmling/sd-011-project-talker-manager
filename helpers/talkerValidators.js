@@ -43,10 +43,9 @@ function validateAge(request, response, next) {
 }
 
 function validateTalk(request, response, next) {
-  const { talk } = request.body;
-  const talkTest = talk || { watchedAt: undefined, rate: undefined };
+  const { talk = {} } = request.body;
   const { wrongTalk } = talkerErrorMessages;
-  if (talkTest.watchedAt === undefined || talkTest.rate === undefined) {
+  if (talk.watchedAt === undefined || talk.rate === undefined) {
     return response.status(HTTP_BAD_REQUEST_STATUS).json(wrongTalk);
   }
   next();

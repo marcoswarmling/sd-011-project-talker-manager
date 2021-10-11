@@ -17,11 +17,11 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.get('/talker', talkersList);
-
 async function talkersList(_req, res) {
   const talkes = await fs
     .readFile('./talker.json', 'utf-8')
     .then((file) => JSON.parse(file));
   res.status(200).json(talkes);
 }
+
+app.get('/talker', talkersList);

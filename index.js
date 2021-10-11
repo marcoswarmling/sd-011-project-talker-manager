@@ -28,6 +28,17 @@ app.get('/talker', (_req, res) => {
     res.status(HTTP_OK_STATUS).json(getTalkers);
 });
 
+app.get('/talker/search',
+validateToken,
+(req, res) => {
+  const { q } = req.query;
+  const fileTalkers = talkers.getTalkers();
+  const findTalker = fileTalkers
+  .filter((a) => a.name.includes(q));
+  if (findTalker) return res.status(200).json({ findTalker });
+  if (!q) return fileTalkers;
+});
+
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   const getTalkers = talkers.getTalkers();
@@ -107,6 +118,7 @@ validateToken,
   fs.writeFileSync('./talker.json', JSON.stringify(findTalkerId));
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
+
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -93,3 +93,20 @@ app.put(
     res.status(HTTP_OK_STATUS).json(editedTalker);
   },
 );
+
+app.delete('/talker/:id', tokenHandler, async (req, res) => {
+  const id = JSON.parse(req.params.id);
+  const data = await fs.readFile(talkerPath, 'utf-8');
+  const talkers = JSON.parse(data);
+  const talkerIndex = talkers.findIndex((talker) => talker.id === id);
+
+  if (talkerIndex === -1) {
+    res.send(HTTP_STATUS_404).json({ message: 'Talker não encontrado!' });
+  }
+
+  talkers.splice(talkerIndex, 1);
+
+  fs.writeFile(talkerPath, JSON.stringify(talkers), 'utf-8');
+
+  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});

@@ -5,6 +5,7 @@ const app = express();
 app.use(express.json());
 
 const talkerRoute = require('./routes/index');
+const loginRoute = require('./routes/autenticacao/autenticaLogin');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -15,6 +16,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/', talkerRoute);
+app.use('/login', loginRoute);
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -15,17 +15,14 @@ function testDateRegex(date) {
   return date.match(dateRegex);
 }
 
-// regex source: https://stackoverflow.com/questions/3750814/can-someone-give-me-a-regular-expression-for-a-number-to-be-between-1-and-5
 function checkRate(rate) {
-  // const rateRegex = /^[1-5]$/;
-  // return rate.match(rateRegex);
   if (rate < 0 || rate > 5) {
     return false;
   }
   return true;
 }
 
-const validateTalk = (req, res, next) => {
+const validateTalkParams = (req, res, next) => {
   const { talk } = req.body;
   const { watchedAt, rate } = talk;
 
@@ -45,4 +42,4 @@ const validateTalk = (req, res, next) => {
   next();
 };
   
-module.exports = validateTalk;
+module.exports = validateTalkParams;

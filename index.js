@@ -35,7 +35,7 @@ validateToken,
   const fileTalkers = talkers.getTalkers();
   const findTalker = fileTalkers
   .filter((a) => a.name.includes(q));
-  if (findTalker) return res.status(200).json({ findTalker });
+  if (findTalker) return res.status(200).json(findTalker);
   if (!q) return fileTalkers;
 });
 

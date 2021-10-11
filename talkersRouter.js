@@ -34,6 +34,19 @@ async function addTalker(name, age, watchedAt, rate) {
     return newTalker;
   }
 
+async function updateTalker(id, newTalker) {
+  const talkers = await readTalker();
+  const findTalker = talkers.find((t) => t.id === id);
+
+  talkers.splice(talkers.indexOf(findTalker), 1, newTalker);
+
+  fs.writeFile('./talker.json', JSON.stringify(talkers))
+    .then((data) => JSON.parse(data))
+    .catch((err) => {
+      console.error(`Erro ao escrever o arquivo: ${err.message}`);
+    });
+}
+  
   const tokenValidator = require('./tokenValidator');
   const {
     validateName,
@@ -75,6 +88,26 @@ router.post(
     const newTalker = await addTalker(name, age, watchedAt, rate);
 
     res.status(201).json(newTalker);
+  },
+);
+
+router.put(
+  '/:id',
+  tokenValidator,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const { watchedAt, rate } = talk;
+    const newTalker = { name, age, id: Number(id), talk: { watchedAt, rate } };
+
+    await updateTalker(id, newTalker);
+
+    res.status(200).json(newTalker);
   },
 );
 

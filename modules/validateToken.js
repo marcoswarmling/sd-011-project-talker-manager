@@ -14,4 +14,4 @@ function valToken(req, res, next) {
   next();
 }
 
-module.exports = valToken;
+export default valToken;

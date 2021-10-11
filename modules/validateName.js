@@ -13,4 +13,4 @@ function valName(req, res, next) {
   next();
 }
 
-module.exports = valName;
+export default valName;

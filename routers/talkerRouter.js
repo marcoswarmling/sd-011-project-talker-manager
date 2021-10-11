@@ -1,15 +1,13 @@
-const express = require('express');
-const fs = require('fs');
+import { Router } from 'express';
+import { writeFileSync } from 'fs';
+import { loadSpeakers } from '../modules/loadSpeakers';
+import { valToken } from '../modules/validateToken';
+import { valName } from '../modules/validateName';
+import { valAge } from '../modules/validateAge';
+import { valTalker } from '../modules/validateTalker';
+import { valWatchedRated } from '../modules/validateWatched';
 
-const router = express.Router();
-
-// modules imports
-const { loadSpeakers } = require('../modules/loadSpeakers.js');
-const { valToken } = require('../modules/validateToken.js');
-const { valName } = require('../modules/validateName.js');
-const { valAge } = require('../modules/validateAge.js');
-const { valTalker } = require('../modules/validateTalker.js');
-const { valWatchedRated } = require('../modules/validateWatched.js');
+const router = Router();
 
 // load speakears
 router.use(loadSpeakers);
@@ -58,7 +56,7 @@ router.post('/', valToken, valName, valAge, valTalker, valWatchedRated,
 
     speakers.push({ name, age, id, talk });
 
-    fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+    writeFileSync('./talker.json', JSON.stringify(speakers));
 
     return res.status(201).json({ name, age, id, talk });
 });
@@ -75,7 +73,7 @@ router.put('/:id', valToken, valName, valAge, valTalker, valWatchedRated,
 
    speakers[spkIndex] = { ...speakers[spkIndex], name, age, talk, id };
 
-   fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+   writeFileSync('./talker.json', JSON.stringify(speakers));
 
    return res.status(200).json({ name, age, id, talk });
 });
@@ -88,9 +86,9 @@ router.delete('/:id', valToken, (req, res) => {
 
   speakers.splice(spkIndex, 1);
 
-  fs.writeFileSync('./talker.json', JSON.stringify(speakers));
+  writeFileSync('./talker.json', JSON.stringify(speakers));
 
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-module.exports = router;
+export default router;

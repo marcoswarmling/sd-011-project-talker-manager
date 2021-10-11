@@ -14,4 +14,4 @@ function valEmail(req, res, next) {
   next();
 }
 
-module.exports = valEmail;
+export default valEmail;

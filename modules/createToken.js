@@ -6,4 +6,4 @@ const createToken = (req, res, next) => {
   next();
 };
 
-module.exports = createToken;
+export default createToken;

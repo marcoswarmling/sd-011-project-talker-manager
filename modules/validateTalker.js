@@ -11,4 +11,4 @@ function valTalker(req, res, next) {
   next();
 }
 
-module.exports = valTalker;
+export default valTalker;

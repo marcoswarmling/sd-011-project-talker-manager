@@ -60,7 +60,8 @@ function validateAge(req, res, next) {
 
 function validateTalk(req, res, next) {
   const { talk } = req.body;
-  if (!talk || talk.length === 0) {
+  // console.log(talk);
+  if (!talk) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
     );
@@ -85,7 +86,7 @@ function validateDate(req, res, next) {
   const { talk: { watchedAt } } = req.body;
   const regexWatchedAt = /^\d{2}\/\d{2}\/\d{4}$/; // formato da data
   const validDate = regexWatchedAt.test(watchedAt);
-  if (!watchedAt) {
+  if (watchedAt === undefined) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
     );
@@ -102,7 +103,7 @@ module.exports = {
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateDate,
   validateRate,
-  validateTalk,
 };

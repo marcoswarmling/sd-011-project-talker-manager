@@ -8,10 +8,10 @@ const {
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateDate,
   validateRate,
-  validateTalk,
-} = require('./middlewareNFunc');
+} = require('./middleware');
 
 const talkerFile = './talker.json';
 
@@ -77,9 +77,9 @@ app.post('/login', validateLogin, (_req, res) => {
 // test createTalker.test.js
 app.post('/talker', validateToken, validateName,
   validateAge,
+  validateTalk,
   validateDate,
-  validateRate,
-  validateTalk, (req, res) => {
+  validateRate, (req, res) => {
   const { name, age, talk } = req.body;
   const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
   const newPerson = { id: talker.length + 1, name, age, talk };

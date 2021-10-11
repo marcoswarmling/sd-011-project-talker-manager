@@ -12,7 +12,7 @@ const talkerFile = './talker.json';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   try {
     const talkers = fs.readFileSync(talkerFile, 'utf8');
     res.status(200).json(JSON.parse(talkers));

@@ -1,5 +1,5 @@
 function valToken(req, res, next) {
-  const { authentication } = req.body;
+  const { authentication } = req.headers;
 
   if (!authentication || authentication === '') {
     return res.status(401).json({ message: 'Token não encontrado' });

@@ -37,7 +37,7 @@ const ageHandler = (req, res, next) => {
 const talkHandler = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || typeof talk.rate !== 'number') {
     return res.status(HTTP_STATUS_400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -54,7 +54,7 @@ const talkContentHandler = (req, res, next) => {
     return res.status(HTTP_STATUS_400).json({
       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
     });
-  } if (rate > 5 || rate < 1) {
+  } if (typeof rate !== 'number' || rate > 5 || rate < 1) {
     return res.status(HTTP_STATUS_400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });

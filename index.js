@@ -70,3 +70,26 @@ app.post(
     res.status(HTTP_STATUS_201).json(newTalker);
   },
 );
+
+app.put(
+  '/talker/:id',
+  tokenHandler,
+  nameHandler,
+  ageHandler,
+  talkHandler,
+  talkContentHandler,
+  async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { name, age, talk } = req.body;
+    const data = await fs.readFile(talkerPath, 'utf-8');
+    const talkers = JSON.parse(data);
+    const editedTalker = { name, age, id, talk: { ...talk } };
+    const talkerIndex = talkers.findIndex((talker) => talker.id === id);
+
+    talkers[talkerIndex] = { ...editedTalker };
+
+    fs.writeFile(talkerPath, JSON.stringify(talkers));
+
+    res.status(HTTP_OK_STATUS).json(editedTalker);
+  },
+);

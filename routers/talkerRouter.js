@@ -16,6 +16,19 @@ router.get('/', rescue(async (_req, res) => {
   res.status(200).json(talkers);
 }));
 
+router.get('/search', authMiddleware, rescue(async (req, res) => {
+  const { search } = req.query;
+  const talkers = JSON.parse(await fs.readFile(talkerJSON, 'utf-8'));
+
+  if (!search || search === '') {
+    res.status(200).json(talkers);
+  }
+
+  const filteredTalkers = talkers.filter((talker) => talker.name).includes(search);
+  
+  res.status(200).json(filteredTalkers);
+}));
+
 router.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
   const talkers = JSON.parse(await fs.readFile(talkerJSON, 'utf-8'));

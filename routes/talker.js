@@ -3,6 +3,7 @@ const controllers = require('../controllers/talker');
 
 const router = express.Router();
 
-router.get('/', controllers.getTalkers);
+router.get('/talker', controllers.getTalkers);
+router.get('/talker/:id', controllers.getTalker);
 
 module.exports = router;

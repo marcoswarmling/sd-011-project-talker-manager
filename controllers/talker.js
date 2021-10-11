@@ -24,7 +24,27 @@ const getTalker = async (req, res) => {
   return res.status(200).json(findTalker);
 };
 
+const insertTalker = async (req, res) => {
+  const { name, age, talk } = req.body;
+
+  const dataBaseTalker = await models.dataBase();
+  
+  const formatTalker = {
+    id: dataBaseTalker.length + 1,
+    name,
+    age,
+    talk,
+  };
+
+  const newTalker = [...dataBaseTalker, formatTalker];
+
+  models.addTalker(newTalker);
+
+  return res.status(201).json(formatTalker);
+};
+
 module.exports = { 
   getTalkers, 
-  getTalker, 
+  getTalker,
+  insertTalker,
 };

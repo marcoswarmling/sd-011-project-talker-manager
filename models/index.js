@@ -8,4 +8,10 @@ const dataBase = async () => {
   return readFile;
 };
 
-module.exports = { dataBase };
+const addTalker = async (newTalker) => {
+  const writeFile = await fs.writeFile('./talker.json', JSON.stringify(newTalker)); // convertendo JSON
+
+  return writeFile;
+};
+
+module.exports = { dataBase, addTalker };

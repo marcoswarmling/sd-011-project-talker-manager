@@ -31,4 +31,4 @@ loginRoute.post('/', validateEmail, validatePassword, (req, res) => {
   res.status(200).json({ token: generateToken(16) });
 });
 
-module.exports = router;
+module.exports = { router, loginRoute };

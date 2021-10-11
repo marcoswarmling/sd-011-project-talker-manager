@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { writeFileSync, readFileSync } from 'fs';
 
-const { valToken } = require('../modules/validateToken');
-const { valName } = require('../modules/validateName');
-const { valAge } = require('../modules/validateAge');
-const { valTalker } = require('../modules/validateTalker');
-const { valWatchedRated } = require('../modules/validateWatched');
+const { valToken } = require('../utils/validateToken');
+const { valName } = require('../utils/validateName');
+const { valAge } = require('../utils/validateAge');
+const { valTalker } = require('../utils/validateTalker');
+const { valWatchedRated } = require('../utils/validateWatched');
 
 const router = Router();
 

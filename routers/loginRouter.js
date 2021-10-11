@@ -3,9 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 // task 3
-const { createToken } = require('../modules/createToken.js');
-const { valEmail } = require('../modules/validateEmail.js');
-const { valPassword } = require('../modules/validatePassword.js');
+const { createToken } = require('../utils/createToken');
+const { valEmail } = require('../utils/validateEmail');
+const { valPassword } = require('../utils/validatePassword');
 
 router.use(createToken);
 

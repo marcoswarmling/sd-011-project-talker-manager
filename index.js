@@ -1,8 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
+import { json } from 'body-parser';
+import talkerRouter from './routers/talkerRouter';
+import loginRouter from './routers/loginRouter';
 
 const app = express();
-app.use(bodyParser.json());
+app.use(json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -13,14 +15,10 @@ app.get('/', (_request, response) => {
 });
 
 // talker router
-const talkerRt = require('./routers/talkerRouter.js');
-
-app.use('/talker', talkerRt);
+app.use('/talker', talkerRouter);
 
 // login router
-const loginRt = require('./routers/loginRouter.js');
-
-app.use('/login', loginRt);
+app.use('/login', loginRouter);
 
 // app
 app.listen(PORT, () => {

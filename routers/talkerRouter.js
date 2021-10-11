@@ -1,15 +1,29 @@
 import { Router } from 'express';
-import { writeFileSync } from 'fs';
-import { loadSpeakers } from '../modules/loadSpeakers';
-import { valToken } from '../modules/validateToken';
-import { valName } from '../modules/validateName';
-import { valAge } from '../modules/validateAge';
-import { valTalker } from '../modules/validateTalker';
-import { valWatchedRated } from '../modules/validateWatched';
+import { writeFileSync, readFileSync } from 'fs';
+
+const { valToken } = require('../modules/validateToken');
+const { valName } = require('../modules/validateName');
+const { valAge } = require('../modules/validateAge');
+const { valTalker } = require('../modules/validateTalker');
+const { valWatchedRated } = require('../modules/validateWatched');
 
 const router = Router();
 
 // load speakears
+const loadSpeakers = (req, res, next) => {
+  let speakers = [];
+
+  try {
+    const data = readFileSync('talker.json', 'utf8');
+    speakers = JSON.parse(data);
+  } catch (err) {
+    res.status(200).json([]);
+  }
+
+  req.speakers = speakers;
+  next();
+};
+
 router.use(loadSpeakers);
 
 // task 1
@@ -91,4 +105,4 @@ router.delete('/:id', valToken, (req, res) => {
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-export default router;
+module.exports = router;

@@ -12,4 +12,6 @@ function valPassword(req, res, next) {
   next();
 }
 
-export default valPassword;
+module.exports = {
+  valPassword,
+};

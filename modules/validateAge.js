@@ -14,4 +14,6 @@ function valAge(req, res, next) {
   next();
 }
 
-export default valAge;
+module.exports = {
+  valAge,
+};

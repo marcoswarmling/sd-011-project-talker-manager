@@ -18,4 +18,6 @@ function valWatchedRated(req, res, next) {
   next();
 }
 
-export default valWatchedRated;
+module.exports = {
+  valWatchedRated,
+};

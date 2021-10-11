@@ -39,3 +39,16 @@ async function talkerID(req, res) {
 }
 
 app.get('/talker/:id', talkerID);
+
+function createToken() {
+  const alphabet = 'abcdefghijklmnopqrstuvxywz1234567890'.split('');
+  const token = [];
+  for (let index = 0; index < 16; index += 1) {
+    const positionArray = Math.floor(Math.random() * 36);
+    token.push(alphabet[positionArray]);
+  }
+
+  return token.join('');
+}
+
+console.log(createToken());

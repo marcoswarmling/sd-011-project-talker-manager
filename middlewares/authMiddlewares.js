@@ -1,4 +1,5 @@
 const HTTP_STATUS_400 = 400;
+const HTTP_STATUS_401 = 401;
 
 const emailHandler = (req, res, next) => {
   const { email } = req.body;
@@ -33,4 +34,18 @@ const passwordHandler = (req, res, next) => {
   next();
 };
 
-module.exports = { emailHandler, passwordHandler };
+const tokenHandler = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization || authorization === '') {
+    return res.status(HTTP_STATUS_401).json({ message: 'Token não encontrado' });
+  }
+  
+  if (authorization !== '7mqaVRXJSp886CGr') {
+    return res.status(HTTP_STATUS_401).json({ message: 'Token inválido' });
+  }
+
+  next();
+};
+
+module.exports = { emailHandler, passwordHandler, tokenHandler };

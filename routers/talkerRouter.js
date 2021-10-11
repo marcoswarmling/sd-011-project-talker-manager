@@ -4,27 +4,16 @@ const fs = require('fs');
 const router = express.Router();
 
 // utils functions
-const { valToken } = require('../utils/validateToken');
-const { valAge } = require('../utils/validateAge');
-const { valName } = require('../utils/validateName');
-const { valTalker } = require('../utils/validateTalker');
-const { valWatchedRated } = require('../utils/validateWatched');
+const {
+  loadSpeakers, 
+  valToken,
+  valAge,
+  valName,
+  valTalker,
+  valWatchedRated,
+} = require('../utils/utils');
 
 // load speakears
-const loadSpeakers = (req, res, next) => {
-  let speakers = [];
-
-  try {
-    const data = fs.readFileSync('talker.json', 'utf8');
-    speakers = JSON.parse(data);
-  } catch (err) {
-    res.status(200).json([]);
-  }
-
-  req.speakers = speakers;
-  next();
-};
-
 router.use(loadSpeakers);
 
 // task 1

@@ -43,8 +43,24 @@ const insertTalker = async (req, res) => {
   return res.status(201).json(formatTalker);
 };
 
+const updateTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const dataBaseTalker = await models.dataBase();
+  const formatTalker = { id: Number(id), name, age, talk };
+  
+  const findTalker = dataBaseTalker.map((talker) => (
+    talker.id === Number(id) ? formatTalker : id
+  ));
+
+  models.addTalker(findTalker);
+
+  return res.status(200).json(formatTalker);
+};
+
 module.exports = { 
   getTalkers, 
   getTalker,
   insertTalker,
+  updateTalker,
 };

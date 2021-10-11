@@ -7,8 +7,8 @@ const arrayMiddlewares = [
   middlewares.checkName,
   middlewares.checkTalk,
   middlewares.checkAge,
-  middlewares.checkDate,
   middlewares.checkRate,
+  middlewares.checkDate,
 ];
 
 const router = express.Router();
@@ -16,5 +16,6 @@ const router = express.Router();
 router.get('/talker', controllers.getTalkers);
 router.get('/talker/:id', controllers.getTalker);
 router.post('/talker', arrayMiddlewares, controllers.insertTalker);
+router.put('/talker/:id', arrayMiddlewares, controllers.updateTalker);
 
 module.exports = router;

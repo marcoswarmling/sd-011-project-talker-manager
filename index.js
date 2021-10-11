@@ -1,23 +1,25 @@
 import express from 'express';
-import { json } from 'body-parser';
-import talkerRouter from './routers/talkerRouter';
-import loginRouter from './routers/loginRouter';
+import bodyParser from 'body-parser';
 
 const app = express();
-app.use(json());
+app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-// evaluator endpoint
+// não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
 // talker router
+const talkerRouter = require('./routers/talkerRouter');
+
 app.use('/talker', talkerRouter);
 
 // login router
+const loginRouter = require('./routers/loginRouter');
+
 app.use('/login', loginRouter);
 
 // app

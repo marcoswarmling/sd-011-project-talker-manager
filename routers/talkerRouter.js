@@ -1,20 +1,21 @@
-import { Router } from 'express';
-import { writeFileSync, readFileSync } from 'fs';
+const express = require('express');
+const fs = require('fs');
 
+const router = express.Router();
+
+// utils functions
 const { valToken } = require('../utils/validateToken');
-const { valName } = require('../utils/validateName');
 const { valAge } = require('../utils/validateAge');
+const { valName } = require('../utils/validateName');
 const { valTalker } = require('../utils/validateTalker');
 const { valWatchedRated } = require('../utils/validateWatched');
-
-const router = Router();
 
 // load speakears
 const loadSpeakers = (req, res, next) => {
   let speakers = [];
 
   try {
-    const data = readFileSync('talker.json', 'utf8');
+    const data = fs.readFileSync('talker.json', 'utf8');
     speakers = JSON.parse(data);
   } catch (err) {
     res.status(200).json([]);
@@ -70,7 +71,7 @@ router.post('/', valToken, valName, valAge, valTalker, valWatchedRated,
 
     speakers.push({ name, age, id, talk });
 
-    writeFileSync('./talker.json', JSON.stringify(speakers));
+    fs.writeFileSync('./talker.json', JSON.stringify(speakers));
 
     return res.status(201).json({ name, age, id, talk });
 });
@@ -87,7 +88,7 @@ router.put('/:id', valToken, valName, valAge, valTalker, valWatchedRated,
 
    speakers[spkIndex] = { ...speakers[spkIndex], name, age, talk, id };
 
-   writeFileSync('./talker.json', JSON.stringify(speakers));
+   fs.writeFileSync('./talker.json', JSON.stringify(speakers));
 
    return res.status(200).json({ name, age, id, talk });
 });
@@ -100,7 +101,7 @@ router.delete('/:id', valToken, (req, res) => {
 
   speakers.splice(spkIndex, 1);
 
-  writeFileSync('./talker.json', JSON.stringify(speakers));
+  fs.writeFileSync('./talker.json', JSON.stringify(speakers));
 
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });

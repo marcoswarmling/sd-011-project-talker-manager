@@ -78,6 +78,25 @@ validateRate,
   res.status(201).json(addTalker);
 });
 
+app.put('/talker/:id',
+validateToken,
+validateName,
+validateAge,
+validateTalk,
+validateRate,
+validateDate,
+(req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const fileTalkers = talkers.getTalkers();
+  const findTalkerId = fileTalkers
+  .findIndex((talkerId) => talkerId.id === Number(id));
+  const newTalker = { name, age, id: Number(id), talk };
+  fileTalkers[findTalkerId] = newTalker;
+  fs.writeFileSync('./talker.json', JSON.stringify(fileTalkers));
+  res.status(200).json(fileTalkers[findTalkerId]);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

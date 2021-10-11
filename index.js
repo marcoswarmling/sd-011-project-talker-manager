@@ -33,6 +33,14 @@ app.get('/talker', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(JSON.parse(talkers));
 });
 
+app.get('/talker/search', tokenHandler, async (req, res) => {
+  const { q } = req.query;
+  const data = await fs.readFile(talkerPath, 'utf-8');
+  const talkers = JSON.parse(data);
+  const talkersFound = talkers.filter((talker) => talker.name.includes(q));
+  res.status(HTTP_OK_STATUS).json(talkersFound);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const readData = await fs.readFile(talkerPath, 'utf-8');
   const talkers = JSON.parse(readData);

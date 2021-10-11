@@ -70,4 +70,15 @@ router.put('/:id',
   res.status(200).json(editedTalker);
 }));
 
+router.delete('/:id', authMiddleware, rescue(async (req, res) => {
+  const { id } = req.params;
+  const talkers = JSON.parse(await fs.readFile(talkerJSON, 'utf-8'));
+
+  const updatedTalkers = talkers.filter((talker) => Number(talker.id) !== Number(id));
+
+  await fs.writeFile(talkerJSON, JSON.stringify(updatedTalkers));
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}));
+
 module.exports = router;

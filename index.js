@@ -119,7 +119,6 @@ validateToken,
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-
 app.listen(PORT, () => {
   console.log('Online');
 });

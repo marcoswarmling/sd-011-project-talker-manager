@@ -46,15 +46,28 @@ async function updateTalker(id, newTalker) {
       console.error(`Erro ao escrever o arquivo: ${err.message}`);
     });
 }
+
+async function deleteTalker(id) {
+  const talkers = await readTalker();
+  const findIndexTalker = talkers.indexOf(id);
+
+  talkers.splice(findIndexTalker, 1);
+
+  fs.writeFile('./talker.json', JSON.stringify(talkers))
+    .then((data) => JSON.parse(data.splice(findIndexTalker, 1)))
+    .catch((err) => {
+      console.error(`Erro ao escrever o arquivo: ${err.message}`);
+    });
+} 
   
-  const tokenValidator = require('./tokenValidator');
-  const {
-    validateName,
-    validateAge,
-    validateTalk,
-    validateDate,
-    validateRate,
-  } = require('./validateRegistration');
+const tokenValidator = require('./tokenValidator');
+const {
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+} = require('./validateRegistration');
 
 router.get('/:id', async (req, res) => {
   const talkers = await readTalker();
@@ -108,6 +121,17 @@ router.put(
     await updateTalker(id, newTalker);
 
     res.status(200).json(newTalker);
+  },
+);
+
+router.delete(
+  '/:id',
+  tokenValidator,
+  async (req, res) => {
+    const { id } = req.params;
+
+    deleteTalker(id);
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 

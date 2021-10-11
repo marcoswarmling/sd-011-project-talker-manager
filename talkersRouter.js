@@ -120,7 +120,7 @@ router.put(
 
     await updateTalker(id, newTalker);
 
-    res.status(200).json(newTalker);
+    return res.status(200).json(newTalker);
   },
 );
 

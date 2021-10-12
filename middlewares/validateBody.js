@@ -1,5 +1,7 @@
 const fs = require('fs').promises;
 
+const TalkerFiles = './talker.json';
+
 const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
@@ -55,7 +57,7 @@ const validateRate = (req, res, next) => {
 
 const createTalks = async (req, res) => {
   const { name, age, talk } = req.body;
-  const data = JSON.parse(await fs.readFile('./talker.json'));
+  const data = JSON.parse(await fs.readFile(TalkerFiles));
   data.push({
     id: data.length + 1,
     name,
@@ -74,11 +76,20 @@ const createTalks = async (req, res) => {
 const editTalker = async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-  const talkers = JSON.parse(await fs.readFile('./talker.json'));
+  const talkers = JSON.parse(await fs.readFile(TalkerFiles));
   const index = talkers.findIndex((i) => i.id === Number(id));
   talkers[index] = { ...talkers[index], name, age, talk };
-  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  await fs.writeFile(TalkerFiles, JSON.stringify(talkers));
   return res.status(200).json(talkers[index]);
+};
+
+const deleteTalker = async (req, res) => {
+  const { id } = req.params; 
+  const talkers = JSON.parse(await fs.readFile('./talker.json'));
+  const index = talkers.findIndex((i) => i.id === Number(id));
+  talkers.splice(index, 1);
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
 module.exports = {
@@ -89,4 +100,5 @@ validateTalk,
 validateWatchedAt,
 validateRate,
 createTalks,
-editTalker };
+editTalker,
+deleteTalker };

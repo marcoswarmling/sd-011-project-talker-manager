@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const { readTalkers, readTalkerById,
   validateEmailAndPassword, giveToken } = require('./middlewares/middlewares');
 const { validateName, validateToken, validateAge, validateTalk, validateWatchedAt,
-   validateRate, createTalks, editTalker } = require('./middlewares/validateBody');
+   validateRate, createTalks, editTalker, deleteTalker } = require('./middlewares/validateBody');
 
 const app = express();
 app.use(bodyParser.json());
@@ -31,3 +31,5 @@ app.post('/talker', validateToken, validateName, validateAge,
 
 app.put('/talker/:id', validateToken, validateName, validateAge,
 validateTalk, validateRate, validateWatchedAt, editTalker);
+
+app.delete('/talker/:id', validateToken, deleteTalker);

@@ -62,27 +62,11 @@ const isValidAge = (req, res, next) => {
 
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return res.status(400)
       .json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
       });
-  }
-  next();
-};
-
-const isValidRate = (req, res, next) => {
-  const { talk: { rate } } = req.body;
-
-  if (!rate) {
-    return res.status(400)
-      .json({
-        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-      });
-  }
-
-    if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
@@ -91,19 +75,21 @@ const isValidRate = (req, res, next) => {
 // https://stackoverflow.com/questions/10194464/javascript-dd-mm-yyyy-date-check
 
 const isValidWatchedAt = (req, res, next) => {
-  const { talk: { watchedAt } } = req.body;
-
-  if (!watchedAt) {
-    return res.status(400)
-      .json({
-        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-      });
-  }
+  const { watchedAt } = req.body.talk;
 
   const verifiedDate = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/
     .test(watchedAt);
   if (!verifiedDate) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  next();
+};
+
+const isValidRate = (req, res, next) => {
+  const { rate } = req.body.talk;
+
+    if (rate < 1 || rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
@@ -115,6 +101,6 @@ module.exports = {
   isValidName,
   isValidAge,
   isValidTalk,
-  isValidRate,
   isValidWatchedAt,
+  isValidRate,
 };

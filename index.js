@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const talkerRouter = require('./routers/talkerRouter');
 const loginRouter = require('./routers/loginRouter');
 const addTalkerRouter = require('./routers/addTalkerRouter');
+const updateTalkerRouter = require('./routers/updateTalkerRouter');
+const deleteTalkerRouter = require('./routers/deleteTalkerRouter');
 
 const app = express();
 app.use(bodyParser.json());
@@ -11,6 +13,8 @@ app.use(bodyParser.json());
 app.use('/', talkerRouter);
 app.use('/', loginRouter);
 app.use('/', addTalkerRouter);
+app.use('/', updateTalkerRouter);
+app.use('/', deleteTalkerRouter);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

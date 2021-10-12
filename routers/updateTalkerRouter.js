@@ -13,27 +13,27 @@ const {
   isValidWatchedAt,
 } = require('../middlewares/validations');
 
-router.post(
-  '/talker',
+router.put(
+  '/talker/:id',
   isValidToken,
   isValidName,
   isValidAge,
   isValidTalk,
-  isValidRate,
   isValidWatchedAt,
+  isValidRate,
    async (req, res) => {
+  const { id } = req.params;
   const { name, age, talk } = req.body;
-
   const talkers = await getTalkers();
+  const talker = { name, age, id: parseInt(id, 10), talk };
+  const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
 
-  const id = talkers.length + 1;
+  talkers[talkerIndex] = talker;
 
-  const addNewTalker = { name, age, id, talk };
+  const atualizedTalker = JSON.stringify([...talkers]);
+  await fs.writeFile('talker.json', atualizedTalker);
 
-  const newTalker = JSON.stringify([...talkers, addNewTalker]);
-  await fs.writeFile('talker.json', newTalker);
-
-  res.status(201).json(addNewTalker);
+  res.status(200).json(talker);
   },
 );
 

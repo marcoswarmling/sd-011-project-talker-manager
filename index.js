@@ -25,8 +25,8 @@ app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talkerId = talkerParse.find((t) => t.id === Number(id));
 
-  if (!talkerId) return res.status(404).JSON({ message: 'Pessoa palestrante não encontrada' });
-  return res.status(HTTP_OK_STATUS).JSON(talkerId);
+  if (!talkerId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  return res.status(200).json(talkerId);
 });
 
 app.listen(PORT, () => {

@@ -28,6 +28,27 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// Requisito 07:
+app.get(
+  '/talker/search',
+  validationToken,
+  async (req, res) => {
+    try {
+      const { searchTerm } = req.query;
+      const talkers = JSON.parse(await fs.readFile(PATH_FILE, 'utf-8'));
+      const filteredTalker = talkers.filter((r) => r.name.includes(searchTerm));
+      
+      if (!searchTerm) {
+        return res.status(200).json(talkers);
+      }
+
+      return res.status(200).json(filteredTalker);
+    } catch (error) {
+      return ({ message: error.message, code: error.code });
+    }
+  },
+);
+
 // Requisito 01:
 app.use('/talker', talkersRouter);
 

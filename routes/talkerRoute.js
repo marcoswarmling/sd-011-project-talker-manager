@@ -1,9 +1,7 @@
 const express = require('express');
 const fs = require('fs');
-const { validatePassword, validateEmail, generateToken } = require('../data/userData');
 
 const router = express.Router();
-const loginRoute = express.Router();
 
 router.get('/', (_req, res) => {
   try {
@@ -27,8 +25,4 @@ router.get('/:id', (req, res) => {
   }
 });
 
-loginRoute.post('/', validateEmail, validatePassword, (req, res) => {
-  res.status(200).json({ token: generateToken(16) });
-});
-
-module.exports = { router, loginRoute };
+module.exports = { router };

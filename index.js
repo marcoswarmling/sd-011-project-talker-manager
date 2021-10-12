@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs').promises;
 
-const { isValidEmail, isValidPassword } = require('./middlewares/validations');
+/* 
+const { isValidEmail, isValidPassword } = require('./middlewares/validations'); */
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,8 +17,8 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (req, res) => {
-  const data = fs.readFileSync('./talker.json');
+app.get('/talker', async (_req, res) => {
+  const data = await fs.readFile('./talker.json');
   const talkers = JSON.parse(data);
   res.status(HTTP_OK_STATUS).json(talkers);
 });
@@ -34,12 +35,12 @@ app.get('/talker/:id', (req, res) => {
   return res.status(HTTP_OK_STATUS).json(talker);
 });
 
-app.post('/login', 
+/* app.post('/login', 
 isValidEmail,
 isValidPassword,
 (req, res) => {
   res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
-});
+}); */
 
 app.listen(PORT, () => {
   console.log('Online');

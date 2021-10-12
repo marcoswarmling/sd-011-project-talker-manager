@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const talkerRoute = require('./routes/talkerRoute');
-const loginRout = require('./routes/talkerRoute');
+const loginRout = require('./routes/loginRoute');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,7 +15,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.use('/talker', talkerRoute);
+app.use('talker', talkerRoute);
 app.use('/login', loginRout);
 
 app.listen(PORT, () => {

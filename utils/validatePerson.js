@@ -17,8 +17,8 @@ const validationAge = (age) => {
 };
 
 const validationWatchtedAt = (talk) => {
-  const { watchedAt, rate } = talk;
-  if (!watchedAt || !rate) {
+  const { watchedAt } = talk;
+  if (!watchedAt) {
     throw err({ status: 400, 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -30,8 +30,8 @@ const validationWatchtedAt = (talk) => {
   }
 };
 const validationRate = (talk) => {
-  const { watchedAt, rate } = talk;
-  if (!watchedAt || !rate) {
+  const { rate } = talk;
+  if (!rate) {
     throw err({ status: 400, 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }

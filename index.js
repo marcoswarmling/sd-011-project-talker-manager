@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
-const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
 const app = express();
 app.use(bodyParser.json());
 
@@ -15,7 +14,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', (req, res) => {
-  res.status(HTTP_OK_STATUS).json(talkers);
+  const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+  return res.status(HTTP_OK_STATUS).json(talkers);
 });
 
 app.listen(PORT, () => {

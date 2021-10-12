@@ -1,0 +1,25 @@
+// // ----------------------Requisito 3 ---------------------------------------------------------------
+// // Aciona o módulo router:
+// const router = require('express').Router();
+
+// // importa módulo crypto para gerar token:
+// const crypto = require('crypto');
+
+// // importa middlewares (arquivo Validation):
+// const {
+//     emailValido,
+//     senhaValida,
+// } = require('../middlewares/validation');
+
+// // armazena o token: 
+// const token = crypto.randomBytes(8).toString('hex');
+
+// // cria rota /post retornando o token: 
+// router.post(
+//     '/',
+//     emailValido,
+//     senhaValida,
+//     (_req, res) => res.status(200).json({ token }),
+//   );
+
+//   module.exports = (router);

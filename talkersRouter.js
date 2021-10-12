@@ -58,7 +58,18 @@ async function deleteTalker(id) {
     .catch((err) => {
       console.error(`Erro ao escrever o arquivo: ${err.message}`);
     });
-} 
+}
+
+async function getByQuery(query) {
+  const talkers = await readTalker();
+  const regex = new RegExp(`.*${query}.*`, 'i');
+  const findTalker = talkers.filter(({ name }) => regex.test(name));
+
+  if (!query) return talkers;
+  if (!findTalker) return [];
+
+  return findTalker;
+}
   
 const tokenValidator = require('./tokenValidator');
 const {
@@ -68,6 +79,13 @@ const {
   validateDate,
   validateRate,
 } = require('./validateRegistration');
+
+router.get('/search', tokenValidator, async (req, res) => {
+  const { name } = req.query;
+  const result = await getByQuery(name);
+
+  res.status(200).json(result);
+});
 
 router.get('/:id', async (req, res) => {
   const talkers = await readTalker();
@@ -83,7 +101,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/', async (_req, res) => {
   const talkers = await readTalker();
-
+  
   return res.status(200).json(talkers);
 });
 
@@ -96,28 +114,28 @@ router.post(
   validateDate,
   validateRate,
     async (req, res) => {
-    const { name, age, talk } = req.body;
-    const { watchedAt, rate } = talk;
+      const { name, age, talk } = req.body;
+      const { watchedAt, rate } = talk;
     const newTalker = await addTalker(name, age, watchedAt, rate);
-
+    
     res.status(201).json(newTalker);
   },
-);
+  );
 
 router.put(
-  '/:id',
-  tokenValidator,
-  validateName,
-  validateAge,
-  validateTalk,
-  validateDate,
-  validateRate,
-  async (req, res) => {
+'/:id',
+tokenValidator,
+validateName,
+validateAge,
+validateTalk,
+validateDate,
+validateRate,
+async (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;
     const { watchedAt, rate } = talk;
     const newTalker = { name, age, id: Number(id), talk: { watchedAt, rate } };
-
+    
     await updateTalker(id, newTalker);
 
     return res.status(200).json(newTalker);
@@ -134,5 +152,5 @@ router.delete(
     res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
-
+    
 module.exports = router;

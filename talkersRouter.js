@@ -31,8 +31,8 @@ async function addTalker(name, age, watchedAt, rate) {
       console.error(`Erro ao escrever o arquivo: ${err.message}`);
     });
 
-    return newTalker;
-  }
+  return newTalker;
+}
 
 async function updateTalker(id, newTalker) {
   const talkers = await readTalker();
@@ -80,9 +80,29 @@ const {
   validateRate,
 } = require('./validateRegistration');
 
+router.put(
+  '/:id',
+  tokenValidator,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const { watchedAt, rate } = talk;
+    const newTalker = { name, age, id: Number(id), talk: { watchedAt, rate } };
+    
+    await updateTalker(id, newTalker);
+
+    return res.status(200).json(newTalker);
+  },
+);
+
 router.get('/search', tokenValidator, async (req, res) => {
-  const { name } = req.query;
-  const result = await getByQuery(name);
+  const { q } = req.query;
+  const result = await getByQuery(q);
 
   res.status(200).json(result);
 });
@@ -113,44 +133,20 @@ router.post(
   validateTalk,
   validateDate,
   validateRate,
-    async (req, res) => {
-      const { name, age, talk } = req.body;
-      const { watchedAt, rate } = talk;
-    const newTalker = await addTalker(name, age, watchedAt, rate);
-    
-    res.status(201).json(newTalker);
-  },
-  );
-
-router.put(
-'/:id',
-tokenValidator,
-validateName,
-validateAge,
-validateTalk,
-validateDate,
-validateRate,
-async (req, res) => {
-    const { id } = req.params;
+  async (req, res) => {
     const { name, age, talk } = req.body;
     const { watchedAt, rate } = talk;
-    const newTalker = { name, age, id: Number(id), talk: { watchedAt, rate } };
-    
-    await updateTalker(id, newTalker);
-
-    return res.status(200).json(newTalker);
+    const newTalker = await addTalker(name, age, watchedAt, rate);
+  
+    res.status(201).json(newTalker);
   },
 );
 
-router.delete(
-  '/:id',
-  tokenValidator,
-  async (req, res) => {
-    const { id } = req.params;
+router.delete('/:id', tokenValidator, async (req, res) => {
+  const { id } = req.params;
 
-    deleteTalker(id);
-    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
-  },
-);
+  deleteTalker(id);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
     
 module.exports = router;

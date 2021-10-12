@@ -46,6 +46,9 @@ app.use('/login', loginRoute);
 // requisito 4
 app.use('/talker', userRoute);
 
+// requisito 5
+app.use('/talker/:id', userRoute);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

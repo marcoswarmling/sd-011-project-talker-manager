@@ -65,7 +65,7 @@ const validateRateDate = (req, res, next) => {
   const { talk } = req.body;
   const { watchedAt, rate } = talk;
 
-  if (!watchedAt || !rate || rate === 0) {
+  if (!watchedAt || !rate) {
     return res.status(400)
   .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });  
   }

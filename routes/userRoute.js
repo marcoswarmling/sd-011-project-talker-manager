@@ -1,6 +1,6 @@
 // Requisito 4
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
 const {
   checkToken,
   validateName,
@@ -21,15 +21,42 @@ validateTalk,
 validateRate,
 validateDateFormat,
 validateRateDate,
-(req, res) => {
+async (req, res) => {
   const { name, age, talk } = req.body;
-  const fileContent = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
-  const addId = fileContent[fileContent.length - 1].id + 1;
+  const fileContent = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
+  // const addId = fileContent[fileContent.length - 1].id + 1;
+  const addId = fileContent.length + 1;
   const newTalker = { id: addId, name, age, talk };
-
+  
   fileContent.push(newTalker);
-  fs.writeFileSync('./talker.json', JSON.stringify(fileContent));
-  res.status(201).json(newTalker);
+  await fs.writeFile('./talker.json', JSON.stringify(fileContent));
+  
+  console.log('teste filecontent', fileContent);
+  return res.status(201).json(newTalker);
+});
+
+userRoute.put('/',
+checkToken,
+validateName,
+validateAge,
+validateTalk,
+validateRate,
+validateDateFormat,
+validateRateDate,
+async (req, res) => {
+  const { name, age, talk } = req.body;
+  // const idTalker = Number(req.params.id);
+  const { id } = req.params;
+  console.log('check id', req.params.id);
+  const fileContent = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
+  const temporaryTalkers = fileContent.filter((t) => t.id !== Number(req.params.id));
+  console.log('teste', temporaryTalkers);
+
+  const updatedTalker = { name, age, talk, id: Number(id) };
+  // fileContent[indexTalker] = updatedTalker;
+  const updateList = [...temporaryTalkers, updatedTalker];
+  await fs.writeFile('./talker.json', JSON.stringify(updateList));
+  return res.status(200).json(updatedTalker);
 });
 
 module.exports = userRoute;

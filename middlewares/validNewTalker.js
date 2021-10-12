@@ -3,7 +3,8 @@ const validNewTalker = (req, res, next) => {
 
   if (!talk || !(talk.watchedAt) || !(talk.rate)) {
     return res.status(400)
-      .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+      .json({ message:
+        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 
   next();

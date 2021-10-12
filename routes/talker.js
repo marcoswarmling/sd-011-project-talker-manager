@@ -14,7 +14,7 @@ const validatedNewTalker = [
   validNewTalker,
   validRate,
   validToken,
-  validWatchedAt
+  validWatchedAt,
 ];
 
 router.get('/talker', async (_req, res) => {
@@ -38,19 +38,17 @@ router.post('/talker', validatedNewTalker, async (req, res) => {
   const talkers = await fs.readFile('./talker.json', 'utf8');
   const talkerParse = JSON.parse(talkers);
   const id = talkerParse.length + 1;
-
   const newTalker = {
     id,
     name,
     age,
     talk: {
       rate,
-      watchedAt
-    }
+      watchedAt,
+    },
   };
 
   talkerParse.push(newTalker);
-
   await fs.writeFile('./talker.json', JSON.stringify(talkerParse));
   return res.status(201).json(newTalker);
 });

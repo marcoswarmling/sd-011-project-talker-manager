@@ -72,4 +72,16 @@ router.put('/:id',
     res.status(200).json(talker);
 });
 
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const data = await getFile(talkerPath);
+  const talkerIndex = data.findIndex((t) => t.id === Number(id));
+
+  data.splice(talkerIndex, 1);
+
+  await writeFile(talkerPath, data);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

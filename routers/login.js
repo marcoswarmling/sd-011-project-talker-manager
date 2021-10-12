@@ -13,7 +13,7 @@ function tokenGenerator() {
   return result;
 }
 
-router.post('/', checkEmail, checkPassword, async (_req, res) => {
+router.post('/', checkEmail, checkPassword, (req, res) => {
   const token = tokenGenerator();
 
   res.status(200).json({ token });

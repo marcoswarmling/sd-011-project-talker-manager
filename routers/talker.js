@@ -18,4 +18,10 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(personById);
 });
 
+router.post('/', async (_req, res) => {
+  const result = await getFileData();
+
+  res.status(200).json(result);
+});
+
 module.exports = router;

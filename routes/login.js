@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const checkEmail = require('../middlewares/checkEmail');
-const checkPassword = require('../middlewares/checkPassword');
+const checkEmail = require('../middlewares/validEmail');
+const checkPassword = require('../middlewares/validPassword');
 
 const checkLogin = [checkEmail, checkPassword];
 

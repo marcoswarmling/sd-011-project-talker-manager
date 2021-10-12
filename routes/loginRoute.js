@@ -1,3 +1,4 @@
+// Requisito 3
 const express = require('express');
 const { validatePassword, validateEmail, generateToken } = require('../middleware/loginValidation');
 

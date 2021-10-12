@@ -1,3 +1,4 @@
+// Requisito 3
 const crypto = require('crypto');
 
 function generateToken() {

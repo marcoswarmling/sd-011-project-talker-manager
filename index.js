@@ -2,8 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
  
-/* const { isValidEmail, isValidPassword } = require('./middlewares/validations'); */
-
 const app = express();
 app.use(bodyParser.json());
 

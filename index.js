@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkerID, talkersList, doLogin } = require('./functions');
+const { talkerID, talkersList, doLogin, addTalker } = require('./functions');
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,3 +22,5 @@ app.get('/talker', talkersList);
 app.get('/talker/:id', talkerID);
 
 app.post('/login', doLogin);
+
+app.post('/talker', addTalker);

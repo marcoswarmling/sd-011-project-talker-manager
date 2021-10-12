@@ -1,4 +1,4 @@
-const isValidEmail = (req, res, next) => {
+/* const isValidEmail = (req, res, next) => {
   const { email } = req.body;
   
   if (!email || email === '') { 
@@ -34,3 +34,4 @@ module.exports = {
   isValidEmail,
   isPasswordValid,
 };
+ */

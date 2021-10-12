@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
  
-const { isValidEmail, isValidPassword } = require('./middlewares/validations');
+/* const { isValidEmail, isValidPassword } = require('./middlewares/validations'); */
 
 const app = express();
 app.use(bodyParser.json());
@@ -34,10 +34,15 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(talker);
 });
 
-app.post('/login', 
+/* app.post('/talker', (req, res) => {
+
+}); */
+
+/* app.post('/login', 
   isValidEmail, 
   isValidPassword,
   (req, res) => res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' }));
+ */
 
 app.listen(PORT, () => {
   console.log('Online');

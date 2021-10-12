@@ -6,9 +6,9 @@ const readContentTalker = async (path) => {
       const contentTalker = await fs.readFileSync(path, 'utf-8');
       return JSON.parse(contentTalker);
     } catch (error) {
-      return null;
+        return null;
     }
-  };
+};
 
 module.exports = {
     readContentTalker,

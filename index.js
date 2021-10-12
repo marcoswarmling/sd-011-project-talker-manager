@@ -31,10 +31,12 @@ app.get('/talker', async (_req, res) => {
 
 app.get('talker/:id', async (req, res) => {
   const { id } = req.params;
-  const dataTalkerId = await readContentTalker('./talker.json');
-  const talkers = dataTalkerId.find((item) => item.id === Number(id));
-  if (!talkers) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(200).json(talkers);
+  const dataId = await readContentTalker('./talker.json');
+  const talkerId = dataId.find((item) => item.id === Number(id));
+  
+  if (!talkerId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  
+  res.status(200).json(talkerId);
 });
 
 app.listen(PORT, () => {

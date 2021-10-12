@@ -71,6 +71,16 @@ const createTalks = async (req, res) => {
   });
 };
 
+const editTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = JSON.parse(await fs.readFile('./talker.json'));
+  const index = talkers.findIndex((i) => i.id === Number(id));
+  talkers[index] = { ...talkers[index], name, age, talk };
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return res.status(200).json(talkers[index]);
+};
+
 module.exports = {
 validateToken,
 validateName,
@@ -78,4 +88,5 @@ validateAge,
 validateTalk,
 validateWatchedAt,
 validateRate,
-createTalks };
+createTalks,
+editTalker };

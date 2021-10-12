@@ -13,7 +13,7 @@ app.get('/talker', async (_req, res) => {
     const file = await fs.readFile('./talker.json', 'utf-8');
     res.status(HTTP_OK_STATUS).json(JSON.parse(file));
   } catch (e) {
-    res.status(404).send({ message: e.message });
+    res.status(404).json({ message: e.message });
   }
 });
 

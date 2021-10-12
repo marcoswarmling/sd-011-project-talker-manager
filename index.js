@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const talkerRoute = require('./routes/talkerRoute');
-const loginRout = require('./routes/loginRoute');
+const fs = require('fs');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,8 +13,16 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.use('/talker', talkerRoute);
-app.use('/login', loginRout);
+// requisito 1
+app.get('/talker', (_req, res) => {
+  try {
+    const fileContent = fs.readFileSync('./talker.json', 'utf8');
+    const talkers = JSON.parse(fileContent);
+    return res.status(200).json(talkers);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
 
 app.listen(PORT, () => {
   console.log('Online');

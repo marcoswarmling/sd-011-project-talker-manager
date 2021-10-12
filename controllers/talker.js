@@ -70,10 +70,24 @@ const deleteTalker = async (req, res) => {
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchNameTalker = async (req, res) => {
+  const { q } = req.query;
+
+  const dataBaseTalker = await models.dataBase();
+
+  const filterTalker = dataBaseTalker
+  .filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+
+  console.log(filterTalker);
+
+  return res.status(200).json(filterTalker);
+}; 
+
 module.exports = { 
   getTalkers, 
   getTalker,
   insertTalker,
   updateTalker,
   deleteTalker,
+  searchNameTalker,
 };

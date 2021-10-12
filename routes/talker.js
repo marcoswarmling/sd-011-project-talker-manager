@@ -13,6 +13,7 @@ const arrayMiddlewares = [
 
 const router = express.Router();
 
+router.get('/talker/search', middlewares.checkToken, controllers.searchNameTalker);
 router.get('/talker', controllers.getTalkers);
 router.get('/talker/:id', controllers.getTalker);
 router.post('/talker', arrayMiddlewares, controllers.insertTalker);

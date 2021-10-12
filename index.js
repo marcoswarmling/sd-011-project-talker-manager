@@ -10,8 +10,8 @@ const PORT = '3000';
 
 app.get('/talker', async (_req, res) => {
   try {
-    const file = await fs.readFile('./talker.json');
-    res.status(200).send(file.toString('utf-8'));
+    const file = await fs.readFile('./talker.json', 'utf-8');
+    res.status(HTTP_OK_STATUS).json(JSON.parse(file));
   } catch (e) {
     res.status(404).send({ message: e.message });
   }

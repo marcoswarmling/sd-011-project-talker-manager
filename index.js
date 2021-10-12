@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
- 
+
 const app = express();
 app.use(bodyParser.json());
+
+const isValidEmail = require('./middlewares/isValidEmail');
+const isValidPassword = require('./middlewares/isValidPassword');
 
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND_STATUS = 404;
@@ -39,6 +42,10 @@ app.get('/talker/:id', async (req, res) => {
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
+});
+
+app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.listen(PORT, () => {

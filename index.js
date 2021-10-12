@@ -1,13 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
+// módulo para validação do token
+const crypto = require('crypto');
 const fs = require('fs').promises;
+const { emailValido, senhaValida } = require('./middlewares/validation');
 
 const app = express();
 app.use(bodyParser.json());
-// faz a app entender que irei usar o router do login e do talk (req. 3 e 4 respec.):
-// TROCAR URLS
-// app.use('/login', loginRouter);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -50,3 +50,10 @@ app.get(
       return res.status(200).json(talker[talkerId]);
        }),
     );
+
+// Requisito 3:
+
+app.post('/login', emailValido, senhaValida, (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+     res.status(200).json({ token });
+      });

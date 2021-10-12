@@ -1,5 +1,5 @@
 const express = require('express');
-const getFile = require('../fs-utils');
+const getFile = require('../helpers/fs-utils');
 
 const router = express.Router();
 

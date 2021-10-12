@@ -1,4 +1,4 @@
-const validateWatchedAt = (req, res, next) => {
+const autenticaWatchedAt = (req, res, next) => {
   const { talk } = req.body;
   const { watchedAt } = talk;
 
@@ -15,4 +15,4 @@ const validateWatchedAt = (req, res, next) => {
   next();
 };
 
-module.exports = validateWatchedAt;
+module.exports = autenticaWatchedAt;

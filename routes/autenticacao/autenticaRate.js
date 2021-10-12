@@ -1,4 +1,4 @@
-const validateRate = (req, res, next) => {
+const autenticaRate = (req, res, next) => {
     const { talk } = req.body;
     const { rate } = talk;
   
@@ -13,4 +13,4 @@ const validateRate = (req, res, next) => {
     next();
   };
   
-  module.exports = validateRate;
+  module.exports = autenticaRate;

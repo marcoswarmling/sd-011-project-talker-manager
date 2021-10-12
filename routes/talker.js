@@ -43,4 +43,18 @@ router.get('/:id', async (req, res) => {
     return res.status(201).json(person);
   });
 
+  router.put('/:id', autenticacao, async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const editedPerson = { id: Number(id), name, age, talk };
+    const talkers = await fs.readFile(db, 'utf-8');
+    const resultTalkers = JSON.parse(talkers);
+  
+    const talkerIndex = resultTalkers.findIndex((e) => e.id === Number(id));
+    resultTalkers[talkerIndex] = editedPerson;
+    await fs.writeFile(db, JSON.stringify(resultTalkers));
+  
+    return res.status(200).json(editedPerson);
+  });
+
 module.exports = router;

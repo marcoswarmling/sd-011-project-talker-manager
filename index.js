@@ -27,6 +27,8 @@ app.get(
   validToken,
   controllers.search,
 );
+app.get('/talker', controllers.getAll);
+app.get('/talker/:id', controllers.getById);
 app.post('/login', validEmail, validPassword);
 app.post(
   '/talker',
@@ -38,8 +40,6 @@ app.post(
    validRate,
    controllers.create,
 );
-app.get('/talker', controllers.getAll);
-app.get('/talker/:id', controllers.getById);
 app.put(
   '/talker/:id',
   validToken,

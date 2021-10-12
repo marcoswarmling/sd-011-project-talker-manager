@@ -16,7 +16,6 @@ const deletePerson = async (req, res, next) => {
       const { status, message } = err.statusCode;
       next({ status, message });
     }
-
     next({ status: 500, message: err });
   }
 };

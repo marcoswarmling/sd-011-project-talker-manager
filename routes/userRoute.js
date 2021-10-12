@@ -30,12 +30,10 @@ async (req, res) => {
   
   fileContent.push(newTalker);
   await fs.writeFile('./talker.json', JSON.stringify(fileContent));
-  
-  console.log('teste filecontent', fileContent);
   return res.status(201).json(newTalker);
 });
 
-userRoute.put('/',
+userRoute.put('/:id',
 checkToken,
 validateName,
 validateAge,
@@ -45,12 +43,10 @@ validateDateFormat,
 validateRateDate,
 async (req, res) => {
   const { name, age, talk } = req.body;
-  // const idTalker = Number(req.params.id);
   const { id } = req.params;
   console.log('check id', req.params.id);
   const fileContent = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
   const temporaryTalkers = fileContent.filter((t) => t.id !== Number(req.params.id));
-  console.log('teste', temporaryTalkers);
 
   const updatedTalker = { name, age, talk, id: Number(id) };
   // fileContent[indexTalker] = updatedTalker;

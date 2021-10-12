@@ -42,7 +42,6 @@ app.get('/talker/:id', (req, res) => {
 
 // requisito 3
 app.use('/login', loginRoute);
-
 // requisito 4
 app.use('/talker', userRoute);
 

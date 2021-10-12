@@ -12,8 +12,8 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-const loginRouter = require('./loginRouter');
-const talkersRouter = require('./talkersRouter');
+const loginRouter = require('./routes/loginRouter');
+const talkersRouter = require('./routes/talkersRouter');
 
 app.use('/talker', talkersRouter);
 app.use('/login', loginRouter);

@@ -2,8 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-const validateCredentials = require('./validateCredentials');
-const tokenGenerator = require('./tokenGenerator');
+const validateCredentials = require('../middlewares/validateCredentials');
+const { tokenGenerator } = require('../helpers');
 
 router.post('/', validateCredentials, (_req, res) => {
   const getToken = tokenGenerator(8);

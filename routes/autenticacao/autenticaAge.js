@@ -1,4 +1,4 @@
-const autenticaIdade = (req, res, next) => {
+const autenticaAge = (req, res, next) => {
     const { age } = req.body;
   
     if (!age || age === '') return res.status(400).json({ message: 'O campo "age" é obrigatório' });
@@ -9,4 +9,4 @@ const autenticaIdade = (req, res, next) => {
     next();
   };
 
-  module.exports = autenticaIdade;
+  module.exports = autenticaAge;

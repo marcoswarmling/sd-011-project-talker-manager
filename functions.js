@@ -30,7 +30,6 @@ function createToken() {
   return token.join('');
 }
 
-
 async function validationEmail(email, res) {
   const rexexEmail = /[a-zA-Z0-9_]+@+[a-zA-Z0-9_]+.com/;
   if (!email) {
@@ -66,4 +65,4 @@ async function doLogin(req, res) {
   }
 }
 
-module.exports = {talkerID, talkersList, doLogin}
+module.exports = { talkerID, talkersList, doLogin };

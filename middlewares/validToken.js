@@ -8,6 +8,7 @@ const validToken = (req, res, next) => {
   if (authorization !== '7mqaVRXJSp886CGr') {
     return res.status(401).json({ message: 'Token inválido' });
   }
+
   next();
 };
 

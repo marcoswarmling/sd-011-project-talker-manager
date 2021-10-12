@@ -9,11 +9,11 @@ const validToken = require('../middlewares/validToken');
 const validWatchedAt = require('../middlewares/validWatchedAt');
 
 const validatedNewTalker = [
-  validAge,
+  validToken,
   validName,
+  validAge,
   validNewTalker,
   validRate,
-  validToken,
   validWatchedAt,
 ];
 

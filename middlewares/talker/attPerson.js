@@ -15,9 +15,9 @@ const attPerson = async (req, res, next) => {
     validationTalk(talk);
     validationName(name);
     const data = await fs.readFile('talker.json', 'utf8').then((f) => JSON.parse(f));
-    const newData = data.map((e) => (e.id === Number(id) ? { name, age, id, talk } : e));
+    const newData = data.map((e) => (e.id === +id ? { name, age, id, talk } : e));
     await fs.writeFile('./talker.json', JSON.stringify(newData));
-    return res.status(200).json({ name, age, id: Number(id), talk });
+    return res.status(200).json({ name, age, id: +id, talk });
   } catch (err) {
     if (err.statusCode) {
       const { status, message } = err.statusCode;

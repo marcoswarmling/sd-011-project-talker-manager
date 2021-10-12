@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+const { isValidEmail, isValidPassword } = require('./middlewares/validations');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -30,6 +32,13 @@ app.get('/talker/:id', (req, res) => {
     return res.status(HTTP_NOT_FOUND_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(HTTP_OK_STATUS).json(talker);
+});
+
+app.post('/login', 
+isValidEmail,
+isValidPassword,
+(req, res) => {
+  res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.listen(PORT, () => {

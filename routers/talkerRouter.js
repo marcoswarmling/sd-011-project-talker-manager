@@ -21,6 +21,15 @@ router.get('/', async (req, res) => {
   res.status(200).json(response);
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const response = await getFile(talkerPath);
+
+  const filteredTalkers = response.filter((t) => t.name.includes(q));
+
+  res.status(200).json(filteredTalkers);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const response = await getFile(talkerPath);

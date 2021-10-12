@@ -17,9 +17,13 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const data = await fs.readFile('./talker.json');
-  const talkers = JSON.parse(data);
-  res.status(HTTP_OK_STATUS).json(talkers);
+  try {
+    const data = await fs.readFile('./talker.json', 'utf-8');
+    const talkers = JSON.parse(data);
+    res.status(HTTP_OK_STATUS).json(talkers);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -33,16 +37,6 @@ app.get('/talker/:id', async (req, res) => {
   }
   return res.status(HTTP_OK_STATUS).json(talker);
 });
-
-/* app.post('/talker', (req, res) => {
-
-}); */
-
-/* app.post('/login', 
-  isValidEmail, 
-  isValidPassword,
-  (req, res) => res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' }));
- */
 
 app.listen(PORT, () => {
   console.log('Online');

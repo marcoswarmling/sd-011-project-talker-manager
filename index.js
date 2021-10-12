@@ -54,7 +54,7 @@ app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
   res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 });
 
-app.post('talker', 
+app.post('/talker', 
   isValidToken, 
   isValidName, 
   isValidAge,

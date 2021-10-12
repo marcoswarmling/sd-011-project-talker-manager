@@ -6,20 +6,23 @@ const getAll = require('./middlewares/talker/getAll');
 const getID = require('./middlewares/talker/getID');
 const login = require('./middlewares/login/makeLogin');
 const addNewPerson = require('./middlewares/talker/addNewPerson');
-// const attPerson = require('./middlewares/attperson/attPerson');
+const attPerson = require('./middlewares/talker/attPerson');
+const deletePerson = require('./middlewares/talker/deletePerson')
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
-const PORT = 3000;
+const PORT = 3001;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// app.put('/talker/:id', attPerson);
+app.delete('/talker/:id', )
+
+app.put('/talker/:id', attPerson);
 
 app.post('/login', login);
 

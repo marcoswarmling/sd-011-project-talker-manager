@@ -20,6 +20,10 @@ const addNewPerson = async (req, res, next) => {
     setPerson(data, newPerson);
     return res.status(201).json(newPerson);
   } catch (err) {
+    if (err.statusCode) {
+      const { status, message } = err.statusCode;
+      next({ status, message });
+    }
     next({ status: 500, message: err });
   }
 };

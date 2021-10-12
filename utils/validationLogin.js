@@ -1,7 +1,4 @@
-const err = (code) => {
-  const { status, message } = code;
-  return (status, message);
-};
+const err = (statusCode) => ({ statusCode });
 
 const validationEmail = (email) => {
   if (!email) throw err({ status: 400, message: 'O campo "email" é obrigatório' });

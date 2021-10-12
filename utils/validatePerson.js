@@ -1,7 +1,4 @@
-const err = (code) => {
-  const { status, message } = code;
-  return (status, message);
-};
+const err = (statusCode) => ({ statusCode });
 
 const validationName = (name) => {
   if (!name) {

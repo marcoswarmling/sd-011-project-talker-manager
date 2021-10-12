@@ -12,7 +12,12 @@ const login = async (req, res, next) => {
     const token = generationToken();
     return res.status(200).json({ token });
   } catch (err) {
-    next({ status: 400, message: err });
+    if (err.statusCode) {
+      const { status, message } = err.statusCode;
+      next({ status, message });
+    }
+
+    next({ status: 500, message: err });
   }
 };
 

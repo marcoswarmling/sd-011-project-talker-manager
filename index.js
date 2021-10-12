@@ -23,9 +23,9 @@ app.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const data = fs.readFileSync('./talker.json');
+  const data = await fs.readFile('./talker.json');
   const talkers = JSON.parse(data);
   const talker = talkers.find((t) => t.id === Number(id));
 

@@ -53,4 +53,22 @@ router.post('/talker', validatedNewTalker, async (req, res) => {
   return res.status(201).json(newTalker);
 });
 
+router.put('/talker/:id', validatedNewTalker, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const newTalker = {
+    id: Number(id),
+    name,
+    age,
+    talk,
+  };
+  const talkers = await fs.readFile('./talker.json', 'utf8');
+  const talkerParse = JSON.parse(talkers);
+  const index = talkerParse.findIndex((item) => item.id === Number(id));
+  talkerParse[index] = newTalker;
+  await fs.writeFile('./talker.json', JSON.stringify(talkerParse));
+
+  return res.status(200).json(newTalker);
+});
+
 module.exports = router;

@@ -1,8 +1,8 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 
 const readContentTalker = async (path) => {
     try {
-      const contentTalker = await fs.readFile(path, 'utf-8');
+      const contentTalker = await fs.readFileSync(path, 'utf-8');
       return JSON.parse(contentTalker);
     } catch (error) {
       return null;

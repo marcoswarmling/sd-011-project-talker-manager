@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { readContentTalker } = require('./helpers/readFile');
-const PATH = require('./talker.json');
+// const PATH = require('./talker.json');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,7 +15,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const dataTalker = await readContentTalker(PATH) || [];
+  const dataTalker = await readContentTalker('./talker.json') || [];
   res.status(200).json(dataTalker);
 });
 

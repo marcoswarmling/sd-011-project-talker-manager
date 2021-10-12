@@ -17,5 +17,6 @@ router.get('/talker', controllers.getTalkers);
 router.get('/talker/:id', controllers.getTalker);
 router.post('/talker', arrayMiddlewares, controllers.insertTalker);
 router.put('/talker/:id', arrayMiddlewares, controllers.updateTalker);
+router.delete('/talker/:id', middlewares.checkToken, controllers.deleteTalker);
 
 module.exports = router;

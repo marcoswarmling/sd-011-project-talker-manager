@@ -58,9 +58,22 @@ const updateTalker = async (req, res) => {
   return res.status(200).json(formatTalker);
 };
 
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+
+  const dataBaseTalker = await models.dataBase();
+
+  const differentTalkers = dataBaseTalker.find((talker) => talker.id !== Number(id));
+
+  models.addTalker(differentTalkers);
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = { 
   getTalkers, 
   getTalker,
   insertTalker,
   updateTalker,
+  deleteTalker,
 };

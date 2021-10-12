@@ -7,7 +7,7 @@ const getID = require('./middlewares/talker/getID');
 const login = require('./middlewares/login/makeLogin');
 const addNewPerson = require('./middlewares/talker/addNewPerson');
 const attPerson = require('./middlewares/talker/attPerson');
-const deletePerson = require('./middlewares/talker/deletePerson')
+const deletePerson = require('./middlewares/talker/deletePerson');
 
 const app = express();
 app.use(bodyParser.json());
@@ -20,7 +20,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.delete('/talker/:id', )
+app.delete('/talker/:id', deletePerson);
 
 app.put('/talker/:id', attPerson);
 

@@ -7,4 +7,8 @@ const getFile = async (file) => {
   return dataJSON;
 };
 
-module.exports = getFile;
+const writeFile = async (file, data) => {
+  await fs.writeFile(file, JSON.stringify(data));
+};
+
+module.exports = { getFile, writeFile };

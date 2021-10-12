@@ -1,5 +1,13 @@
 const express = require('express');
-const getFile = require('../helpers/fs-utils');
+const { getFile, writeFile } = require('../helpers/fs-utils');
+const {
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+} = require('../middlewares');
 
 const router = express.Router();
 
@@ -21,5 +29,25 @@ router.get('/:id', async (req, res) => {
 
   res.status(200).json(talker);
 });
+
+router.post('/',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const data = await getFile('./talker.json');
+
+    const newTalker = { name, age, id: data.length + 1, talk };
+
+    data.push(newTalker);
+
+    await writeFile('./talker.json', data);
+
+    res.status(201).json(newTalker);
+  });
 
 module.exports = router;

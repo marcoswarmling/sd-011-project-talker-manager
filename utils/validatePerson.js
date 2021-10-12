@@ -31,7 +31,7 @@ const validationWatchtedAt = (talk) => {
 };
 const validationRate = (talk) => {
   const { rate } = talk;
-  if (!rate) {
+  if (!rate && rate !== 0) {
     throw err({ status: 400, 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }

@@ -10,13 +10,15 @@ const validationToken = require('../middlewares/validationToken');
 
 const HTTP_OK_STATUS = 200;
 
-router.get('/', async (_req, res, next) => {
+router.get('/search', validationToken, async (req, res, next) => {
   try {
+    const { q } = req.query;
     const data = await db.getTalkers();
-    if (data.length === 0) {
-      return res.status(HTTP_OK_STATUS).json([]);
+    if (!q) {
+      res.status(200).json(data);
     }
-    res.status(HTTP_OK_STATUS).json(data);
+    const find = data.filter((t) => t.name.includes(q));
+    res.status(200).json(find);
   } catch (error) {
     next(error);
   }
@@ -37,6 +39,18 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.get('/', async (_req, res, next) => {
+  try {
+    const data = await db.getTalkers();
+    if (data.length === 0) {
+      return res.status(HTTP_OK_STATUS).json([]);
+    }
+    res.status(HTTP_OK_STATUS).json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post(
   '/', 
   validationToken, 
@@ -45,19 +59,23 @@ router.post(
   validationTalk, 
   validationRate, 
   validationDate, 
-  async (req, res) => {
-  const { name, age, talk } = req.body;
-  const data = await db.getTalkers();
-  const newTalker = { 
-    id: data.length + 1, 
-    name, 
-    age: Math.floor(age), 
-    talk,
-   };
-  data.push(newTalker);
-  await db.setTalkers(data);
-
-  res.status(201).json(newTalker);
+  async (req, res, next) => {
+    try {
+      const { name, age, talk } = req.body;
+      const data = await db.getTalkers();
+      const newTalker = { 
+        id: data.length + 1, 
+        name, 
+        age: Math.floor(age), 
+        talk,
+      };
+      data.push(newTalker);
+      await db.setTalkers(data);
+      
+      res.status(201).json(newTalker);
+    } catch (error) {
+      next(error);
+    }
 },
 );
 
@@ -68,31 +86,39 @@ router.put('/:id',
   validationTalk, 
   validationRate, 
   validationDate, 
-  async (req, res) => { 
-    const { id } = req.params;
-    const { name, age, talk } = req.body;
-    const data = await db.getTalkers();
-    const indexTalker = data.findIndex((p) => p.id === Number(id));
+  async (req, res, next) => { 
+    try {
+      const { id } = req.params;
+      const { name, age, talk } = req.body;
+      const data = await db.getTalkers();
+      const indexTalker = data.findIndex((p) => p.id === Number(id));
       if (indexTalker === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
-    const newTalker = { 
-      id: Number(id), 
-      name, 
-      age: Math.floor(age), 
-      talk,
-    };
-    data[indexTalker] = newTalker;
-    await db.setTalkers(data);
-    res.status(200).json(newTalker);
-  });
+      const newTalker = { 
+        id: Number(id), 
+        name, 
+        age: Math.floor(age), 
+        talk,
+      };
+      data[indexTalker] = newTalker;
+      await db.setTalkers(data);
+      res.status(200).json(newTalker);
+    } catch (error) {
+      next(error);
+    }
+    });
 
-  router.delete('/:id', validationToken, async (req, res) => {
-    const { id } = req.params;
-    const data = await db.getTalkers();
-    const indexTalker = data.findIndex((p) => p.id === Number(id));
+  router.delete('/:id', validationToken, async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await db.getTalkers();
+      const indexTalker = data.findIndex((p) => p.id === Number(id));
       if (indexTalker === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
       data.splice(indexTalker, 1);
-    await db.setTalkers(data);
-    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+      await db.setTalkers(data);
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    } catch (error) {
+      next(error);
+    }
   });
 
 module.exports = router;

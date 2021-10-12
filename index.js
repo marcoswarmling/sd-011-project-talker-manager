@@ -44,8 +44,10 @@ app.get('/talker/:id', async (req, res) => {
   }
 });
 
+app.post('/talker', async (req, res) => {});
+
 app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
-  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+  res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.listen(PORT, () => {

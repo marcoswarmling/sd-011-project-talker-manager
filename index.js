@@ -51,4 +51,39 @@ function createToken() {
   return token.join('');
 }
 
-console.log(createToken());
+async function validationEmail(email, res) {
+  const rexexEmail = /[a-zA-Z0-9_]+@+[a-zA-Z0-9_]+.com/;
+  if (!email) {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (!rexexEmail.test(email)) {
+    console.log(email);
+    return res
+      .status(400)
+      .json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  return true;
+}
+
+async function validationPassword(password, res) {
+  if (!password) {
+    return res
+      .status(400)
+      .json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+  return true;
+}
+
+async function doLogin(req, res) {
+  const { email, password } = req.body;
+  if (validationEmail(email, res) && validationPassword(password, res)) {
+    res.status(200).json({ token: createToken() });
+  }
+}
+
+app.post('/login', doLogin);

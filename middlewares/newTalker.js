@@ -1,3 +1,17 @@
+function validateToken(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token === '' || token === undefined) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  next();
+}
+
 function validateName(req, res, next) {
   const { name } = req.body;
 
@@ -25,20 +39,6 @@ function validateAge(req, res, next) {
   next();
 }
 
-function validateToken(req, res, next) {
-  const token = req.headers.authorization;
-
-  if (token === '' || token === undefined) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-
-  next();
-}
-
 function validateRate(req, res, next) {
   const { talk: { rate } } = req.body;
   if (rate < 1 || rate > 5) {
@@ -53,7 +53,8 @@ function validateWatchedAt(req, res, next) {
   const validDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
 
   if (!validDate.test(watchedAt)) {
-    return res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+    return res.status(400)
+    .send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   
   next();
@@ -71,9 +72,9 @@ function validateTalk(req, res, next) {
 }
 
 module.exports = {
+  validateToken,
   validateName,
   validateAge,
-  validateToken,
   validateRate,
   validateWatchedAt,
   validateTalk,

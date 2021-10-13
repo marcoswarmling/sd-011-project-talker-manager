@@ -1,6 +1,10 @@
 const router = require('express').Router();
 
-const { getTalkersData, setTalkersData } = require('../fileManager.js');
+const {
+  getTalkersData,
+  setTalkersData,
+  editTalkersData,
+} = require('../fileManager.js');
 
 const {
   verifyToken,
@@ -46,5 +50,20 @@ router.post(
     res.status(201).json(data);
   },
 );
+
+router.put(
+  '/:id',
+  verifyToken,
+  verifyName,
+  verifyAge,
+  verifyTalk,
+  verifyRate,
+  verifyWatchedAt,
+
+async (req, res) => {
+  const { id } = req.params;
+  const newData = await editTalkersData(id, req.body);
+  res.status(200).json(newData);
+});
 
 module.exports = router;

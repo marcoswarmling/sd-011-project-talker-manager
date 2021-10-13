@@ -1,6 +1,13 @@
 const router = require('express').Router();
 
-const { getTalkersData } = require('../fileManager.js');
+const { getTalkersData, setTalkersData } = require('../fileManager.js');
+
+const {
+  verifyToken,
+  verifyName,
+  verifyAge,
+  verifyTalk,
+} = require('../middleware/talkerMiddleware');
 
 router.get('/', async (req, res) => {
   const talkers = await getTalkersData();
@@ -20,5 +27,19 @@ router.get('/:id', async (req, res) => {
 }
   res.status(200).json(filteredTalker);
 });
+
+router.post(
+  '/',
+  verifyToken,
+  verifyName,
+  verifyAge,
+  verifyTalk,
+  async (req, res) => {
+    const newTalker = req.body;
+
+    setTalkersData(newTalker);
+    res.status(201).json(newTalker);
+  },
+);
 
 module.exports = router;

@@ -9,4 +9,20 @@ const getTalkersData = async () => {
   }
 };
 
-module.exports = { getTalkersData };
+const setTalkersData = async (data) => {
+  try {
+    const talkers = await getTalkersData();
+    const newTalkersData = {
+      id: talkers.length + 1, ...data,
+    };
+
+    talkers.push(newTalkersData);
+
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
+    return;
+  } catch (err) {
+    return err.message;
+  }
+};
+
+module.exports = { getTalkersData, setTalkersData };

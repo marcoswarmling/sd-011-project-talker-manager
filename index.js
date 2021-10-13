@@ -58,7 +58,7 @@ function validateEmailRequisitos(email) {
 }
 
 function validateData(data) {
-  const re = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
+  const re = /\d\d\/\d\d\/\d\d\d\d\b/;
   return re.test(data);
     // Solução de https://www.regextester.com
 }
@@ -121,11 +121,30 @@ function validAge(req, res, next) {
 next();
 }
 
+function validDataAndRate(req, res, next) {
+  const { talk } = req.body;
+
+  if (!talk) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+   }
+
+  const { watchedAt, rate } = talk;
+  console.log(watchedAt);
+  
+  if (watchedAt === undefined || rate === undefined) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+   }
+   next();
+}
+
 function validWat(req, res, next) {
-  const { talk: { watchedAt } } = req.body;
+  const { talk } = req.body;
+  const { watchedAt } = talk;
   const validData = validateData(watchedAt);
   
-  if (!validData && !watchedAt) {
+  if (!validData || !watchedAt) {
  return res.status(400)
    .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
 }
@@ -134,24 +153,15 @@ function validWat(req, res, next) {
 }
 
 function validRate(req, res, next) {
-  const { talk: { rate } } = req.body;
+  const { talk } = req.body;
+  const { rate } = talk;
 
-  if (!rate || rate < 1 || rate > 5) {
+  if (rate < 1 || rate > 5) {
  return res.status(400)
   .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 }
   
   next();
-}
-
-function validDataAndRate(req, res, next) {
-  const { talk } = req.body;
-  
-  if (!talk || talk.length === 0) {
-    return res.status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
-   }
-   next();
 }
 
 app.post('/login', validaPassword, validaEmail, (_req, res) => {
@@ -163,8 +173,8 @@ app.post('/talker',
 validTokenUser,
 validaUserName,
 validAge,
-validWat,
 validDataAndRate,
+validWat,
 validRate, 
 (req, res) => {
   const { name, age, talk } = req.body;
@@ -183,8 +193,9 @@ app.put('/talker/:id',
 validTokenUser,
 validaUserName,
 validAge,
+validDataAndRate,
 validWat,
-validDataAndRate, (req, res) => {
+validRate, (req, res) => {
    const { id } = req.params;
    const dados = fs.readFileSync(ARQUIVO, 'utf-8');
    const newdados = JSON.parse(dados);
@@ -195,7 +206,7 @@ validDataAndRate, (req, res) => {
     newdados[dadosId] = { ...newdados[dadosId], name, age, talk: { watchedAt, rate } };
 
     fs.writeFileSync(ARQUIVO, JSON.stringify(newdados));
-    res.status(200).json(newdados);
+    res.status(200).json(newdados[dadosId]);
     });
 
     app.delete('/talker/:id',

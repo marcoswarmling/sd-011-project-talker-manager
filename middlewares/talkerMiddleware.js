@@ -61,7 +61,7 @@ const checkRate = (req, res, next) => {
 
 const checkTalk = (req, res, next) => {
   const { talk } = req.body;
-  const message = 'O campo "talk" é obrigatório e"watchedAt" e "rate" não podem ser vazios';
+  const message = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
   if (!talk || !((talk.rate || talk.rate === 0) && talk.watchedAt)) {
     return res.status(400).json({ message });
   }

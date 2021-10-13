@@ -30,9 +30,9 @@ router.use(
   checkToken,
   checkName,
   checkAge,
+  checkTalk,
   checkWatchedAt,
   checkRate,
-  checkTalk,
 );
 
 router.post('/', async (req, res) => {

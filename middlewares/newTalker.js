@@ -32,6 +32,7 @@ function validateAge(req, res, next) {
   if (!age || age.length === 0) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
+
   if (age < 18) {
     return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
@@ -62,10 +63,10 @@ function validateWatchedAt(req, res, next) {
 
 function validateTalk(req, res, next) {
   const { talk } = req.body;
-
-  if (!talk.watchedAt || talk.rate === '' || talk.rate === undefined) {
+  if (!talk || !talk.watchedAt || talk.rate === '' || talk.rate === undefined) {
     return res.status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+      .json({ 
+        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 
   next();

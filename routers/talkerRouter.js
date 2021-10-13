@@ -8,9 +8,9 @@ const {
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateRate,
   validateWatchedAt,
-  validateTalk,
 } = require('../middlewares/newTalker');
 
 router.get('/search', validateToken, async (req, res) => {
@@ -38,12 +38,12 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/',
-  validateToken,  
+  validateToken,
   validateName,
   validateAge,
   validateTalk,
-  validateWatchedAt,
   validateRate,
+  validateWatchedAt,
   async (req, res) => {
   const { name, age, talk } = req.body;
   const talker = await readFile();
@@ -55,12 +55,12 @@ router.post('/',
 });
 
 router.put('/:id',
-validateToken,
-validateName,
-validateAge,
-validateRate,
-validateWatchedAt,
-validateTalk,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateRate,
+  validateWatchedAt,
   async (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;

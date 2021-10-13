@@ -73,7 +73,7 @@ async (req, res) => {
 });
 
 app.put('/talker/:id',
-// validateToken,
+validateToken,
 validateName,
 validateAge,
 validateTalk,
@@ -93,6 +93,17 @@ async (req, res) => {
   fs.writeFile(fileBeingRead, JSON.stringify(jsonFile));
 
   return res.status(HTTP_OK_STATUS).json(newSpeaker);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const file = await fs.readFile(fileBeingRead, 'utf-8');
+  const jsonFile = JSON.parse(file);
+
+  jsonFile.filter((s) => s.id !== parseInt(id, 10));
+  fs.writeFile(fileBeingRead, JSON.stringify(jsonFile));
+
+  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

@@ -211,6 +211,21 @@ app.put('/talker/:id', [
   putTalker,
 ]);
 
+// Requisito 6
+
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  const talkers = await FILE();
+  const newTalkers = talkers.filter((t) => t.id !== parseInt(id, 10));
+  await fs.writeFile('talker.json', JSON.stringify(newTalkers));
+  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
+app.delete('/talker/:id', [
+  tokenValidation,
+  deleteTalker,
+]);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

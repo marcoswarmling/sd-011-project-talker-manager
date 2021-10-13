@@ -4,8 +4,15 @@ const fs = require('fs').promises;
 const crypto = require('crypto');
 
 const {
-  validatePassword, validateEmail,
-} = require('./middleware/authLogin');
+  validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+} = require('./middleware/auth');
 
 const app = express();
 app.use(bodyParser.json());
@@ -36,10 +43,26 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', validateEmail, validatePassword, (_req, response) => {
-  const validToken = crypto.randomBytes(8).toString('hex');
-    return response.status(HTTP_OK_STATUS).send({
-      validToken,
-    });
+  const token = crypto.randomBytes(8).toString('hex');
+  return response.status(HTTP_OK_STATUS).send({
+    token,
+  });
+});
+
+app.post('/talker', validateToken, validateName,
+  validateAge, validateTalk, validateWatchedAt, validateRate, async (req, response) => {
+    const { name, age, talk } = req.body;
+  const data = await fs.readFile('./talker.json', 'utf-8');
+  const fetchData = await JSON.parse(data);
+  const newData = {
+    id: fetchData.length + 1,
+    name,
+    age,
+    talk,
+  };
+  fetchData.push(newData);
+  await fs.writeFile('./talker.json', JSON.stringify(fetchData));
+  return response.status(201).json(newData);
 });
 
 app.listen(PORT, () => {

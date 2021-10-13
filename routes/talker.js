@@ -17,11 +17,11 @@ router.get('/:id', async (req, res, next) => {
   .then((data) => JSON.parse(data));
   const talker = db.find((t) => t.id === +id);
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(200).json({ talker });
+  res.status(200).json(talker);
   next();
 });
 
-// router.get('/:id', async (req, res, next) => {
+// router.post('/:id', async (req, res, next) => {
 //   const { id } = req.params;
 //   const db = await fs.readFile('./talker.json', 'utf8')
 //   .then((data) => JSON.parse(data));

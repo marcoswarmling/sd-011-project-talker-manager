@@ -86,12 +86,13 @@ async (req, res) => {
   try {
     const file = await fs.readFile(fileBeingRead, 'utf-8');
     const jsonFile = JSON.parse(file);
-    const findID = jsonFile.find((s) => s.id === parseInt(id, 10));
     const newSpeaker = { id, name, age, talk };
-    const index = jsonFile.indexOf(findID);
+    const replaceSpeaker = jsonFile.find((s) => {
+      if (s.id === parseInt(id, 10)) return newSpeaker;
+      return s;
+    });
 
-    jsonFile[index] = newSpeaker;
-    fs.writeFile(fileBeingRead, JSON.stringify(jsonFile));
+    fs.writeFile(fileBeingRead, JSON.stringify(replaceSpeaker));
     
     res.status(HTTP_OK_STATUS).json(newSpeaker);
   } catch (e) {

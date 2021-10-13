@@ -8,6 +8,7 @@ const {
   HTTP_UNAUTHORIZED,
   HTTP_NOT_FOUND,
   HTTP_BAD_REQUEST,
+  HTTP_CREATED_STATUS,
 } = require('./httpStatusCode');
 
 const app = express();
@@ -29,7 +30,7 @@ const FILE = async () => {
 const tokenValidation = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
+    return res.status(HTTP_UNAUTHORIZED).json({ message: 'Token não encontrado' });
   }
   if (token.length !== 16) {
     return res.status(HTTP_UNAUTHORIZED).json({ message: 'Token inválido' });
@@ -39,7 +40,7 @@ const tokenValidation = (req, res, next) => {
 
 // Requisito 1
 app.get('/talker', async (_request, response) => {
-  const data = await fs.readFile(FILE);
+  const data = await FILE();
   const talkers = JSON.parse(data);
   response.status(HTTP_OK_STATUS).json(talkers);
 });
@@ -64,6 +65,8 @@ app.get('/talker/:id', async (req, res) => {
 }
   res.status(HTTP_OK_STATUS).json(myTalker);
 });
+
+// Requisito 3
 
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
@@ -96,9 +99,94 @@ const validatePassword = (req, res, next) => {
 
 app.post('/login', validateEmail, validatePassword, (req, res) => {
   // https://www.codegrepper.com/code-examples/javascript/js+random+generate+token
+  
   const token = crypto.randomBytes(8).toString('hex');
   res.status(HTTP_OK_STATUS).json({ token });
 });
+
+// Requisito 4
+
+const nameValidation = (req, res, next) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(HTTP_BAD_REQUEST).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name.length < 3) {
+    return res.status(HTTP_BAD_REQUEST).json(
+      { message: 'O "name" deve ter pelo menos 3 caracteres' },
+      );
+  }
+  next();
+};
+
+const ageValidation = (req, res, next) => {
+  const { age } = req.body;
+  if (!age) {
+    return res.status(HTTP_BAD_REQUEST).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(HTTP_BAD_REQUEST).json(
+      { message: 'A pessoa palestrante deve ser maior de idade' },
+      );
+  }
+  next();
+};
+
+const talkValidation = (req, res, next) => {
+  const { talk } = req.body;
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
+    return res.status(HTTP_BAD_REQUEST)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  next();
+};
+
+const watchedAtValidation = (req, res, next) => {
+  const { talk } = req.body;
+  const { watchedAt } = talk;
+  const reg = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+  if (!reg.test(watchedAt)) {
+    return res.status(HTTP_BAD_REQUEST).json(
+      { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' },
+      );
+  }
+  next();
+};
+
+const rateValidation = (req, res, next) => {
+  const { talk } = req.body;
+  const { rate } = talk;
+  if (rate > 5 || rate < 1) {
+    return res.status(HTTP_BAD_REQUEST).json(
+      { message: 'O campo "rate" deve ser um inteiro de 1 à 5' },
+      );
+  }
+  next();
+};
+
+const postTalker = async (req, res) => {
+  const { name, age, talk } = req.body;
+  const talkers = await FILE();
+  const newTalker = {
+    id: talkers.length + 1,
+    name,
+    age,
+    talk,
+  };
+  talkers.push(newTalker);
+  await fs.writeFile('talker.json', JSON.stringify(talkers));
+  return res.status(HTTP_CREATED_STATUS).json(newTalker);
+};
+
+app.post('/talker', [
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+  postTalker,
+]);
 
 app.listen(PORT, () => {
   console.log('Online');

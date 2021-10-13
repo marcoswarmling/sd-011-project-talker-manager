@@ -32,6 +32,22 @@ app.get('/talker', async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(JSON.parse(returnedTalkers));
 });
 
+// Requisito 7 - Crie o endpoint GET /talker/search?q=searchTerm
+app.get('/talker/search',
+  tokenValidation,
+  async (req, res) => {
+    const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
+    const talkersDB = JSON.parse(returnedTalkers);
+    const searchTerm = req.query.q;
+
+    if (!searchTerm || searchTerm === '') {
+      return res.status(HTTP_OK_STATUS).json(talkersDB);
+    }
+    const filteredTalkers = talkersDB.filter((talker) => talker.name.includes(searchTerm));
+
+    return res.status(HTTP_OK_STATUS).json(filteredTalkers);
+  });
+
 // Requisito 2 - Crie o endpoint GET /talker/:id
 app.get('/talker/:id', async (req, res) => {
   const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
@@ -102,22 +118,6 @@ app.delete('/talker/:id',
     fs.writeFile(talkerJSON, JSON.stringify(filteredIds));
     return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
   });
-
-  // Requisito 7 - Crie o endpoint GET /talker/search?q=searchTerm
-app.get('/talker/search',
-tokenValidation,
-async (req, res) => {
-  const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
-  const talkersDB = JSON.parse(returnedTalkers);
-  const searchTerm = req.query.q;
-
-  if (!searchTerm || searchTerm === '') {
-    return res.status(HTTP_OK_STATUS).json(talkersDB);
-  }
-  const filteredTalkers = talkersDB.filter((talker) => talker.name.includes(searchTerm));
-
-  return res.status(HTTP_OK_STATUS).json(filteredTalkers);
-});
 
 app.listen(PORT, () => {
   console.log('Online');

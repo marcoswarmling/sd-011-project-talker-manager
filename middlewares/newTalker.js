@@ -1,4 +1,4 @@
-function validateName(req, res, next) {
+function withOutName(req, res, next) {
   const { name } = req.body;
 
   if (!name || name.length === 0) {
@@ -12,20 +12,7 @@ function validateName(req, res, next) {
   next();
 }
 
-function validateAge(req, res, next) {
-  const { age } = req.body;
-
-  if (!age || age.length === 0) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
-
-  next();
-}
-
-function validateToken(req, res, next) {
+function tokenValid(req, res, next) {
   const token = req.headers.authorization;
 
   if (token === '' || token === undefined) {
@@ -39,7 +26,21 @@ function validateToken(req, res, next) {
   next();
 }
 
-function validateRate(req, res, next) {
+function ageValid(req, res, next) {
+  const { age } = req.body;
+
+  if (!age || age.length === 0) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+
+  next();
+}
+
+function rateInterval(req, res, next) {
   const { talk: { rate } } = req.body;
   if (rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
@@ -48,33 +49,33 @@ function validateRate(req, res, next) {
   next();
 }
 
-function validateWatchedAt(req, res, next) {
+function validWatchedAt(req, res, next) {
   const { talk: { watchedAt } } = req.body;
-  const validDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
-
-  if (!validDate.test(watchedAt)) {
-    return res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  const dateRgx = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+  const result = dateRgx.test(watchedAt);
+  if (!result) {
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  
+
   next();
 }
 
-function validateTalk(req, res, next) {
+function talkValid(req, res, next) {
   const { talk } = req.body;
-
-  if (!talk.watchedAt || talk.rate === '' || talk.rate === undefined) {
+  if (!talk || !talk.watchedAt || talk.rate === '' || talk.rate === undefined) {
     return res.status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+      .json({ 
+        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 
   next();
 }
 
 module.exports = {
-  validateName,
-  validateAge,
-  validateToken,
-  validateRate,
-  validateWatchedAt,
-  validateTalk,
+  withOutName,
+  tokenValid,
+  ageValid,
+  talkValid,
+  rateInterval,
+  validWatchedAt,
 };

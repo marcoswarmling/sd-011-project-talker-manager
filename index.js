@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
+
+const {
+  validatePassword, validateEmail,
+} = require('./middleware/authLogin');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,6 +33,13 @@ app.get('/talker/:id', async (req, res) => {
   if (!reqId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
   res.status(HTTP_OK_STATUS).json(reqId);
+});
+
+app.post('/login', validateEmail, validatePassword, (_req, response) => {
+  const validToken = crypto.randomBytes(8).toString('hex');
+    return response.status(HTTP_OK_STATUS).send({
+      validToken,
+    });
 });
 
 app.listen(PORT, () => {

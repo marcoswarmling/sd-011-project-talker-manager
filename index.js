@@ -18,8 +18,6 @@ app.get('/', (_request, response) => {
 
 app.use('/piu', talkerRouter); // meu testador de rota
 
-app.use('/', talkerRouter);
-
 app.use('/talker', talkerRouter);
 
 

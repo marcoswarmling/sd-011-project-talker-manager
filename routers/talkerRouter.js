@@ -15,7 +15,7 @@ const {
 
 router.get('/talker', async (_req, res) => {
   const talker = await readFile();
-  return res.status(200).json(JSON.parse(talker));
+  return res.status(200).json(talker);
 });
 
 router.get('/talker/:id', async (req, res) => {

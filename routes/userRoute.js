@@ -1,4 +1,3 @@
-// Requisito 4
 const express = require('express');
 const fs = require('fs').promises;
 const {
@@ -14,6 +13,30 @@ const {
 const userRoute = express.Router();
 const TALKER_FILE_PATH = './talker.json';
 
+// requisito 1
+userRoute.get('/', async (_req, res) => {
+  try {
+    const fileContent = JSON.parse(await fs.readFile(TALKER_FILE_PATH, 'utf8'));
+    return res.status(200).json(fileContent);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
+// requisito 2
+userRoute.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const fileContent = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
+    const data = fileContent.find((t) => t.id === Number(id));
+    if (!data) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
+// Requisito 4
 userRoute.post('/',
 checkToken,
 validateName,
@@ -34,6 +57,7 @@ async (req, res) => {
   return res.status(201).json(newTalker);
 });
 
+// Requisito 5
 userRoute.put('/:id',
 checkToken,
 validateName,
@@ -54,6 +78,7 @@ async (req, res) => {
   return res.status(200).json(updatedTalker);
 });
 
+// Requisito 6
 userRoute.delete('/:id', checkToken,
 async (req, res) => {
   const { id } = req.params;

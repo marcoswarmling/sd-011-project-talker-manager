@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const talkerJSON = './talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -26,14 +27,14 @@ app.get('/', (_request, response) => {
 
 // Requisito 1 - Crie o endpoint GET /talker
 app.get('/talker', async (req, res) => {
-  const returnedTalkers = await fs.readFile('./talker.json', 'utf-8');
+  const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
   if (!returnedTalkers) return res.status(HTTP_OK_STATUS).json([]);
   return res.status(HTTP_OK_STATUS).json(JSON.parse(returnedTalkers));
 });
 
 // Requisito 2 - Crie o endpoint GET /talker/:id
 app.get('/talker/:id', async (req, res) => {
-  const returnedTalkers = await fs.readFile('./talker.json', 'utf-8');
+  const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
   const talkersDB = JSON.parse(returnedTalkers);
   const { id } = req.params;
   const talkerId = talkersDB.find((talker) => talker.id === Number(id));
@@ -57,12 +58,37 @@ app.post('/talker',
   rateValidation,
   async (req, res) => {
     const { name, age, talk } = req.body;
-    const returnedTalkers = await fs.readFile('./talker.json', 'utf-8');
+    const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
     const talkersDB = JSON.parse(returnedTalkers);
     const newTalker = { id: talkersDB.length + 1, name, age, talk };
     talkersDB.push(newTalker);
-    fs.writeFile('./talker.json', JSON.stringify(talkersDB));
+    fs.writeFile(talkerJSON, JSON.stringify(talkersDB));
     return res.status(201).json(newTalker);
+  });
+
+// Requisito 5 - Crie o endpoint PUT /talker/:id
+app.put('/talker/:id',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+    const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
+    const talkersDB = JSON.parse(returnedTalkers);
+    const newTalkersDB = talkersDB.map((talker) => {
+      if (talker.id === Number(id)) {
+        return {
+          id: Number(id), name, age, talk,
+        };
+      }
+      return talker;
+    });
+    fs.writeFile(talkerJSON, JSON.stringify(newTalkersDB));
+    return res.status(HTTP_OK_STATUS).json({ id: Number(id), name, age, talk });
   });
 
 app.listen(PORT, () => {

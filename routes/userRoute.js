@@ -13,6 +13,15 @@ const {
 const userRoute = express.Router();
 const TALKER_FILE_PATH = './talker.json';
 
+// Requisito 7
+userRoute.get('/search', checkToken,
+async (req, res) => {
+  const { q } = req.query;
+  const fileContent = JSON.parse(await fs.readFile(TALKER_FILE_PATH, 'utf8'));
+  const talkerIndex = fileContent.filter((t) => t.name.includes(q));
+  return res.status(200).json(talkerIndex);
+});
+
 // requisito 1
 userRoute.get('/', async (_req, res) => {
   try {

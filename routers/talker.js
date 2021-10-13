@@ -4,6 +4,7 @@ const {
   getFileData,
   setFileData,
   editFileData,
+  deleteFileData,
 } = require('../services/CRUD');
 const {
   checkToken,
@@ -30,8 +31,16 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(personById);
 });
 
+router.use(checkToken);
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  await deleteFileData(id);
+  const message = 'Pessoa palestrante deletada com sucesso';
+  res.status(200).json({ message });
+});
+
 router.use(
-  checkToken,
   checkName,
   checkAge,
   checkTalk,

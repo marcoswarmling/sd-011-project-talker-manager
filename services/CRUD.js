@@ -36,8 +36,20 @@ const editFileData = async (id, newData) => {
   }
 };
 
+const deleteFileData = async (id) => {
+  try {
+    const data = await getFileData();
+    data.splice(id - 1, 1);
+    
+    await fs.writeFile('./talker.json', JSON.stringify(data));
+  } catch (err) {
+    return err.message;
+  }
+};
+
 module.exports = {
   getFileData,
   setFileData,
   editFileData,
+  deleteFileData,
 };

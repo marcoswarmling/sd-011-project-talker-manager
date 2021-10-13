@@ -12,6 +12,7 @@ const {
 } = require('../middleware/userValidation');
 
 const userRoute = express.Router();
+const TALKER_FILE_PATH = './talker.json';
 
 userRoute.post('/',
 checkToken,
@@ -23,7 +24,7 @@ validateDateFormat,
 validateRateDate,
 async (req, res) => {
   const { name, age, talk } = req.body;
-  const fileContent = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
+  const fileContent = JSON.parse(await fs.readFile(TALKER_FILE_PATH, 'utf8'));
   // const addId = fileContent[fileContent.length - 1].id + 1;
   const addId = fileContent.length + 1;
   const newTalker = { id: addId, name, age, talk };
@@ -44,15 +45,25 @@ validateRateDate,
 async (req, res) => {
   const { name, age, talk } = req.body;
   const { id } = req.params;
-  console.log('check id', req.params.id);
-  const fileContent = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
+  const fileContent = JSON.parse(await fs.readFile(TALKER_FILE_PATH, 'utf8'));
   const temporaryTalkers = fileContent.filter((t) => t.id !== Number(req.params.id));
 
   const updatedTalker = { name, age, talk, id: Number(id) };
-  // fileContent[indexTalker] = updatedTalker;
   const updateList = [...temporaryTalkers, updatedTalker];
   await fs.writeFile('./talker.json', JSON.stringify(updateList));
   return res.status(200).json(updatedTalker);
+});
+
+userRoute.delete('/:id', checkToken,
+(req, res) => {
+  const { id } = req.params;
+  const fileContent = JSON.parse(fs.readFile(TALKER_FILE_PATH, 'utf8'));
+  console.log(fileContent);
+  const talkerIndex = fileContent.filter((t) => t.id !== Number(id));
+  fileContent.push(talkerIndex);
+  fs.writeFile(TALKER_FILE_PATH, JSON.stringify(talkerIndex));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = userRoute;

@@ -65,7 +65,7 @@ app.post('/talker',
   async (req, res) => {
     try {
       const { name, age, talk } = req.body;
-      const talker = JSON.parse(await fs.readFile(FILE, 'utf8'));
+      const talker = JSON.parse(await fs.readFile(FILE, 'utf-8'));
 
       const addTalker = {
         name,
@@ -92,7 +92,7 @@ app.put('/talker/:id',
     const { id } = req.params;
     const { name, age, talk } = req.body;
     try {
-      const talker = JSON.parse(await fs.readFile(FILE, 'utf8'));
+      const talker = JSON.parse(await fs.readFile(FILE, 'utf-8'));
       const talkerIndex = talker.findIndex((ID) => ID.id === Number(id));
       const people = {
         name,
@@ -114,8 +114,8 @@ app.put('/talker/:id',
     async (req, res) => {
       const { id } = req.params;
       try {
-        const talker = JSON.parse(await fs.readFile(FILE, 'utf8'));
-        const findTalker = talker.find((talkerID) => talkerID === Number(id));
+        const talker = JSON.parse(await fs.readFile(FILE, 'utf-8'));
+        const findTalker = talker.find((talkerID) => talkerID.id === Number(id));
         talker.splice(findTalker, 1);
 
         await fs.writeFile(FILE, JSON.stringify(findTalker));

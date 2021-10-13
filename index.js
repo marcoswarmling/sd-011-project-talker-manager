@@ -39,10 +39,10 @@ const tokenValidation = (req, res, next) => {
 };
 
 // Requisito 1
-app.get('/talker', async (_request, response) => {
-  const data = await FILE();
-  const talkers = JSON.parse(data);
-  response.status(HTTP_OK_STATUS).json(talkers);
+
+app.get('/talker', async (_req, res) => {
+  const talkers = await FILE();
+  res.status(HTTP_OK_STATUS).json(talkers);
 });
 
 // Requisito 7:
@@ -56,6 +56,7 @@ app.get('/talker/search', tokenValidation, async (req, res) => {
 });
 
 // Requisito 2
+
 app.get('/talker/:id', async (req, res) => {
   const talkers = await FILE();
   const { id } = req.params;
@@ -186,6 +187,28 @@ app.post('/talker', [
   watchedAtValidation,
   rateValidation,
   postTalker,
+]);
+
+// Requisito 5
+
+const putTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await FILE();
+  const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+  talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+  await fs.writeFile('talker.json', JSON.stringify(talkers));
+  res.status(HTTP_OK_STATUS).json(talkers[talkerIndex]);
+};
+
+app.put('/talker/:id', [
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+  putTalker,
 ]);
 
 app.listen(PORT, () => {

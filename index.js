@@ -25,6 +25,31 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// Requisito 5 - Crie o endpoint PUT /talker/:id
+app.put('/talker/:id',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+    const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
+    const talkersDB = JSON.parse(returnedTalkers);
+    const newTalkersDB = talkersDB.map((talker) => {
+      if (talker.id === Number(id)) {
+        return {
+          id: Number(id), name, age, talk,
+        };
+      }
+      return talker;
+    });
+    fs.writeFile(talkerJSON, JSON.stringify(newTalkersDB));
+    return res.status(HTTP_OK_STATUS).json({ id: Number(id), name, age, talk });
+  });
+
 // Requisito 7 - Crie o endpoint GET /talker/search?q=searchTerm
 app.get('/talker/search',
   tokenValidation,
@@ -80,31 +105,6 @@ app.post('/talker',
     talkersDB.push(newTalker);
     fs.writeFile(talkerJSON, JSON.stringify(talkersDB));
     return res.status(201).json(newTalker);
-  });
-
-// Requisito 5 - Crie o endpoint PUT /talker/:id
-app.put('/talker/:id',
-  tokenValidation,
-  nameValidation,
-  ageValidation,
-  talkValidation,
-  watchedAtValidation,
-  rateValidation,
-  async (req, res) => {
-    const { name, age, talk } = req.body;
-    const { id } = req.params;
-    const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
-    const talkersDB = JSON.parse(returnedTalkers);
-    const newTalkersDB = talkersDB.map((talker) => {
-      if (talker.id === Number(id)) {
-        return {
-          id: Number(id), name, age, talk,
-        };
-      }
-      return talker;
-    });
-    fs.writeFile(talkerJSON, JSON.stringify(newTalkersDB));
-    return res.status(HTTP_OK_STATUS).json({ id: Number(id), name, age, talk });
   });
 
 // Requisito 6 - Crie o endpoint DELETE /talker/:id

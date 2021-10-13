@@ -23,7 +23,22 @@ const setFileData = async (newData) => {
   }
 };
 
+const editFileData = async (id, newData) => {
+  try {
+    const data = await getFileData();
+    const objNewData = { id: data.length + 1, ...newData };
+
+    data[id] = { ...data[id], ...newData };
+    await fs.writeFile('./talker.json', JSON.stringify(data));
+    
+    return objNewData;
+  } catch (err) {
+    return err.message;
+  }
+};
+
 module.exports = {
   getFileData,
   setFileData,
+  editFileData,
 };

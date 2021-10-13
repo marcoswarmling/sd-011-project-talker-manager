@@ -17,6 +17,7 @@ const isValidRate = require('./middlewares/isValidRate');
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
+const FILE = './talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -25,7 +26,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', async (_req, res) => {
   try {
-    const data = await fs.readFile('./talker.json', 'utf-8');
+    const data = await fs.readFile(FILE, 'utf-8');
     const talkers = JSON.parse(data);
     res.status(HTTP_OK_STATUS).json(talkers);
   } catch (err) {
@@ -36,7 +37,7 @@ app.get('/talker', async (_req, res) => {
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const data = await fs.readFile('./talker.json', 'utf-8');
+    const data = await fs.readFile(FILE, 'utf-8');
     const talkers = JSON.parse(data);
     const talker = talkers.find((t) => t.id === Number(id));
     if (!talker) {
@@ -64,7 +65,7 @@ app.post('/talker',
   async (req, res) => {
     try {
       const { name, age, talk } = req.body;
-      const talker = JSON.parse(await fs.readFile('./talker.json', 'utf8'));
+      const talker = JSON.parse(await fs.readFile(FILE, 'utf8'));
 
       const addTalker = {
         name,
@@ -73,8 +74,36 @@ app.post('/talker',
         talk,
       };
       talker.push(addTalker);
-      await fs.writeFile('./talker.json', JSON.stringify(talker));
+      await fs.writeFile(FILE, JSON.stringify(talker));
       return res.status(201).json(addTalker);
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  });
+
+app.put('/talker/:id', 
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalk,
+  isValidWatchedAt,
+  isValidRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    try {
+      const talker = JSON.parse(await fs.readFile(FILE, 'utf8'));
+      const talkerIndex = talker.findIndex((ID) => ID.id === Number(id));
+      const people = {
+        name,
+        age,
+        talk,
+        id: Number(id),
+      };
+      if (talkerIndex === -1) return res.status(404).json({ message: 'Pessoa não encontrada' });
+      talker[talkerIndex] = people;
+      await fs.writeFile(FILE, JSON.stringify(talker));
+      return res.status(HTTP_OK_STATUS).json(people);
     } catch (err) {
       return res.status(400).json({ message: err.message });
     }

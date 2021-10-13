@@ -14,6 +14,34 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+function validTokenUser(req, res, next) {
+  const { authorization } = req.headers;
+
+  if (!authorization || authorization === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  } 
+
+  next();
+}
+
+app.get('/talker/search', validTokenUser, (req, res) => {
+  try {
+   const { q } = req.query;
+
+   const dados = fs.readFileSync(ARQUIVO, 'utf-8');
+   const therms = JSON.parse(dados);
+  console.log(therms);
+   const result = therms.filter((palavra) => palavra.name.includes(q));
+   return res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.get('/talker', (_req, res) => {
   const dados = fs.readFileSync(ARQUIVO, 'utf-8');
 
@@ -36,20 +64,6 @@ app.get('/talker/:id', (req, res) => {
 
     return res.status(200).send(dadosId);
 });
-
-function validTokenUser(req, res, next) {
-  const { authorization } = req.headers;
-
-  if (!authorization || authorization === '') {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  } 
-
-  next();
-}
 
 function validateEmailRequisitos(email) {
   const re = /\S+@\S+\.com/;

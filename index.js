@@ -86,7 +86,7 @@ async (req, res) => {
   try {
     const file = await fs.readFile(fileBeingRead, 'utf-8');
     const jsonFile = JSON.parse(file);
-    const newSpeaker = { id, name, age, talk };
+    const newSpeaker = { id: parseInt(id, 10), name, age, talk };
     const replaceSpeaker = jsonFile.map((s) => {
       if (s.id === parseInt(id, 10)) return newSpeaker;
       return s;

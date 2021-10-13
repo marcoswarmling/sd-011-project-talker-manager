@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const { validateEmail, validatePassword } = require('./validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,6 +34,11 @@ app.get('/talker/:id', async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 });
+
+app.post('/login',
+validateEmail,
+validatePassword,
+(_req, res) => res.status(200).json({ token: '7mqaVRXJSp886CGr' }));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

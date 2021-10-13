@@ -17,6 +17,8 @@ const {
 const app = express();
 app.use(bodyParser.json());
 
+const talkerFile = './talker.json';
+
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
@@ -26,7 +28,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const data = await fs.readFile('./talker.json', 'utf-8');
+  const data = await fs.readFile(talkerFile, 'utf-8');
   const fetchData = await JSON.parse(data);
 
   res.status(HTTP_OK_STATUS).json(fetchData);
@@ -34,7 +36,7 @@ app.get('/talker', async (_req, res) => {
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await fs.readFile('./talker.json', 'utf-8');
+  const data = await fs.readFile(talkerFile, 'utf-8');
   const fetchData = await JSON.parse(data);
   const reqId = fetchData.find((resp) => resp.id === Number(id));
   if (!reqId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
@@ -52,18 +54,39 @@ app.post('/login', validateEmail, validatePassword, (_req, response) => {
 app.post('/talker', validateToken, validateName,
   validateAge, validateTalk, validateWatchedAt, validateRate, async (req, response) => {
     const { name, age, talk } = req.body;
-  const data = await fs.readFile('./talker.json', 'utf-8');
-  const fetchData = await JSON.parse(data);
-  const newData = {
-    id: fetchData.length + 1,
-    name,
-    age,
-    talk,
-  };
-  fetchData.push(newData);
-  await fs.writeFile('./talker.json', JSON.stringify(fetchData));
-  return response.status(201).json(newData);
-});
+    const data = await fs.readFile(talkerFile, 'utf-8');
+    const fetchData = await JSON.parse(data);
+    const newData = {
+      id: fetchData.length + 1,
+      name,
+      age,
+      talk,
+    };
+    fetchData.push(newData);
+    await fs.writeFile('./talker.json', JSON.stringify(fetchData));
+    return response.status(201).json(newData);
+  });
+
+app.put('/talker/:id', validateToken, validateName,
+  validateAge, validateTalk, validateWatchedAt, validateRate, async (req, response) => {
+    const { id } = req.params;
+    const data = await fs.readFile(talkerFile, 'utf-8');
+    const fetchData = await JSON.parse(data);
+    const { name, talk, age } = req.body;
+    const talkerId = {
+      id: Number(id),
+      name,
+      age,
+      talk,
+    };
+    const updateTalkers = fetchData.map((talker) => {
+      if (talker.id === Number(id)) return talkerId;
+      return talker;
+    });
+
+    await fs.writeFile('./talker.json', JSON.stringify(updateTalkers));
+    response.status(HTTP_OK_STATUS).json(talkerId);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');

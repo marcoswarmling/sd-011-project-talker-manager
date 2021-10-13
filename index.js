@@ -54,7 +54,16 @@ app.post('/talker',
   ageValidation,
   talkValidation,
   watchedAtValidation,
-  rateValidation);
+  rateValidation,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const returnedTalkers = await fs.readFile('./talker.json', 'utf-8');
+    const talkersDB = JSON.parse(returnedTalkers);
+    const newTalker = { id: talkersDB.length + 1, name, age, talk };
+    talkersDB.push(newTalker);
+    fs.writeFile('./talker.json', JSON.stringify(talkersDB));
+    return res.status(201).json(newTalker);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');

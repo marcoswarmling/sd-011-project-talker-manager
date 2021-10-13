@@ -55,15 +55,16 @@ async (req, res) => {
 });
 
 userRoute.delete('/:id', checkToken,
-(req, res) => {
+async (req, res) => {
   const { id } = req.params;
-  const fileContent = JSON.parse(fs.readFile(TALKER_FILE_PATH, 'utf8'));
-  console.log(fileContent);
+  const fileContent = JSON.parse(await fs.readFile(TALKER_FILE_PATH, 'utf8'));
   const talkerIndex = fileContent.filter((t) => t.id !== Number(id));
   fileContent.push(talkerIndex);
-  fs.writeFile(TALKER_FILE_PATH, JSON.stringify(talkerIndex));
+  await fs.writeFile(TALKER_FILE_PATH, JSON.stringify(talkerIndex));
 
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
+
+// userRoute.get('/search', )
 
 module.exports = userRoute;

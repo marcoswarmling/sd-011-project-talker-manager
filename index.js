@@ -1,7 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-const { emailValidation, passwordValidation, generateToken } = require('./fieldsValidation');
+const {
+  emailValidation,
+  passwordValidation,
+  generateToken,
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+} = require('./fieldsValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -32,7 +42,19 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // Requisito 3 - Crie o endpoint POST /login
-app.post('/login', emailValidation, passwordValidation, generateToken);
+app.post('/login',
+  emailValidation,
+  passwordValidation,
+  generateToken);
+
+// Requisito 4 - Crie o endpoint POST /talker
+app.post('/talker',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation);
 
 app.listen(PORT, () => {
   console.log('Online');

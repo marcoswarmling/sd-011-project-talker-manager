@@ -44,7 +44,7 @@ function validTokenUser(req, res, next) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
 
-  if (authorization !== '7mqaVRXJSp886CGr') {
+  if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   } 
 
@@ -111,26 +111,32 @@ function validAge(req, res, next) {
   const { age } = req.body;
   if (age === '' || age === undefined) {
  return res.status(400)
-   .json({ message: 'O campo "idade" é obrigatório' });
+   .json({ message: 'O campo "age" é obrigatório' });
 }
 
-  if (age.length < 18) {
+  if (age < 18) {
  return res.status(400)
-  .json({ message: 'A pessoa palestrate deve ser maior de idade' });
+  .json({ message: 'A pessoa palestrante deve ser maior de idade' });
 }
 next();
 }
 
 function validWat(req, res, next) {
-  const { talk: { watchedAt, rate } } = req.body;
+  const { talk: { watchedAt } } = req.body;
   const validData = validateData(watchedAt);
-  console.log(validData);
-  if (!validData) {
+  
+  if (!validData && !watchedAt) {
  return res.status(400)
    .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
 }
+  
+  next();
+}
 
-  if (rate.length < 1 || rate.length > 5) {
+function validRate(req, res, next) {
+  const { talk: { rate } } = req.body;
+
+  if (!rate || rate < 1 || rate > 5) {
  return res.status(400)
   .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 }
@@ -139,9 +145,9 @@ function validWat(req, res, next) {
 }
 
 function validDataAndRate(req, res, next) {
-  const { talk: { watchedAt, rate } } = req.body;
+  const { talk } = req.body;
   
-  if (rate.length === 0 || watchedAt.length === 0) {
+  if (!talk || talk.length === 0) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
    }
@@ -158,7 +164,9 @@ validTokenUser,
 validaUserName,
 validAge,
 validWat,
-validDataAndRate, (req, res) => {
+validDataAndRate,
+validRate, 
+(req, res) => {
   const { name, age, talk } = req.body;
   const dados = fs.readFileSync(ARQUIVO, 'utf-8');
     const FileAdd = JSON.parse(dados);
@@ -190,12 +198,9 @@ validDataAndRate, (req, res) => {
     res.status(200).json(newdados);
     });
 
-    app.put('/talker/:id',
+    app.delete('/talker/:id',
 validTokenUser,
-validaUserName,
-validAge,
-validWat,
-validDataAndRate, (req, res) => {
+ (req, res) => {
    const { id } = req.params;
    const dados = fs.readFileSync(ARQUIVO, 'utf-8');
    const newdados = JSON.parse(dados);
@@ -205,7 +210,7 @@ validDataAndRate, (req, res) => {
     newdados.splice(dadosId, 1);
 
     fs.writeFileSync(ARQUIVO, JSON.stringify(newdados));
-    res.status(200).json(newdados);
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
     });
 
 app.listen(PORT, () => {

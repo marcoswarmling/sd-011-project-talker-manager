@@ -70,7 +70,9 @@ function emailValidaded(email, res) {
     res
       .status(400)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    return;
   }
+  return true;
 }
 
 async function doLogin(req, res) {
@@ -88,16 +90,14 @@ function isTokenValid(token) {
   return token.length >= 16;
 }
 
-function validateToken(req, res) {
-  if (!tokenExist(req.headers.authorization)) {
-    res.status(401).json({ message: 'Token não encontrado' });
-    return;
+function validaToken(token) {
+  if (!tokenExist(token)) {
+    return { valido: false, message: 'Token não encontrado' };
   }
-  if (!isTokenValid(req.headers.authorization)) {
-    res.status(401).json({ message: 'Token inválido' });
-    return;
+  if (!isTokenValid(token)) {
+    return { valido: false, message: 'Token inválido' };
   }
-  return true;
+  return { valido: true };
 }
 
 function nameExist(Name) {
@@ -107,20 +107,17 @@ function nameExist(Name) {
 function isNameValid(name) {
   return name.length >= 3;
 }
-
-function validateName(req, res) {
-  const { name } = req.body;
-  if (!nameExist(name)) {
-    res.status(400).json({ message: 'O campo "name" é obrigatório' });
-    return;
+function validaNome(nome) {
+  if (!nameExist(nome)) {
+    return { valido: false, message: 'O campo "name" é obrigatório' };
   }
-  if (!isNameValid(name)) {
-    res
-      .status(400)
-      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-    return;
+  if (!isNameValid(nome)) {
+    return {
+      valido: false,
+      message: 'O "name" deve ter pelo menos 3 caracteres',
+    };
   }
-  return true;
+  return { valido: true };
 }
 
 function ageExist(age) {
@@ -131,19 +128,17 @@ function isAgeValid(age) {
   return age >= 18;
 }
 
-function validateAge(req, res) {
-  const { age } = req.body;
-  if (!ageExist(age)) {
-    res.status(400).json({ message: 'O campo "age" é obrigatório' });
-    return;
+function validaIdade(idade) {
+  if (!ageExist(idade)) {
+    return { valido: false, message: 'O campo "age" é obrigatório' };
   }
-  if (!isAgeValid(age)) {
-    res
-      .status(400)
-      .json({ message: 'A pessoa palestrante deve ser maior de idade' });
-    return;
+  if (!isAgeValid(idade)) {
+    return {
+      valido: false,
+      message: 'A pessoa palestrante deve ser maior de idade',
+    };
   }
-  return true;
+  return { valido: true };
 }
 
 function WachedAtExist(watchedAt) {
@@ -151,25 +146,26 @@ function WachedAtExist(watchedAt) {
 }
 
 function isWachedAtValid(watchedAt) {
-  const regexData = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+  const regexData =
+    /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
   return regexData.test(watchedAt);
 }
 
-function validateWachedAt(res, talk) {
-  if (!WachedAtExist(talk.watchedAt)) {
-    res.status(400).json({
+function validaData(data) {
+  if (!WachedAtExist(data)) {
+    return {
+      valido: false,
       message:
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-    return;
+    };
   }
-  if (!isWachedAtValid(talk.watchedAt)) {
-    res
-      .status(400)
-      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-    return;
+  if (!isWachedAtValid(data)) {
+    return {
+      valido: false,
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
+    };
   }
-  return true;
+  return { valido: true };
 }
 
 function rateExist(Rate) {
@@ -180,60 +176,146 @@ function isARateValid(Rate) {
   return Rate < 6 && Rate > 0;
 }
 
-function validateTalkRate(res, talk) {
-  if (!rateExist(talk.rate)) {
-    res.status(400).json({
+function validaNota(nota) {
+  if (!rateExist(nota)) {
+    return {
+      valido: false,
       message:
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-    return;
+    };
   }
-  if (!isARateValid(talk.rate)) {
-    res
-      .status(400)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-    return;
+  if (!isARateValid(nota)) {
+    return {
+      valido: false,
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+    };
   }
-  return true;
+  return { valido: true };
 }
 
 function TalkExist(talk) {
   return talk !== null && typeof talk !== 'undefined';
 }
 
-function validateTalk(req, res) {
-  const { talk } = req.body;
-  if (!TalkExist(talk)) {
-    res.status(400).json({
+function validaPalestra(palestra) {
+  if (!TalkExist(palestra)) {
+    return {
+      valido: false,
       message:
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-    return;
+    };
   }
-  if (validateWachedAt(res, talk) && validateTalkRate(res, talk)) {
-    return true;
-  }
+
+  return { valido: true };
 }
+
+async function carregarDB() {
+  return fs.readFile('./talker.json', 'utf-8').then((file) => JSON.parse(file));
+}
+
+function gravaDB(conteudo) {
+  return fs.writeFile('./talker.json', JSON.stringify(conteudo));
+}
+
+function makeErrorMessage(msg) {
+  return { message: msg };
+}
+
+function validacoiso(req) {
+  const validacoes = [
+    validaNome(req.body.name),
+    validaIdade(req.body.age),
+    validaPalestra(req.body.talk),
+    validaData(req.body.talk && req.body.talk.watchedAt),
+    validaNota(req.body.talk && req.body.talk.rate),
+  ];
+
+  return validacoes.find((resultado) => !resultado.valido) || { valido: true };
+}
+
+// function validaTalkerP1(req, res) {
+//   const checkNome = validaNome(req.body.name);
+//   if (!checkNome.valido) {
+//     res.status(400).json(makeErrorMessage(checkNome.message));
+//     return false;
+//   }
+//   const checkIdade = validaIdade(req.body.age);
+//   if (!checkIdade.valido) {
+//     res.status(400).json(makeErrorMessage(checkIdade.message));
+//     return false;
+//   }
+//   const checkData = validaData(req.body.talk.watchedAt);
+//   if (!checkData.valido) {
+//     res.status(400).json(makeErrorMessage(checkData.message));
+//     return false;
+//   }
+//   return true;
+// }
+
+// function validaTalkerP2(req, res) {
+//   const checkNota = validaNota(req.body.talk.rate);
+//   if (!checkNota.valido) {
+//     res.status(400).json(makeErrorMessage(checkNota.message));
+//     return false;
+//   }
+//   const checkPalestra = validaPalestra(req.body.talk);
+//   if (!checkPalestra.valido) {
+//     res.status(400).json(makeErrorMessage(checkPalestra.message));
+//     return false;
+//   }
+//   return true;
+// }
+
+// function validaTalker(req, res) {
+//   return validaTalkerP1(req, res) && validaTalkerP2(req, res);
+// }
 
 async function addTalker(req, res) {
-  const newTalker = req.body;
-
-  const fileTalkerList = await fs
-    .readFile('./talker.json', 'utf-8')
-    .then((file) => JSON.parse(file));
-
-  if (
-    validateToken(req, res)
-    && validateName(req, res)
-    && validateAge(req, res)
-    && validateTalk(req, res)
-  ) {
-    newTalker.id = fileTalkerList.length + 1;
-    fileTalkerList.push(newTalker);
-    await fs.writeFile('./talker.json', JSON.stringify(fileTalkerList));
-
-    return res.status(201).json(newTalker);
+  const checkToken = validaToken(req.headers.authorization);
+  if (!checkToken.valido) {
+    res.status(401).json(makeErrorMessage(checkToken.message));
+    return;
   }
+
+  const validacaoTalker = validacoiso(req);
+  if (!validacaoTalker.valido) {
+    res.status(400).json(makeErrorMessage(validacaoTalker.message));
+    return;
+  }
+
+  const fileTalkerList = await carregarDB();
+  const newTalker = req.body;
+  newTalker.id = fileTalkerList.length + 1;
+  fileTalkerList.push(newTalker);
+  await gravaDB(fileTalkerList);
+  res.status(201).json(newTalker);
 }
 
-module.exports = { talkerID, talkersList, doLogin, addTalker };
+async function editTalker(req, res) {
+  const checkToken = validaToken(req.headers.authorization);
+  if (!checkToken.valido) {
+    res.status(401).json(makeErrorMessage(checkToken.message));
+    return;
+  }
+  const validacaoTalker = validacoiso(req);
+  if (!validacaoTalker.valido) {
+    res.status(400).json(makeErrorMessage(validacaoTalker.message));
+    return;
+  }
+
+  const talkeredited = req.body;
+  const params = req.params.id;
+  const fileTalkerList = await carregarDB();
+  const target = fileTalkerList.find((talker) => params === talker.id);
+  if (!target) {
+    res.status(404).send('registro não encontrado');
+    return;
+  }
+  target.name = req.body.name;
+  target.age = req.body.age;
+  target.talk = req.body.talk;
+  await gravaDB(fileTalkerList);
+  res.status(200).json(talkeredited);
+}
+
+module.exports = { talkerID, talkersList, doLogin, addTalker, editTalker };

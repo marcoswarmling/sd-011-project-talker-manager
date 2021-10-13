@@ -224,4 +224,17 @@ async function editTalker(req, res) {
   res.status(200).json(target);
 }
 
-module.exports = { talkerID, talkersList, addTalker, editTalker };
+async function deleteTalker(req, res) {
+  const checkToken = validaToken(req.headers.authorization);
+  if (!checkToken.valido) {
+    res.status(401).json(makeErrorMessage(checkToken.message));
+    return false;
+  }
+  const id = parseInt(req.params.id, 0);
+  const fileTalkerList = await carregarDB();
+  fileTalkerList.splice(fileTalkerList[id - 1], 1);
+  await gravaDB([fileTalkerList]);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}
+
+module.exports = { talkerID, talkersList, addTalker, editTalker, deleteTalker };

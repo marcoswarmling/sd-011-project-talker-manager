@@ -1,7 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { doLogin } = require('./login');
-const { talkerID, talkersList, addTalker, editTalker } = require('./functions');
+const {
+  talkerID,
+  talkersList,
+  addTalker,
+  editTalker,
+  deleteTalker,
+} = require('./functions');
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,3 +30,4 @@ app.get('/talker', talkersList);
 app.get('/talker/:id', talkerID);
 app.post('/talker', addTalker);
 app.put('/talker/:id', editTalker);
+app.delete('/talker/:id', deleteTalker);

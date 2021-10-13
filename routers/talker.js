@@ -5,6 +5,7 @@ const {
   setFileData,
   editFileData,
   deleteFileData,
+  searchFileData,
 } = require('../services/CRUD');
 const {
   checkToken,
@@ -17,6 +18,13 @@ const {
 
 router.get('/', async (_req, res) => {
   const result = await getFileData();
+
+  res.status(200).json(result);
+});
+
+router.get('/search', checkToken, async (req, res) => {
+  const { q } = req.query;
+  const result = await searchFileData(q);
 
   res.status(200).json(result);
 });

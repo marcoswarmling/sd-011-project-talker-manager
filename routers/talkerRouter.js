@@ -4,14 +4,14 @@ const fs = require('fs').promises;
 const router = express.Router();
 
 const TALKER_FILE = 'talker.json';
-const authToken = require('../middlewares/authtoken');
+const authToken = require('../middlewares/authToken');
 const { 
-  nameAuth,
-  ageAuth,
-  watchedAtAuth,
-  rateAuth,
-  talkAuth, 
-} = require('../middlewares/authtalker');
+  nameCheck,
+  ageCheck,
+  watchedAtCheck,
+  rateCheck,
+  talkCheck, 
+} = require('../middlewares/authTalker');
 
 function readTalkerFile() {
   return fs.readFile(TALKER_FILE, 'utf-8').then((data) => JSON.parse(data)); 
@@ -39,11 +39,11 @@ router.get('/:id', (req, res) => {
 router.post(
   '/', 
   authToken,
-  nameAuth,
-  ageAuth,
-  talkAuth,
-  watchedAtAuth,
-  rateAuth,
+  nameCheck,
+  ageCheck,
+  talkCheck,
+  watchedAtCheck,
+  rateCheck,
   (req, res) => {
     readTalkerFile()
     .then((data) => {

@@ -1,4 +1,4 @@
-module.exports = function errorFsRead (err, req, res, next) {
+module.exports = function errorFsRead(err, req, res, next) {
     if (err.code === 'ENOENT') {
       const newError = new Error(err.message);
       newError.code = 'file_not_found';

@@ -20,11 +20,7 @@ app.use('/piu', talkerRouter); // meu testador de rota
 
 app.use('/talker', talkerRouter);
 
-
-
-app.all('*', function(req, res) {
-  return res.status(404).send('Router not found');
-});
+app.all('*', (req, res) => res.status(404).send('Router not found'));
 
 app.use(errorMiddleware);
 

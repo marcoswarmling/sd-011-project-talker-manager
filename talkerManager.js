@@ -54,13 +54,13 @@ checkTalk, checkDateFormat, checkRates, rescue(async (req, res) => {
   const talkers = await talkerUtils.getTalker();
 
   const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
-    
-  talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
-
-  talkers.slice(talkerIndex, 1);
-
-  await talkerUtils.setTalker(talkers);
   
+  talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+  
+  const newArray = [...[...talkers], talkers[talkerIndex]];
+
+  await talkerUtils.setTalker(newArray);
+
   return res.status(200).json(talkers[talkerIndex]);
 }));
 
@@ -80,7 +80,7 @@ router.delete('/talker/:id', validateToken, rescue(async (req, res) => {
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 }));
 
-router.get('/talker/search?q=searchTerm', validateToken, rescue(async (req, res) => {
+router.get('/talker/search', validateToken, rescue(async (req, res) => {
   const { name } = req.query;
   const talkers = await talkerUtils.getTalker();
   const searchTalker = talkers.filter((talker) => talker.name.includes(name));

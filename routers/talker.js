@@ -1,6 +1,14 @@
 const router = require('express').Router();
 
-const { getFileData } = require('../services/CRUD');
+const { getFileData, setFileData } = require('../services/CRUD');
+const {
+  checkToken,
+  checkName,
+  checkAge,
+  checkWatchedAt,
+  checkRate,
+  checkTalk,
+} = require('../middlewares/talkerMiddleware');
 
 router.get('/', async (_req, res) => {
   const result = await getFileData();
@@ -18,10 +26,18 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(personById);
 });
 
-// router.post('/', async (_req, res) => {
-//   const result = await getFileData();
+router.use(
+  checkToken,
+  checkName,
+  checkAge,
+  checkWatchedAt,
+  checkRate,
+  checkTalk,
+);
 
-//   res.status(200).json(result);
-// });
+router.post('/', async (req, res) => {
+  const result = await setFileData(req.body);
+  res.status(201).json(result);
+});
 
 module.exports = router;

@@ -19,69 +19,6 @@ async function talkerID(req, res) {
   res.status(200).json(findId);
 }
 
-function createToken() {
-  const alphabet = 'abcdefghijklmnopqrstuvxywz1234567890'.split('');
-  const token = [];
-  for (let index = 0; index < 16; index += 1) {
-    const positionArray = Math.floor(Math.random() * 36);
-    token.push(alphabet[positionArray]);
-  }
-
-  return token.join('');
-}
-
-function passwordExists(password) {
-  return password !== null && typeof password !== 'undefined';
-}
-
-function isPasswordlValid(password) {
-  return password.length >= 6;
-}
-
-function passwordValidaded(password, res) {
-  if (!passwordExists(password)) {
-    res.status(400).json({ message: 'O campo "password" é obrigatório' });
-    return;
-  }
-  if (!isPasswordlValid(password)) {
-    res
-      .status(400)
-      .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-    return;
-  }
-  return true;
-}
-
-function isEmailValid(email) {
-  const rexexEmail = /[a-zA-Z0-9_]+@+[a-zA-Z0-9_]+.com/;
-  return rexexEmail.test(email);
-}
-
-function emailExists(email) {
-  return email !== null && typeof email !== 'undefined';
-}
-
-function emailValidaded(email, res) {
-  if (!emailExists(email)) {
-    res.status(400).json({ message: 'O campo "email" é obrigatório' });
-    return;
-  }
-  if (!isEmailValid(email)) {
-    res
-      .status(400)
-      .json({ message: 'O "email" deve ter o formato "email@email.com"' });
-    return;
-  }
-  return true;
-}
-
-async function doLogin(req, res) {
-  const { email, password } = req.body;
-  if (passwordValidaded(password, res) && emailValidaded(email, res)) {
-    return res.status(200).json({ token: createToken() });
-  }
-}
-
 function tokenExist(token) {
   return token !== null && typeof token !== 'undefined';
 }
@@ -146,8 +83,9 @@ function WachedAtExist(watchedAt) {
 }
 
 function isWachedAtValid(watchedAt) {
-  const regexData =
-    /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+  // const regexData =
+  //   /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+  const regexData = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}/;
   return regexData.test(watchedAt);
 }
 
@@ -221,7 +159,7 @@ function makeErrorMessage(msg) {
   return { message: msg };
 }
 
-function validacoiso(req) {
+function validaParametros(req) {
   const validacoes = [
     validaNome(req.body.name),
     validaIdade(req.body.age),
@@ -233,43 +171,6 @@ function validacoiso(req) {
   return validacoes.find((resultado) => !resultado.valido) || { valido: true };
 }
 
-// function validaTalkerP1(req, res) {
-//   const checkNome = validaNome(req.body.name);
-//   if (!checkNome.valido) {
-//     res.status(400).json(makeErrorMessage(checkNome.message));
-//     return false;
-//   }
-//   const checkIdade = validaIdade(req.body.age);
-//   if (!checkIdade.valido) {
-//     res.status(400).json(makeErrorMessage(checkIdade.message));
-//     return false;
-//   }
-//   const checkData = validaData(req.body.talk.watchedAt);
-//   if (!checkData.valido) {
-//     res.status(400).json(makeErrorMessage(checkData.message));
-//     return false;
-//   }
-//   return true;
-// }
-
-// function validaTalkerP2(req, res) {
-//   const checkNota = validaNota(req.body.talk.rate);
-//   if (!checkNota.valido) {
-//     res.status(400).json(makeErrorMessage(checkNota.message));
-//     return false;
-//   }
-//   const checkPalestra = validaPalestra(req.body.talk);
-//   if (!checkPalestra.valido) {
-//     res.status(400).json(makeErrorMessage(checkPalestra.message));
-//     return false;
-//   }
-//   return true;
-// }
-
-// function validaTalker(req, res) {
-//   return validaTalkerP1(req, res) && validaTalkerP2(req, res);
-// }
-
 async function addTalker(req, res) {
   const checkToken = validaToken(req.headers.authorization);
   if (!checkToken.valido) {
@@ -277,7 +178,7 @@ async function addTalker(req, res) {
     return;
   }
 
-  const validacaoTalker = validacoiso(req);
+  const validacaoTalker = validaParametros(req);
   if (!validacaoTalker.valido) {
     res.status(400).json(makeErrorMessage(validacaoTalker.message));
     return;
@@ -291,22 +192,27 @@ async function addTalker(req, res) {
   res.status(201).json(newTalker);
 }
 
-async function editTalker(req, res) {
+function validaParametrosEditTalker(req, res) {
   const checkToken = validaToken(req.headers.authorization);
   if (!checkToken.valido) {
     res.status(401).json(makeErrorMessage(checkToken.message));
-    return;
+    return false;
   }
-  const validacaoTalker = validacoiso(req);
+  const validacaoTalker = validaParametros(req);
   if (!validacaoTalker.valido) {
     res.status(400).json(makeErrorMessage(validacaoTalker.message));
+    return false;
+  }
+  return true;
+}
+
+async function editTalker(req, res) {
+  if (!validaParametrosEditTalker(req, res)) {
     return;
   }
-
-  const talkeredited = req.body;
-  const params = req.params.id;
+  const id = parseInt(req.params.id, 0);
   const fileTalkerList = await carregarDB();
-  const target = fileTalkerList.find((talker) => params === talker.id);
+  const target = fileTalkerList.find((talker) => id === talker.id);
   if (!target) {
     res.status(404).send('registro não encontrado');
     return;
@@ -314,8 +220,8 @@ async function editTalker(req, res) {
   target.name = req.body.name;
   target.age = req.body.age;
   target.talk = req.body.talk;
-  await gravaDB(fileTalkerList);
-  res.status(200).json(talkeredited);
+  await gravaDB([target]);
+  res.status(200).json(target);
 }
 
-module.exports = { talkerID, talkersList, doLogin, addTalker, editTalker };
+module.exports = { talkerID, talkersList, addTalker, editTalker };

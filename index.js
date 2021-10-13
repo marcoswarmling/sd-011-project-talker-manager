@@ -97,8 +97,8 @@ const validatePassword = (req, res, next) => {
   next();
 };
 
+// https://www.codegrepper.com/code-examples/javascript/js+random+generate+token
 app.post('/login', validateEmail, validatePassword, (req, res) => {
-  // https://www.codegrepper.com/code-examples/javascript/js+random+generate+token
   
   const token = crypto.randomBytes(8).toString('hex');
   res.status(HTTP_OK_STATUS).json({ token });

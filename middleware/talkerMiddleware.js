@@ -1,5 +1,5 @@
 const verifyToken = (req, res, next) => {
-  const { token } = req.headers;
+  const { authorization: token } = req.headers;
 
   if (!token) return res.status(401).json({ message: 'Token não encontrado' });
 
@@ -33,21 +33,44 @@ const verifyAge = (req, res, next) => {
 };
 
 const verifyTalk = (req, res, next) => {
-  const { talk: { watchedAt, rate } } = req.body;
   const { talk } = req.body;
-
-  const regex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
   
   if (!talk) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
-  if (!regex.test(watchedAt)) {
-    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+
+  next();
+};
+
+const verifyRate = (req, res, next) => {
+  const { talk: { rate } } = req.body;
+
+  if (!rate) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
   }
+
   if (rate > 5 || rate < 1) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  next();
+};
+
+const verifyWatchedAt = (req, res, next) => {
+  const { talk: { watchedAt } } = req.body;
+  const regex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
+
+  if (!watchedAt) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+
+  if (!regex.test(watchedAt)) {
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   next();
 };
@@ -57,4 +80,6 @@ module.exports = {
   verifyName,
   verifyAge,
   verifyTalk,
+  verifyRate,
+  verifyWatchedAt,
 };

@@ -7,6 +7,8 @@ const {
   verifyName,
   verifyAge,
   verifyTalk,
+  verifyRate,
+  verifyWatchedAt,
 } = require('../middleware/talkerMiddleware');
 
 router.get('/', async (req, res) => {
@@ -34,11 +36,14 @@ router.post(
   verifyName,
   verifyAge,
   verifyTalk,
+  verifyRate,
+  verifyWatchedAt,
+
   async (req, res) => {
     const newTalker = req.body;
 
-    setTalkersData(newTalker);
-    res.status(201).json(newTalker);
+    const data = await setTalkersData(newTalker);
+    res.status(201).json(data);
   },
 );
 

@@ -19,7 +19,7 @@ const setTalkersData = async (data) => {
     talkers.push(newTalkersData);
 
     await fs.writeFile('./talker.json', JSON.stringify(talkers));
-    return;
+    return newTalkersData;
   } catch (err) {
     return err.message;
   }

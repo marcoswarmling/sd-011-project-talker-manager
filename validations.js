@@ -31,14 +31,12 @@ const validatePassword = (req, res, next) => {
 };
 
 const validateToken = (req, res, next) => {
-  const { token } = req.headers;
-
-  const validToken = '7mqaVRXJSp886CGr';
-
-  if (!token) {
+  const token = req.headers.authorization;
+  
+  if (!token || token === '') {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token !== validToken) {
+  if (token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
 

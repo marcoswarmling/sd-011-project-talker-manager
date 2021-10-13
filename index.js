@@ -63,7 +63,7 @@ async (req, res) => {
   const lastEntry = jsonFile.length;
   const id = lastEntry + 1;
   const newSpeaker = { id, name, age, talk };
-  
+
   jsonFile.push(newSpeaker);
   fs.writeFile('./talker.json', JSON.stringify(jsonFile));
 

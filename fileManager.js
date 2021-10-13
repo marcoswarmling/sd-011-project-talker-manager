@@ -43,4 +43,20 @@ const editTalkersData = async (id, newData) => {
   }
 };
 
-module.exports = { getTalkersData, setTalkersData, editTalkersData };
+const deleteTalkerData = async (id) => {
+  try {
+    const talkers = await getTalkersData();
+    talkers.splice(id - 1, 1);
+
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  } catch (err) {
+    return err.message;
+  }
+};
+
+module.exports = {
+  getTalkersData,
+  setTalkersData,
+  editTalkersData,
+  deleteTalkerData,
+};

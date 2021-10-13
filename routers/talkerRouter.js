@@ -4,6 +4,7 @@ const {
   getTalkersData,
   setTalkersData,
   editTalkersData,
+  deleteTalkerData,
 } = require('../fileManager.js');
 
 const {
@@ -66,5 +67,12 @@ async (req, res) => {
   res.status(200).json(newData);
   },
 );
+
+router.delete('/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  await deleteTalkerData(id);
+  
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
 
 module.exports = router;

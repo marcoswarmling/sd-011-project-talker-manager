@@ -25,13 +25,6 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// Requisito 1 - Crie o endpoint GET /talker
-app.get('/talker', async (req, res) => {
-  const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
-  if (!returnedTalkers) return res.status(HTTP_OK_STATUS).json([]);
-  return res.status(HTTP_OK_STATUS).json(JSON.parse(returnedTalkers));
-});
-
 // Requisito 7 - Crie o endpoint GET /talker/search?q=searchTerm
 app.get('/talker/search',
   tokenValidation,
@@ -47,6 +40,13 @@ app.get('/talker/search',
 
     return res.status(HTTP_OK_STATUS).json(filteredTalkers);
   });
+
+// Requisito 1 - Crie o endpoint GET /talker
+app.get('/talker', async (req, res) => {
+  const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
+  if (!returnedTalkers) return res.status(HTTP_OK_STATUS).json([]);
+  return res.status(HTTP_OK_STATUS).json(JSON.parse(returnedTalkers));
+});
 
 // Requisito 2 - Crie o endpoint GET /talker/:id
 app.get('/talker/:id', async (req, res) => {

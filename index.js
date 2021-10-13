@@ -73,7 +73,7 @@ async (req, res) => {
 });
 
 app.put('/talker/:id',
-// validateToken,
+validateToken,
 validateName,
 validateAge,
 validateTalk,
@@ -83,26 +83,36 @@ async (req, res) => {
   const { name, age, talk } = req.body;
   const { id } = req.params;
 
-  const file = await fs.readFile(fileBeingRead, 'utf-8');
-  const jsonFile = JSON.parse(file);
-  const findID = jsonFile.find((s) => s.id === parseInt(id, 10));
-  const newSpeaker = { id, name, age, talk };
-  const index = jsonFile.indexOf(findID);
+  try {
+    const file = await fs.readFile(fileBeingRead, 'utf-8');
+    const jsonFile = JSON.parse(file);
+    const findID = jsonFile.find((s) => s.id === parseInt(id, 10));
+    const newSpeaker = { id, name, age, talk };
+    const index = jsonFile.indexOf(findID);
 
-  jsonFile[index] = newSpeaker;
-  fs.writeFile(fileBeingRead, JSON.stringify(jsonFile));
-
-  res.status(HTTP_OK_STATUS).json(newSpeaker).end();
+    jsonFile[index] = newSpeaker;
+    fs.writeFile(fileBeingRead, JSON.stringify(jsonFile));
+    
+    res.status(HTTP_OK_STATUS).json(newSpeaker);
+  } catch (e) {
+    res.status(404).json({ message: e.message });
+  }
 });
 
 app.delete('/talker/:id', validateToken, async (req, res) => {
   const { id } = req.params;
-  const file = await fs.readFile(fileBeingRead, 'utf-8');
-  const jsonFile = JSON.parse(file);
-  const newList = jsonFile.filter((s) => s.id !== parseInt(id, 10));
-  fs.writeFile(fileBeingRead, JSON.stringify(newList));
 
-  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
+  try {
+    const file = await fs.readFile(fileBeingRead, 'utf-8');
+    const jsonFile = JSON.parse(file);
+
+    const newList = jsonFile.filter((s) => s.id !== parseInt(id, 10));
+    fs.writeFile(fileBeingRead, JSON.stringify(newList));
+
+    res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (e) {
+    res.status(404).json({ message: e.message });
+  }
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

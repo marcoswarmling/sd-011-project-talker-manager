@@ -87,7 +87,7 @@ async (req, res) => {
     const file = await fs.readFile(fileBeingRead, 'utf-8');
     const jsonFile = JSON.parse(file);
     const newSpeaker = { id, name, age, talk };
-    const replaceSpeaker = jsonFile.find((s) => {
+    const replaceSpeaker = jsonFile.map((s) => {
       if (s.id === parseInt(id, 10)) return newSpeaker;
       return s;
     });
@@ -108,6 +108,7 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
     const jsonFile = JSON.parse(file);
 
     const newList = jsonFile.filter((s) => s.id !== parseInt(id, 10));
+    
     fs.writeFile(fileBeingRead, JSON.stringify(newList));
 
     res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });

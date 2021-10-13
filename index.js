@@ -14,7 +14,6 @@ const {
 const app = express();
 app.use(bodyParser.json());
 
-// const HTTP_OK_STATUS = HTTP_OK_STATUS;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar

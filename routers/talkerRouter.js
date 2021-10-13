@@ -41,8 +41,8 @@ router.post('/talker',
   const id = talker.length + 1;
 
   talker.push({ id, name, age, talk });
-  await fs.newFile('../talker.json', JSON.stringify(talker));
-  return res.status(201).status({ name, age, talk, id });
+  await fs.writeFile('../talker.json', JSON.stringify(talker));
+  return res.status(201).json({ name, age, talk, id });
 });
 
 module.exports = router;

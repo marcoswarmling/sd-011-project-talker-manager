@@ -2,10 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+const emailValidation = require('./ middleware/validateEmail');
+const passwordValidation = require('./ middleware/validatePassword');
+const { genToken } = require('./ middleware/genToken');
+
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
+const HTTP_ERROR_STATUS = 404;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -23,10 +28,12 @@ app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   const findTalkersById = talkers.find((talker) => talker.id === parseInt(id, 10));
   if (!findTalkersById) {
-    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(HTTP_ERROR_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(HTTP_OK_STATUS).json(findTalkersById);
 });
+
+app.post('/login', emailValidation, passwordValidation, genToken);
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -7,6 +7,7 @@ app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const ARQUIVO = 'talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -14,7 +15,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', (_req, res) => {
-  const dados = fs.readFileSync('talker.json', 'utf-8');
+  const dados = fs.readFileSync(ARQUIVO, 'utf-8');
 
   if (!dados) {
    return res.status(200).json([]);
@@ -24,7 +25,7 @@ app.get('/talker', (_req, res) => {
 });
 
 app.get('/talker/:id', (req, res) => {
-  const dados = fs.readFileSync('talker.json', 'utf-8');
+  const dados = fs.readFileSync(ARQUIVO, 'utf-8');
   const newdados = JSON.parse(dados);
 
   const { id } = req.params;
@@ -36,13 +37,20 @@ app.get('/talker/:id', (req, res) => {
     return res.status(200).send(dadosId);
 });
 
-// const validatedToken = (req, res, next) => {
-//   const token = req.headers.authorization;
-//   if (token !== '7mqaVRXJSp886CGr') {
-//     return res.status(400).json({ message: 'Você não está autorizado!' });
-//   }
-//   next();
-// };
+function validTokenUser(req, res, next) {
+  const { token } = req.headers;
+  console.log(token);
+  if (!token) {
+ return res.status(401)
+   .json({ message: 'Token não encontrado' });
+}
+
+  if (token.length !== 16) {
+ return res.status(401)
+  .json({ message: 'Token inválido' });
+}
+next();
+}
 
 function validateEmailRequisitos(email) {
   const re = /\S+@\S+\.com/;
@@ -61,11 +69,11 @@ function validaPassword(req, res, next) {
   const { password } = req.body;
   console.log(req.body);
   if (!password) {
-    res.status(400).json({ message: 'O campo "password" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
 
   if (password.length < 6) {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   next();
@@ -80,7 +88,7 @@ function validaEmail(req, res, next) {
 }
 
   if (!consultaEmail) {
- res.status(400)
+ return res.status(400)
   .json({ message: 'O "email" deve ter o formato "email@email.com"' });
 }
 next();
@@ -88,42 +96,27 @@ next();
 
 function validaUserName(req, res, next) {
   const { name } = req.body;
-  if (!name) {
+  if (name === '' || name === undefined) {
  return res.status(400)
    .json({ message: 'O campo "name" é obrigatório' });
 }
 
   if (name.length < 3) {
- res.status(400)
-  .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-}
-next();
-}
-
-function validTokenUser(req, res, next) {
-  const token = req.headers.authorization;
-  console.log(token);
-  if (!token) {
  return res.status(400)
-   .json({ message: 'Token não encontrado' });
-}
-
-  if (token.length < 16) {
- res.status(400)
-  .json({ message: 'Token inválido' });
+  .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
 }
 next();
 }
 
 function validAge(req, res, next) {
   const { age } = req.body;
-  if (!age) {
+  if (age === '' || age === undefined) {
  return res.status(400)
    .json({ message: 'O campo "idade" é obrigatório' });
 }
 
   if (age.length < 18) {
- res.status(400)
+ return res.status(400)
   .json({ message: 'A pessoa palestrate deve ser maior de idade' });
 }
 next();
@@ -139,7 +132,7 @@ function validWat(req, res, next) {
 }
 
   if (rate.length < 1 || rate.length > 5) {
- res.status(400)
+ return res.status(400)
   .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 }
   
@@ -150,7 +143,7 @@ function validDataAndRate(req, res, next) {
   const { talk: { watchedAt, rate } } = req.body;
   
   if (rate.length === 0 || watchedAt.length === 0) {
-    res.status(400)
+    return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
    }
    next();
@@ -161,22 +154,22 @@ app.post('/login', validaPassword, validaEmail, (_req, res) => {
   res.status(200).json({ token });
 });
 
-app.post('/talker', 
+app.post('/talker',
 validTokenUser,
 validaUserName,
 validAge,
 validWat,
 validDataAndRate, (req, res) => {
   const { name, age, talk } = req.body;
-  const dados = fs.readFileSync('talker.json', 'utf-8');
+  const dados = fs.readFileSync(ARQUIVO, 'utf-8');
     const FileAdd = JSON.parse(dados);
     const id = FileAdd.length + 1;
     const newAddDocument = { name, age, id, talk: { ...talk } };
   
   FileAdd.push(newAddDocument);
-  fs.writeFileSync('./talker.json', JSON.stringify(FileAdd));
+  fs.writeFileSync(ARQUIVO, JSON.stringify(FileAdd));
 
-    res.status(200).json(newAddDocument);
+    res.status(201).json(newAddDocument);
 });
 
 app.put('/talker/:id',
@@ -184,16 +177,36 @@ validTokenUser,
 validaUserName,
 validAge,
 validWat,
-validDataAndRate, (req, _res) => {
-    const { id } = req.params;
-    const dados = fs.readFileSync('talker.json', 'utf-8');
+validDataAndRate, (req, res) => {
+   const { id } = req.params;
+   const dados = fs.readFileSync(ARQUIVO, 'utf-8');
    const newdados = JSON.parse(dados);
-   console.log('Antes:', newdados);
 
     const dadosId = newdados.findIndex((i) => Number(i.id) === Number(id));
     const { name, age, talk: { watchedAt, rate } } = req.body;
     
     newdados[dadosId] = { ...newdados[dadosId], name, age, talk: { watchedAt, rate } };
+
+    fs.writeFileSync(ARQUIVO, JSON.stringify(newdados));
+    res.status(200).json(newdados);
+    });
+
+    app.put('/talker/:id',
+validTokenUser,
+validaUserName,
+validAge,
+validWat,
+validDataAndRate, (req, res) => {
+   const { id } = req.params;
+   const dados = fs.readFileSync(ARQUIVO, 'utf-8');
+   const newdados = JSON.parse(dados);
+
+    const dadosId = newdados.findIndex((i) => Number(i.id) === Number(id));
+    
+    newdados.splice(dadosId, 1);
+
+    fs.writeFileSync(ARQUIVO, JSON.stringify(newdados));
+    res.status(200).json(newdados);
     });
 
 app.listen(PORT, () => {

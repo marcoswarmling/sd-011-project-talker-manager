@@ -14,6 +14,10 @@ router.get('/', rescue(async (req, res) => {
 }),
 errorFsRead);
 
+// router.get('/', (req, res) => { // Meu testador de rota // nã rola, já tem "/"
+//     res.status(200).json({ message: 'frajola'});
+// });
+
 router.get('/:id', async (req, res, next) => {
     const { id } = req.params;
 
@@ -29,9 +33,5 @@ router.get('/:id', async (req, res, next) => {
         next(error);
     }
 });
-
-// router.get('/', (req, res) => { // meu testador de rota
-//     res.status(200).json({ message: 'frajola'});
-// });
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const errorMiddleware = require('./utils/errorMiddleware');
 const talkerRouter = require('./routers/talkerRouter');
+const loginRouter = require('./routers/loginRouter');
 
 // ATENÇÃO, MAN: Cara, vc trocou node por nodemon no package.json. desfaça depois.
 
@@ -19,6 +20,7 @@ app.get('/', (_request, response) => {
 app.use('/piu', talkerRouter); // meu testador de rota
 
 app.use('/talker', talkerRouter);
+app.use('/login', loginRouter);
 
 app.all('*', (req, res) => res.status(404).send('Router not found'));
 

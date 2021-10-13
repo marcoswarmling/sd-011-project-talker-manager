@@ -18,9 +18,11 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
+const readingFile = fs.readFile('./talker.json', 'utf-8');
+
 app.get('/talker', async (_req, res) => {
   try {
-    const file = await fs.readFile('./talker.json', 'utf-8');
+    const file = await readingFile;
     res.status(HTTP_OK_STATUS).json(JSON.parse(file));
   } catch (e) {
     res.status(404).json({ message: e.message });
@@ -31,7 +33,7 @@ app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const file = await fs.readFile('./talker.json', 'utf-8');
+    const file = await readingFile;
     const jsonFile = JSON.parse(file);
 
     const findId = jsonFile.find((s) => s.id === parseInt(id, 10));
@@ -58,7 +60,7 @@ validateWatchedAt,
 validateRate,
 async (req, res) => {
   const { name, age, talk } = req.body;
-  const file = await fs.readFile('./talker.json', 'utf-8');
+  const file = await readingFile;
   const jsonFile = JSON.parse(file);
   const lastEntry = jsonFile.length;
   const id = lastEntry + 1;
@@ -68,6 +70,28 @@ async (req, res) => {
   fs.writeFile('./talker.json', JSON.stringify(jsonFile));
 
   return res.status(201).json(newSpeaker);
+});
+
+app.put('/talker/:id',
+validateToken,
+validateName,
+validateAge,
+validateTalk,
+validateWatchedAt,
+validateRate,
+async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+
+  const file = await readingFile;
+  const jsonFile = JSON.parse(file);
+  const findID = jsonFile.find((s) => s.id === parseInt(id, 10));
+  const newSpeaker = { id, name, age, talk };
+
+  jsonFile[findID] = newSpeaker;
+  fs.writeFile('./talker.json', JSON.stringify(jsonFile));
+
+  return res.status(HTTP_OK_STATUS).json(newSpeaker);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

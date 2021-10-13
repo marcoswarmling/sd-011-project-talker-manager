@@ -91,6 +91,18 @@ app.put('/talker/:id',
     return res.status(HTTP_OK_STATUS).json({ id: Number(id), name, age, talk });
   });
 
+// Requisito 6 - Crie o endpoint DELETE /talker/:id
+app.delete('/talker/:id',
+  tokenValidation,
+  async (req, res) => {
+    const { id } = req.params;
+    const returnedTalkers = await fs.readFile(talkerJSON, 'utf-8');
+    const talkersDB = JSON.parse(returnedTalkers);
+    const filteredIds = talkersDB.filter((talker) => talker.id !== Number(id));
+    fs.writeFile(talkerJSON, JSON.stringify(filteredIds));
+    return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  });
+
 app.listen(PORT, () => {
   console.log('Online');
 });

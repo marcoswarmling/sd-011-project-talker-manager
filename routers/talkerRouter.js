@@ -7,7 +7,7 @@ router.get('/talker', async (_req, res) => {
   res.status(200).json(dataTalker);
 });
 
-router.get('talker/:id', (req, res) => {
+router.get('/talker/:id', (req, res) => {
     const { id } = req.params;
     const dataId = fs.readFileSync('./talker.json', 'utf-8');
     const talkerId = JSON.parse(dataId);

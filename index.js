@@ -46,6 +46,8 @@ const validatePassword = (request, response, next) => {
 
 const validateToken = (request, response, next) => {
   const { authorization } = request.headers;
+  console.log(request.headers);
+  console.log(authorization);
 
   if (!authorization) {
     return response.status(401).json({ message: 'Token não encontrado' });
@@ -80,7 +82,7 @@ const validateAge = (request, response, next) => {
 const validateTalk = (request, response, next) => {
   const { talk } = request.body;
   const { watchedAt, rate } = talk;
-  if (!talk || talk === '' || !watchedAt || !rate) {
+  if ((!talk || talk === '') || (!watchedAt || !rate)) {
     return response.status(400).json({ message: 
       'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });

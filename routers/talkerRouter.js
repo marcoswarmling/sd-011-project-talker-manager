@@ -13,7 +13,23 @@ const {
 
 const FILE = 'talker.json';
 
-// ATENÇÃO, MAN: Cara, vc trocou node por nodemon no package.json. desfaça depois
+router.get('/search', tokenValidator, rescue(async (req, res) => {
+    const { searchTerm } = req.query;
+    let foundSearch = [];    
+    readFile(FILE)
+    .then((data) => JSON.parse(data))
+    .then((talkers) => {
+        if (!searchTerm) return res.status(200).send(talkers);
+        if (searchTerm) {
+            foundSearch = talkers.filter((item) => item.name.includes(searchTerm));
+        }
+
+      return res.status(200).send(foundSearch);
+    })
+    .catch((error) => error);
+
+    // Outra maneira de fazer é o modo try/catch). Nesse caso não usaria o "rescue".
+}));
 
 router.get('/', rescue(async (req, res) => {
     const talkers = await readFile(FILE);

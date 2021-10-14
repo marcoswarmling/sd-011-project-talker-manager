@@ -1,6 +1,6 @@
 const fieldChecker = require('./fieldChecker');
 
-// FONTE: Adaptação dos exercício do bloco.
+// FONTE: Google, Course e exercícios do bloco.
 
 function tokenValidator(req, res, next) {
   const { authorization } = req.headers;
@@ -83,46 +83,6 @@ function nameValidator(req, res, next) {
     next();
 }
 
-// COMENTADO PARA ADAPTAR DEPOIS
-
-// function countryValidator(req, res, next) {
-//     const { country } = req.body;
-
-//     if (!country) {
-//         return next({ status: 400, message: 'Missing field: country' });
-//     }
-
-//     if (country.length < 3) {
-//         return next({ status: 400, message: 'Invalid data: country' });
-//     }
-
-//     next();
-// }
-
-// function initialsValidator(req, res, next) {
-//     const { initials } = req.body;
-
-//     if (!initials) {
-//         return next({ status: 400, message: 'Missing field: initials' });
-//     }
-
-//     if (initials.length > 3) {
-//         return next({ status: 400, message: 'Invalid data: initials' });
-//     }
-
-//     next();
-// }
-
-// function leagueValidator(req, res, next) {
-//     const { league } = req.body;
-
-//     if (league && !(league.length >= 3 && league.length <= 5)) {
-//           return next({ status: 400, message: 'Invalid data: league' });
-//     }
-
-//     next();
-// }
-
 module.exports = { 
   emailValidator,
   pwValidator,
@@ -130,7 +90,4 @@ module.exports = {
   nameValidator,
   ageValidator,
   talkValidator,
-//   countryValidator,
-//   initialsValidator,
-//   leagueValidator,
 };

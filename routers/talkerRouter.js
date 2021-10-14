@@ -5,7 +5,7 @@ const readFile = require('../utils/readFile');
 const { writeFileFunc } = require('../utils/writeFile');
 
 const { 
-    tokenValidator, 
+    tokenValidator,
     nameValidator,
     ageValidator,
     talkValidator,
@@ -19,12 +19,13 @@ router.get('/search', tokenValidator, rescue(async (req, res) => {
     readFile(FILE)
     .then((data) => JSON.parse(data))
     .then((talkers) => {
-      if (!searchTerm) return res.status(200).send(talkers);
-        
-      foundSearch = talkers.filter((item) => item.name.includes(searchTerm));
-      return foundSearch;
+        if (!searchTerm) return res.status(200).send(talkers);
+        if (searchTerm) {
+            foundSearch = talkers.filter((item) => item.name.includes(searchTerm));
+        }
+
+      return res.status(200).send(foundSearch);
     })
-    .then((found) => res.status(200).send(found))
     .catch((error) => error);
 
     // Outra maneira de fazer é o modo try/catch). Nesse caso não usaria o "rescue".
@@ -63,12 +64,13 @@ router.delete('/:id', tokenValidator, rescue(async (req, res) => {
     const foundMessage = 'Pessoa palestrante não encontrada';
     readFile(FILE)
     .then((data) => JSON.parse(data))
-    .then(async (talkers) => {
+    .then((talkers) => {
+        const updatedTalkers = talkers;
         const foundIndex = talkers.findIndex((item) => item.id.toString() === id);
-  
-      if (!foundIndex) return res.status(404).json({ message: foundMessage });
-      if (foundIndex) talkers.splice(foundIndex, 1);
-      await writeFileFunc(FILE, talkers);
+        if (!foundIndex) return res.status(404).json({ message: foundMessage });
+        updatedTalkers.splice(foundIndex, 1);
+
+      writeFileFunc(FILE, updatedTalkers);
       return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
     })
     .catch((error) => error);

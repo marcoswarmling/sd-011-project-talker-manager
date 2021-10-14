@@ -51,7 +51,7 @@ const checkDateFormat = (req, res, next) => {
 const checkRates = (req, res, next) => {
   const { rate } = req.body.talk;
   const rateFormat = /^[1-5]$/;
-  if (!rateFormat.test(rate)) {
+  if ((!rateFormat.test(rate)) && (rate < 1 || rate > 5)) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });

@@ -43,10 +43,28 @@ ageValidator, talkValidator, rescue(async (req, res) => {
     // Outra maneira de fazer é o modo try/catch). Nesse caso não usaria o "rescue".
 }));
 
+router.put('/:id', tokenValidator, nameValidator,
+ageValidator, talkValidator, rescue(async (req, res) => {
+    const { id } = req.params;
+    const foundMessage = 'Pessoa palestrante não encontrada';
+    readFile(FILE)
+    .then((data) => JSON.parse(data))
+    .then((talkers) => {
+        const updatedTalkers = talkers;
+        const foundIndex = talkers.findIndex((item) => item.id.toString() === id);
+        if (!foundIndex) return res.status(404).json({ message: foundMessage });
+        updatedTalkers[foundIndex] = { ...talkers[foundIndex], ...req.body };
+
+      writeFileFunc(FILE, updatedTalkers);
+      return res.status(200).json(updatedTalkers[foundIndex]);
+    })
+    .catch((error) => error);
+
+    // Outra maneira de fazer é o modo try/catch). Nesse caso não usaria o "rescue".
+}));
+
 router.get('/:id', rescue(async (req, res, next) => {
     const { id } = req.params;
-
-    // Comentado outra maneira de fazer (modo try/catch). Nesse caso não usaria o "rescue".
 
     try {
         const talkers = await readFile(FILE);

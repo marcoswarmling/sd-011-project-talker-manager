@@ -2,7 +2,7 @@ const fieldChecker = require('./fieldChecker');
 
 // FONTE: Adaptação dos exercício do bloco.
 
-function tokenValidator(req, res, next) { // ok - avaliar
+function tokenValidator(req, res, next) {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -14,7 +14,7 @@ function tokenValidator(req, res, next) { // ok - avaliar
   next();
 }
 
-function emailValidator(req, res, next) { // ok 
+function emailValidator(req, res, next) { 
     const { email } = req.body;
 
     const emailRegexp = new RegExp('\\S+@\\S+\\.\\S+');
@@ -44,7 +44,7 @@ function pwValidator(req, res, next) {
   next();
 }
 
-function ageValidator(req, res, next) { // ok - avaliar (Talvez validar se é int)
+function ageValidator(req, res, next) {
   const { age } = req.body;
   const validationMessage = 'A pessoa palestrante deve ser maior de idade';
   if (!age) return next({ status: 400, message: 'O campo "age" é obrigatório' });
@@ -54,12 +54,6 @@ function ageValidator(req, res, next) { // ok - avaliar (Talvez validar se é in
   next();
 }
 
-// function fieldChecker(status, msg, next, bool) {
-//     if (bool) {
-//   return next({ status, message: msg });
-//   }
-// }
-
 function talkValidator(req, res, next) {
   const { talk } = req.body;
   const date = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
@@ -68,6 +62,7 @@ function talkValidator(req, res, next) {
   const rateMessage = 'O campo "rate" deve ser um inteiro de 1 à 5';
 
     if (talk) {
+      fieldChecker(400, rateMessage, next, talk.rate === 0); // rate validation
       fieldChecker(400, talkMessage, next, !talk.watchedAt || !talk.rate); // check if watchedAt and rate exists
       fieldChecker(400, dateMessage, next, !date.test(talk.watchedAt)); // watchedAt validation
       fieldChecker(400, rateMessage, next, !(talk.rate >= 1 && talk.rate <= 5)); // rate validation
@@ -77,7 +72,7 @@ function talkValidator(req, res, next) {
   next({ status: 400, message: talkMessage });
 }
 
-function nameValidator(req, res, next) { // ok - avaliar
+function nameValidator(req, res, next) {
     const { name } = req.body;
     const validationMessage = 'O "name" deve ter pelo menos 3 caracteres';
  

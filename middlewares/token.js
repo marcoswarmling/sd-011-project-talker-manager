@@ -1,11 +1,11 @@
 function valToken(req, res, next) {
-  const { authentication } = req.headers;
+  const { authorization } = req.headers;
 
-  if (!authentication || authentication === '') {
+  if (!authorization || authorization === '') {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
 
-  if (authentication.length !== 16) {
+  if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
 

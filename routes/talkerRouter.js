@@ -37,10 +37,10 @@ router.get('/:id', (req, res) => {
 router.post('/', 
   valToken,
   valName,
-  valAge, 
-  valTalk, 
-  valTalkObj, 
-  valCampos, 
+  valAge,
+  valTalk,
+  valCampos,
+  valTalkObj,
   valRate,
   (req, res) => {
     const { name, age, talk } = req.body;
@@ -49,24 +49,23 @@ router.post('/',
       const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf-8'));
       const lastTalker = talkers[talkers.length - 1];
       const newTalker = { name, age, talk, id: Number(lastTalker.id) + 1 };
-      
       talkers.push(newTalker);
 
-    fs.writeFileSync(talkerFile, JSON.stringify(talkers));
-    res.status(201).json(newTalker);
+      fs.writeFileSync(talkerFile, JSON.stringify(talkers));
+      res.status(201).json(newTalker);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
   });
 
-router.put('/:id', 
+router.put('/:id',
   valToken,
   valName,
-  valAge, 
-  valTalk, 
-  valTalkObj, 
-  valCampos, 
+  valAge,
+  valTalk,
   valRate,
+  valCampos,
+  valTalkObj,
   (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;

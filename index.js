@@ -48,7 +48,7 @@ const validateToken = (request, response, next) => {
   const { authorization } = request.headers;
   console.log(request.headers);
   console.log(authorization);
-
+  
   if (!authorization) {
     return response.status(401).json({ message: 'Token não encontrado' });
   }
@@ -82,7 +82,7 @@ const validateAge = (request, response, next) => {
 const validateTalk = (request, response, next) => {
   const { talk } = request.body;
   const { watchedAt, rate } = talk;
-  if ((!talk || talk === '') || (!watchedAt || !rate)) {
+  if ((!talk || !watchedAt) || (!rate)) {
     return response.status(400).json({ message: 
       'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -96,7 +96,7 @@ const validateWatchedAt = (request, response, next) => {
   const validationDate = dateRegex.test(watchedAt);
   if (!validationDate) {
     return response.status(400).json({ 
-      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa',
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
   // Referência: https://stackoverflow.com/questions/15491894/regex-to-validate-date-formats-dd-mm-yyyy-dd-mm-yyyy-dd-mm-yyyy-dd-mmm-yyyy
@@ -141,9 +141,9 @@ app.post('/talker',
   validateToken,
   validateName,
   validateAge,
+  validateRate,
   validateTalk,
   validateWatchedAt,
-  validateRate,
   async (request, response) => {
     const talkers = await talkersJSON();
     const postTalker = { id: talkers.length + 1, ...request.body };

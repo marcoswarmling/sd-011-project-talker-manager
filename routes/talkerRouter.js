@@ -1,12 +1,12 @@
 const express = require('express');
 const fs = require('fs');
-const token = require('../middlewares/token');
-const name = require('../middlewares/name');
-const age = require('../middlewares/age');
-const talk = require('../middlewares/talk');
-const talkObj = require('../middlewares/talkObj');
-const campos = require('../middlewares/campos');
-const rate = require('../middlewares/rate');
+const valToken = require('../middlewares/token');
+const valName = require('../middlewares/name');
+const valAge = require('../middlewares/age');
+const valTalk = require('../middlewares/talk');
+const valTalkObj = require('../middlewares/talkObj');
+const valCampos = require('../middlewares/campos');
+const valRate = require('../middlewares/rate');
 
 const talkerFile = './talker.json';
 
@@ -35,20 +35,20 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', 
-  token,
-  name,
-  age, 
-  talk, 
-  talkObj, 
-  campos, 
-  rate,
+  valToken,
+  valName,
+  valAge, 
+  valTalk, 
+  valTalkObj, 
+  valCampos, 
+  valRate,
   (req, res) => {
-    const { postName, postAge, postTalk } = req.body;
+    const { name, age, talk } = req.body;
 
     try {
       const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf-8'));
       const lastTalker = talkers[talkers.length - 1];
-      const newTalker = { postName, postAge, postTalk, id: Number(lastTalker.id) + 1 };
+      const newTalker = { name, age, talk, id: Number(lastTalker.id) + 1 };
       
       talkers.push(newTalker);
 
@@ -60,20 +60,20 @@ router.post('/',
   });
 
 router.put('/:id', 
-  token,
-  name,
-  age, 
-  talk, 
-  talkObj, 
-  campos, 
-  rate,
+  valToken,
+  valName,
+  valAge, 
+  valTalk, 
+  valTalkObj, 
+  valCampos, 
+  valRate,
   (req, res) => {
     const { id } = req.params;
-    const { putName, putAge, putTalk } = req.body;
+    const { name, age, talk } = req.body;
 
     try {
       const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
-      const editedTalker = { putName, putAge, putTalk, id: Number(id) };
+      const editedTalker = { name, age, talk, id: Number(id) };
       const newList = talkers.map((talker) => {
       if (Number(talker.id) === Number(id)) {
         return editedTalker;

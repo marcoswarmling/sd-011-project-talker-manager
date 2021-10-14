@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const generateToken = require('./authorizationToken.js');
 
-const talker = 'talker.json';
+const talker = './talker.json';
 
 const app = express();
 app.use(bodyParser.json());
@@ -81,11 +81,16 @@ const validateAge = (request, response, next) => {
 
 const validateTalk = (request, response, next) => {
   const { talk } = request.body;
+  if (!talk) {
+    return response.status(400).json(
+      { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+    );
+  }
   const { watchedAt, rate } = talk;
-  if ((!talk || !watchedAt) || (!rate)) {
-    return response.status(400).json({ message: 
-      'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
+  if ((!watchedAt) || (!rate && rate !== 0)) {
+    return response.status(400).json(
+      { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+    );
   } 
   next();
 };
@@ -112,6 +117,7 @@ const validateRate = (request, response, next) => {
   next();
 };
 
+// ROTAS
 app.get('/talker', async (_request, response) => {
   const data = await talkersJSON();
   if (data.length === 0) return response.status(HTTP_OK_STATUS).json([]);
@@ -141,9 +147,9 @@ app.post('/talker',
   validateToken,
   validateName,
   validateAge,
-  validateRate,
   validateTalk,
   validateWatchedAt,
+  validateRate,
   async (request, response) => {
     const talkers = await talkersJSON();
     const postTalker = { id: talkers.length + 1, ...request.body };

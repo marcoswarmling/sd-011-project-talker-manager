@@ -8,13 +8,12 @@ const {
     tokenValidator, 
     nameValidator,
     ageValidator,
-    talkValidator
+    talkValidator,
  } = require('../utils/validators');
 
 const FILE = 'talker.json';
 
 // ATENÇÃO, MAN: Cara, vc trocou node por nodemon no package.json. desfaça depois
-
 
 router.get('/', rescue(async (req, res) => {
     const talkers = await readFile(FILE);
@@ -23,81 +22,43 @@ router.get('/', rescue(async (req, res) => {
 }),
 errorFsRead);
 
-
 router.post('/', tokenValidator, nameValidator,
 ageValidator, talkValidator, rescue(async (req, res) => {
+    const { name, id, age,
+        talk: { rate, watchedAt } } = req.body;
 
-    const { 
-        name, id, age,
-        talk: { rate, watchedAt} 
-     } = req.body;
-
-    let newData =  { 
-        name, id, age,
-        talk: { rate, watchedAt} 
-     };
-
-
+    const newData = { name, id, age, talk: { rate, watchedAt } };
 
     readFile(FILE)
     .then((data) => JSON.parse(data))
     .then((talkers) => {
-
       newData.id = talkers.length + 1; // Adiciona id incrementado em 1.
 
       talkers.push(newData);
       writeFileFunc(FILE, talkers);
       return res.status(201).json(newData);
-
     })
     .catch((error) => error);
 
-
-    // Comentado outra maneira de fazer (modo try/catch). 
-    // Nesse caso não usaria o "rescue".
-
-    // try {
-
-    //   const talkers = JSON.parse(await readFile(FILE));
-    //   talkers.push(newData);
-    //   await writeFileFunc(FILE, talkers);
-    //   return res.status(201).send(newData);
-    
-    // } catch (error) {
-    //     return error;
-    // }
-
-
+    // Outra maneira de fazer é o modo try/catch). Nesse caso não usaria o "rescue".
 }));
-
 
 router.get('/:id', rescue(async (req, res, next) => {
     const { id } = req.params;
 
-    // Comentado outra maneira de fazer (modo try/catch). 
-    // Nesse caso não usaria o "rescue".
+    // Comentado outra maneira de fazer (modo try/catch). Nesse caso não usaria o "rescue".
 
-    // try {
-    //     const talkers = await readFile(FILE);
-    //     const talkerParsed = JSON.parse(talkers);
-    //     const found = talkerParsed.find((item) => item.id.toString() === id);
+    try {
+        const talkers = await readFile(FILE);
+        const talkerParsed = JSON.parse(talkers);
+        const found = talkerParsed.find((item) => item.id.toString() === id);
         
-    //     if (!found) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+        if (!found) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-    //     res.status(200).json(found);
-
-    // } catch (error) {
-    //     next(error);
-    // }
-
-    const talkers = await readFile(FILE);
-    const talkerParsed = JSON.parse(talkers);
-    const found = talkerParsed.find((item) => item.id.toString() === id);
-    
-    if (!found) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-
-    res.status(200).json(found);
-  
+        res.status(200).json(found);
+    } catch (error) {
+        next(error);
+    }
 }));
 
 module.exports = router;

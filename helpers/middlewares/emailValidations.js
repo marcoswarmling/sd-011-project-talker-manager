@@ -9,6 +9,4 @@ const emailValidate = (req, res, next) => {
       next();
     };
 
-module.exports = {
-  emailValidate,
-};
+module.exports = emailValidate;

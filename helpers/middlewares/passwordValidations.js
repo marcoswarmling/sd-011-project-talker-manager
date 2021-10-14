@@ -8,6 +8,4 @@ const passwordValidate = (req, res, next) => {
     next();
   };
 
-  module.exports = {
-    passwordValidate,
-  };
+  module.exports = passwordValidate;

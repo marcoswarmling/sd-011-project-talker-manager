@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const fs = require('fs');
 const { readContentTalker } = require('../helpers/readFile');
+const emailValidate = require('../helpers/middlewares/emailValidations');
+const passwordValidate = require('../helpers/middlewares/passwordValidations');
 
 router.get('/talker', async (_req, res) => {
   const dataTalker = await readContentTalker('./talker.json') || [];
@@ -21,4 +23,8 @@ router.get('/talker/:id', (req, res) => {
     res.status(200).json(talkers);
   });
 
-  module.exports = router;
+router.post('/login', emailValidate, passwordValidate, (_req, res) => {
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+});
+  
+module.exports = router;

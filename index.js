@@ -4,8 +4,6 @@ const errorMiddleware = require('./utils/errorMiddleware');
 const talkerRouter = require('./routers/talkerRouter');
 const loginRouter = require('./routers/loginRouter');
 
-// ATENÇÃO, MAN: Cara, vc trocou node por nodemon no package.json. desfaça depois.
-
 const app = express();
 app.use(bodyParser.json());
 
@@ -16,8 +14,6 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
-
-app.use('/piu', talkerRouter); // meu testador de rota
 
 app.use('/talker', talkerRouter);
 app.use('/login', loginRouter);

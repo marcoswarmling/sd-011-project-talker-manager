@@ -80,11 +80,16 @@ router.delete('/talker/:id', validateToken, rescue(async (req, res) => {
 }));
 
 router.get('/talker/search', validateToken, rescue(async (req, res) => {
-  const { q } = req.query;
+  const { searchTerm } = req.query;
   const talkers = await talkerUtils.getTalker();
-  const searchTalker = talkers.filter((talker) => talker.name.includes(q)).toArray();
+  const searchTalker = talkers.filter((talker) => talker.name.includes(searchTerm));
 
-  if (!q) res.status(200).json(talkers);
+  if (!searchTerm) {
+    return res.status(200).json(talkers);
+  }
+  if (!searchTalker) {
+    return res.status(200).json([]);
+  }
   return res.status(200).json(searchTalker);
 }));
 

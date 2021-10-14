@@ -116,9 +116,9 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(data);
 });
 
-app.get('/talker/:id', (request, response) => {
+app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
-  const data = JSON.parse(fs.readFileSync(talker));
+  const data = await talkersJSON();
   const talkerById = data.find((talkId) => talkId.id === Number(id));
   if (!talkerById) {
     return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });

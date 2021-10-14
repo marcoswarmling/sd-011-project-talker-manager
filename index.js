@@ -110,8 +110,8 @@ const validateRate = (request, response, next) => {
   next();
 };
 
-app.get('/talker', (_request, response) => {
-  const data = JSON.parse(fs.readFileSync(talker, 'utf8'));
+app.get('/talker', async (_request, response) => {
+  const data = await talkersJSON();
   if (data.length === 0) return response.status(HTTP_OK_STATUS).json([]);
   response.status(HTTP_OK_STATUS).send(data);
 });

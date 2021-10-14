@@ -148,7 +148,7 @@ app.post('/talker',
     talkers.push(postTalker);
     await fs.writeFile('./talker.json', JSON.stringify(talkers));
     return response.status(201).json(postTalker);
-  // Referência: Ajuda com assincronicidade do arquivo com Anderso Silva - Andy - Turma 10-A
+  // Referência: Ajuda com assincronicidade do arquivo com Anderson Silva - Andy - Turma 10-A
 });
 
 app.listen(PORT, () => {

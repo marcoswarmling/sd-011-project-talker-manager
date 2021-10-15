@@ -181,7 +181,7 @@ app.delete('/talker/:id',
   data.splice(getTalkerIndex, 1);
   await fs.writeFile(talker, JSON.stringify(data));
   return response.status(200).json({
-    message: 'Pessoa palestrante deletada com sucesso'
+    message: 'Pessoa palestrante deletada com sucesso',
   });
 });
 

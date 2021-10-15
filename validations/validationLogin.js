@@ -1,7 +1,4 @@
 const crypto = require('crypto');
-const fs = require('fs').promises;
-
-const writeTalker = (newFile) => fs.writeFile('./talker.json', JSON.stringify(newFile));
 
 const emailOk = (req, res, next) => {
   const { email } = req.body;
@@ -27,23 +24,9 @@ const passwordOk = (req, res, next) => {
   next();
 };
 
-const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  const user = {
-    email,
-    password,
-  };
-  const db = await fs.readFile('./talker.json', 'utf8')
-  .then((data) => JSON.parse(data));
-  db.push(user);
-  await writeTalker(db);
-  res.status(201).json(user);
-  next();
-};
-
 const generateToken = (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   return res.status(200).json({ token });
 };
 
-module.exports = { emailOk, passwordOk, generateToken, login };
+module.exports = { emailOk, passwordOk, generateToken };

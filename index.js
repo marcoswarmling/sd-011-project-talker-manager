@@ -15,12 +15,12 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.use('/talker', talker);
-
 app.use('/login',
   login.emailOk,
   login.passwordOk,
   login.generateToken);
+
+app.use('/talker', talker);
 
 app.listen(PORT, () => {
   console.log(`Online na porta ${PORT}`);

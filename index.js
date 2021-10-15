@@ -18,15 +18,16 @@ app.listen(PORT, () => {
 
 const paths = {
   talker: './talker.json',
-  tokens: './tokens.json',
 };
 
 const { FileRead } = require('./services/FilesHandler');
 
-app.get('/talker', async (_request, response) => {
+app.route('/talker').get(async (_request, response) => {
   const contentFromFile = await FileRead(paths.talker);
 
-  if (contentFromFile) return response.status(HTTP_OK_STATUS).json(contentFromFile);
+  if (contentFromFile) {
+    return response.status(200).json(contentFromFile);
+  }
 
-  return response.status(HTTP_OK_STATUS).json([]);
+  response.status(200).json([]);
 });

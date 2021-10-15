@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('oi');
+  console.log('Porta disponivel');
 });
 
 const paths = {

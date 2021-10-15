@@ -13,5 +13,4 @@ async function handleFileReading(filePath, encoding = ENCODING) {
         console.error(`Erro ao ler o arquivo: ${JSON.stringify(message)}`);
     }
 }
-
 module.exports = { handleFileReading };

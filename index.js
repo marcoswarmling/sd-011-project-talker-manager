@@ -121,6 +121,17 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(data);
 });
 
+app.get('/talker/search',  
+  validateToken,
+  async (request, response) => {
+    const { query } = request.query;
+    const data = await talkersJSON();
+    if (!query || query === '') return response.status(200).json(data);
+    const getName = data.filter((talkers) => talkers.name.includes(query));
+    if (!query) return response.status(200).json([]);
+    return response.status(200).json(getName);
+});
+
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
   const data = await talkersJSON();

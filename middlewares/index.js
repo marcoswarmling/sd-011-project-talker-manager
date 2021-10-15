@@ -11,6 +11,7 @@ const {
     validationTalk,
 } = require('./validations');
 const putTalker = require('./putTalker');
+const deleteTalker = require('./deleteTalker');
 
 module.exports = { 
     getTalker, 
@@ -18,6 +19,7 @@ module.exports = {
     login,
     postTalker,
     putTalker,
+    deleteTalker,
     validationToken,
     validationName,
     validationAge,

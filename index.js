@@ -172,6 +172,19 @@ app.put('/talker/:id',
   return response.status(200).json(data[getTalkerIndex]);
 });
 
+app.delete('/talker/:id',
+  validateToken,
+  async (request, response) => {
+  const { id } = request.params;
+  const data = await talkersJSON();
+  const getTalkerIndex = data.findIndex((talkerId) => talkerId.id === Number(id));
+  data.splice(getTalkerIndex, 1);
+  await fs.writeFile(talker, JSON.stringify(data));
+  return response.status(200).json({
+    message: 'Pessoa palestrante deletada com sucesso'
+  });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

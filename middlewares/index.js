@@ -10,12 +10,14 @@ const {
     validationRate,
     validationTalk,
 } = require('./validations');
+const putTalker = require('./putTalker');
 
 module.exports = { 
     getTalker, 
     getId,
     login,
     postTalker,
+    putTalker,
     validationToken,
     validationName,
     validationAge,

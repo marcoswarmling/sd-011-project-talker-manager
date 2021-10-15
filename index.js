@@ -11,6 +11,7 @@ const {
   validationDate,
   validationRate,
   postTalker,
+  putTalker,
 } = require('./middlewares');
 
 const app = express();
@@ -36,6 +37,15 @@ app.post('/talker', [
   validationDate,
   validationRate,
   postTalker,
+]);
+
+app.put('/talker/:id', [
+  validationToken,
+  validationName,
+  validationAge,
+  validationDate,
+  validationRate,
+  putTalker,
 ]);
 
 app.listen(PORT, () => {

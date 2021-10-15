@@ -2,7 +2,15 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 
-const { validateEmail, validatePassword } = require('./midwares/validates');
+const { validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateDate,
+  validateRate,
+  validateTalk,
+} = require('./midwares/validates');
 
 app.use(bodyParser.json());
 
@@ -32,7 +40,34 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', validateEmail, validatePassword, (_req, res) => {
- res.status(200).json({ token: '7mqaVRXJSp886CGr' }); 
+ res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+});
+
+app.post('/talker',
+validateToken,
+validateName,
+validateAge,
+validateDate,
+validateRate,
+validateTalk, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { watchedAt, rate } = talk;
+  const talkerDB = await JSON.parse(fs.readFile('./talker.json', 'utf8'));
+  const id = talkerDB.length + 1;
+  const newTalker = {
+    id,
+    name,
+    age,
+    talk: {
+      watchedAt,
+      rate,
+    },
+  };
+
+  talkerDB.push(newTalker);
+
+  await fs.writeFile('./talker.json', JSON.stringify(talkerDB));
+  res.status(201).json(newTalker);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

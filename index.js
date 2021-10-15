@@ -12,7 +12,6 @@ const {
   validationRate,
   postTalker,
   putTalker,
-  deleteTalker,
 } = require('./middlewares');
 
 const app = express();
@@ -47,11 +46,6 @@ app.put('/talker/:id', [
   validationDate,
   validationRate,
   putTalker,
-]);
-
-app.delete('/talker/:id', [
-  validationToken,
-  deleteTalker,
 ]);
 
 app.listen(PORT, () => {

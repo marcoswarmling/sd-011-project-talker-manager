@@ -45,10 +45,7 @@ const validatePassword = (request, response, next) => {
 };
 
 const validateToken = (request, response, next) => {
-  const { authorization } = request.headers;
-  console.log(request.headers);
-  console.log(authorization);
-  
+  const { authorization } = request.headers;  
   if (!authorization) {
     return response.status(401).json({ message: 'Token não encontrado' });
   }
@@ -157,6 +154,21 @@ app.post('/talker',
     await fs.writeFile('./talker.json', JSON.stringify(talkers));
     return response.status(201).json(postTalker);
   // Referência: Ajuda com assincronicidade do arquivo com Anderson Silva - Andy - Turma 10-A
+});
+
+app.put('/:id', 
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (request, response) => {
+  const { id } = request.params;
+  const data = await talkersJSON();
+  const getTalkerIndex = data.findIndex((talkerId) => talkerId.id === Number(id));
+  data[getTalkerIndex] = { ...data[getTalkerIndex], ...request.body };
+  return response.status(200).json(data[getTalkerIndex]);
 });
 
 app.listen(PORT, () => {

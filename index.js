@@ -168,6 +168,7 @@ app.put('/talker/:id',
   const data = await talkersJSON();
   const getTalkerIndex = data.findIndex((talkerId) => talkerId.id === Number(id));
   data[getTalkerIndex] = { ...data[getTalkerIndex], ...request.body };
+  await fs.writeFile(talker, JSON.stringify(data))
   return response.status(200).json(data[getTalkerIndex]);
 });
 

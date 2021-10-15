@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Estamos aqui');
+  console.log('oi');
 });
 
 const paths = {

@@ -87,4 +87,18 @@ router.put('/:id',
     }
   });
 
+  router.delete('/:id', valToken, (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const talkers = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+      const newList = talkers.filter((talker) => Number(talker.id) !== Number(id));
+
+      fs.writeFileSync(talkerFile, JSON.stringify(newList));
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
 module.exports = router;

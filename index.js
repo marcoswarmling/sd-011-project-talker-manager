@@ -60,8 +60,17 @@ validateAge, validateTalk, validateRate, validateWatchedAt, (req, res) => {
   const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
   talkers[talkerIndex] = { id: Number(id), name, age, talk };
 
-  fs.writeFileSync('./talker.json', JSON.stringify([talkers[talkerIndex]], null, 2));
+  fs.writeFileSync(talkerRoute, JSON.stringify([talkers[talkerIndex]], null, 2));
   res.status(200).json(talkers[talkerIndex]);
+});
+
+app.delete('/talker/:id', verifyToken, (req, res) => {
+const { id } = req.params;
+const talkers = JSON.parse(fs.readFileSync(talkerRoute, 'utf-8'));
+const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+talkers.splice(talkerIndex, 1);
+fs.writeFileSync(talkerRoute, JSON.stringify(talkers), 'utf-8');
+return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {

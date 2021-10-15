@@ -1,16 +1,10 @@
-const router = require('express').Router();
+const crypto = require('crypto');
 const fs = require('fs').promises;
-// const crypto = require('crypto');
 
 const writeTalker = (newFile) => fs.writeFile('./talker.json', JSON.stringify(newFile));
 
-// const generateToken = (req, res) => {
-//   const token = crypto.randomBytes(8).toString('hex');
-//   return res.status(200).json({ token });
-// };
-
-const emailOk = (req, res) => {
-  const email = req;
+const emailOk = (req, res, next) => {
+  const { email } = req.body;
   const valid = /\S+@\S+\.\S+/; // -> https://www.horadecodar.com.br
 
   if (!email || email === '') {
@@ -19,30 +13,37 @@ const emailOk = (req, res) => {
   if (!valid.test(email)) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
+  next();
 };
 
-const passwordOk = (req, res) => {
-  const password = req;
+const passwordOk = (req, res, next) => {
+  const { password } = req.body;
   if (!password || password === '') {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
+  next();
 };
 
-router.post('/', async (req, res) => {
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
   const user = {
-    email: req.body.email,
-    password: req.body.password,
+    email,
+    password,
   };
-  emailOk(user.email, res);
-  passwordOk(user.password, res);
   const db = await fs.readFile('./talker.json', 'utf8')
   .then((data) => JSON.parse(data));
   db.push(user);
   await writeTalker(db);
   res.status(201).json(user);
-});
+  next();
+};
 
-module.exports = router;
+const generateToken = (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  return res.status(200).json({ token });
+};
+
+module.exports = { emailOk, passwordOk, generateToken, login };

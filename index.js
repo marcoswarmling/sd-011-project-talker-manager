@@ -5,7 +5,8 @@ const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
-const HTTP_NOT_FIND_STATUS = 404;
+const HTTP_NOT_FOUND_STATUS = 404;
+const HTTP_BAD_REQUEST_STATUS = 400;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -23,6 +24,11 @@ const paths = {
 
 const { FileRead } = require('./services/FilesHandler');
 const { findId } = require('./services/SearchById');
+const {
+  validator,
+  validatorPassword,
+  validatorInfo,
+} = require('./services/LoginHandler');
 
 app.route('/talker').get(async (_request, response) => {
   const contentFromFile = await FileRead(paths.talker);
@@ -45,6 +51,27 @@ app.route('/talker/:id').get(async (request, response) => {
   }
 
   return response
-    .status(HTTP_NOT_FIND_STATUS)
+    .status(HTTP_NOT_FOUND_STATUS)
     .json({ message: 'Pessoa palestrante não encontrada' });
+});
+
+app.route('/login').post((request, response) => {
+  const { email, password } = request.body;
+  const validateEmail = validator(email);
+  const validatePassword = validatorPassword(password);
+
+  if (validateEmail !== true) {
+    return response
+      .status(HTTP_BAD_REQUEST_STATUS)
+      .json({ message: validateEmail });
+  }
+
+  if (validatePassword !== true) {
+    return response
+      .status(HTTP_BAD_REQUEST_STATUS)
+      .json({ message: validatePassword });
+  }
+
+  const getToken = validatorInfo(email, password);
+  return response.status(HTTP_OK_STATUS).json({ token: getToken.token });
 });

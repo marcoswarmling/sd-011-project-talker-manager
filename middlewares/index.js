@@ -6,9 +6,9 @@ const {
     validationToken,
     validationName,
     validationAge,
-    validationTalk,
     validationDate,
     validationRate,
+    validationTalk,
 } = require('./validations');
 
 module.exports = { 
@@ -19,7 +19,7 @@ module.exports = {
     validationToken,
     validationName,
     validationAge,
-    validationTalk,
     validationDate,
     validationRate,
+    validationTalk,
 };

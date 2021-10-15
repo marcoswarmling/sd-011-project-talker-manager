@@ -28,16 +28,15 @@ app.get('/talker', getTalker);
 app.get('/talker/:id', getId);
 app.post('/login', login);
 
-const validations = [
+app.post('/talker', [
   validationToken,
   validationName,
   validationAge,
   validationTalk,
   validationDate,
   validationRate,
-];
-
-app.post('/talker', [validations, postTalker]);
+  postTalker,
+]);
 
 app.listen(PORT, () => {
   console.log('Online');

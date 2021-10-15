@@ -8,4 +8,5 @@ const postTalker = (req, res) => {
   fs.writeFileSync('talker.json', JSON.stringify(talker));
   return res.status(201).json(newTalker);
 };
+
 module.exports = postTalker;

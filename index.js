@@ -10,6 +10,11 @@ const PORT = '3000';
 const fs = require('fs').promises;
 const rescue = require('express-rescue');
 
+const crypto = require('crypto');
+const {
+  validateEmail,
+  validatePassword } = require('./validate');
+
 function getTalkers() {
   return fs.readFile('./talker.json', 'utf-8')
     .then((fileContent) => JSON.parse(fileContent));
@@ -34,6 +39,11 @@ app.get('/talker/:id', rescue(async (req, res) => {
   }
   res.status(200).json(talker);
 }));
+
+app.post('/login', validateEmail, validatePassword, (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(200).json({ token });
+});
 
 app.listen(PORT, () => {
   console.log('Online');

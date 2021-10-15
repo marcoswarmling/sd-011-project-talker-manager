@@ -22,7 +22,7 @@ const paths = {
 };
 
 const { FileRead } = require('./services/FilesHandler');
-const { findId } = require('./services/SearchById.js');
+const { findId } = require('./services/SearchById');
 
 app.route('/talker').get(async (_request, response) => {
   const contentFromFile = await FileRead(paths.talker);

@@ -13,10 +13,28 @@ async function getAllTalkers(_req, res) {
 
     return res.status(200).json(parsed);
   } catch (error) {
-    res.status(400).json({ message: 'Erro, né' });
+    res.status(400).json({ message: error });
+  }
+}
+
+async function getTalkerById(req, res) {
+  const { talkerId } = req.params;
+  try {
+    const data = await fs.readFile(talkersFile, 'utf-8');
+    const parsed = JSON.parse(data);
+    const talkerById = parsed.find((talker) => talker.id === parseInt(talkerId, 10));
+
+    if (!talkerById) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+
+    return res.status(200).json(talkerById);
+  } catch (error) {
+    res.status(400).json({ message: error });
   }
 }
 
 module.exports = {
   getAllTalkers,
+  getTalkerById,
 };

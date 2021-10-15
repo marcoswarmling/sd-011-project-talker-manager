@@ -11,10 +11,10 @@ const fs = require('fs');
 
 app.get('/talker', async (_req, res) => {
   try {
-    const dados = await fs.readFile('./talker.json', 'utf-8');
+    const dados = JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
     res.status(HTTP_OK_STATUS).json(dados);
-  } catch (e) {
-    res.status(404).json({ message: e.message });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 });
 

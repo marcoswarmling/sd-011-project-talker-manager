@@ -1,13 +1,15 @@
 const validationToken = require('./validationToken');
 const validationName = require('./validationName');
 const validationAge = require('./validationAge');
-const validationData = require('./validationData');
 const validationTalk = require('./validationTalk');
+const validationDate = require('./validationDate');
+const validationRate = require('./validationRate');
 
 module.exports = {
     validationToken,
     validationName,
     validationAge,
-    validationData,
     validationTalk,
+    validationDate,
+    validationRate,
 };

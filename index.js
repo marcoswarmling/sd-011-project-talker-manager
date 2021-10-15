@@ -36,6 +36,7 @@ const validations = [
   validationDate,
   validationRate,
 ];
+
 app.post('/talker', [validations, postTalker]);
 
 app.listen(PORT, () => {

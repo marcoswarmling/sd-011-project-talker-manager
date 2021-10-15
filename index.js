@@ -57,11 +57,10 @@ validateAge, validateTalk, validateRate, validateWatchedAt, (req, res) => {
   const { id } = req.params;
   const talkers = JSON.parse(fs.readFileSync(talkerRoute, 'utf-8'));
 
-  const talkerIndex = talkers.findIndex((talker) => talker.id === +id);
- console.log(talkerIndex);
-  talkers[talkerIndex] = { id: talkerIndex, name, age, talk };
+  const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+  talkers[talkerIndex] = { id: Number(id), name, age, talk };
 
-  fs.writeFileSync('./talker.json', JSON.stringify(talkerIndex, null, 2));
+  fs.writeFileSync('./talker.json', JSON.stringify([talkers[talkerIndex]], null, 2));
   res.status(200).json(talkers[talkerIndex]);
 });
 

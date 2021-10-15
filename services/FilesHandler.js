@@ -2,7 +2,7 @@ const { readFile } = require('fs').promises;
 
 const ENCODING = 'utf8';
 
-async function handleFileReading(filePath, encoding = ENCODING) {
+async function FileRead(filePath, encoding = ENCODING) {
     try {
         const fileContent = await readFile(filePath, encoding);
 
@@ -13,4 +13,4 @@ async function handleFileReading(filePath, encoding = ENCODING) {
         console.error(`Erro ao ler o arquivo: ${JSON.stringify(message)}`);
     }
 }
-module.exports = { handleFileReading };
+module.exports = { FileRead };

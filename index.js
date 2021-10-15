@@ -156,7 +156,7 @@ app.post('/talker',
   // Referência: Ajuda com assincronicidade do arquivo com Anderson Silva - Andy - Turma 10-A
 });
 
-app.put('talker/:id', 
+app.put('/talker/:id', 
   validateToken,
   validateName,
   validateAge,

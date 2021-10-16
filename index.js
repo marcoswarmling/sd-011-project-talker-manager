@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const talkersRoutes = require('./routes/talkerRoutes');
+const loginRoutes = require('./routes/loginRoutes');
+
+const Errors = require('./middlewares/errorMiddlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,6 +18,9 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/talker', talkersRoutes);
+app.use('/login', loginRoutes);
+
+app.use(Errors.errorHandling);
 
 app.listen(PORT, () => {
   console.log('Online');

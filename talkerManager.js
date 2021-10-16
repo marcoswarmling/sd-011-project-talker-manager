@@ -83,7 +83,7 @@ router.delete('/talker/:id', validateToken, rescue(async (req, res) => {
 router.get('/talker/search', validateToken, rescue(async (req, res) => {
   const { q } = req.query;
   const talkers = await talkerUtils.getTalker();
-  const searchTalker = talkers.filter(({name}) => name.toLowerCase().includes(q.toLowerCase()));
+  const searchTalker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
 
   return res.status(200).json(searchTalker);
 }));

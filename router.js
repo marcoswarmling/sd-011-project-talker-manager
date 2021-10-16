@@ -67,4 +67,14 @@ router.get('/talker', rescue(async (_request, response) => {
       fs.writeFile(talkersFile, JSON.stringify(talkers));
       return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
       });
+
+      // Requisito 7:
+router.get('/talker/search', tokenValidation, async (req, res) => {
+  const { q } = req.query;
+  const talker = JSON.parse(await fs.readFile(talkersFile, 'utf-8'));
+  const searchResult = talker.filter((result) => result.name.includes(q));
+  
+  res.status(200).json(searchResult);
+  });
+  
 module.exports = router;

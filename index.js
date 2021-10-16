@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const TalkerController = require('./controllers/talkerController');
+const LoginController = require('./controllers/loginController');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,6 +16,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/talker', TalkerController);
+app.use('/login', LoginController);
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -1,3 +1,8 @@
+/** -------------------------------------------- *
+ * Create a random token in JavaScript.
+ * Source: https://stackoverflow.com/a/48031564 
+ * --------------------------------------------- */
+
 const generateToken = (tokenLength) => {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let token = '';

@@ -51,8 +51,23 @@ async function postTalker(req, res) {
   }
 }
 
+async function putTalker(req, res) {
+  const { talkerId } = req.params;
+  try {
+    const data = await fs.readFile(talkersFile, 'utf-8');
+    const parsed = JSON.parse(data);
+    const talkerToEdit = parsed.findIndex((talker) => talker.id === parseInt(talkerId, 10));
+    parsed[talkerToEdit] = { id: parsed[talkerToEdit].id, ...req.body };
+    await fs.writeFile(talkersFile, JSON.stringify(parsed));
+    return res.status(200).json(parsed[talkerToEdit]);
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+}
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
   postTalker,
+  putTalker,
 };

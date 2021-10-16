@@ -12,10 +12,20 @@ const postTalkerValidations = [
   Validations.isValidRate,
 ];
 
+const putTalkerValidations = [
+  Validations.isValidToken,
+  Validations.isValidName,
+  Validations.isValidAge,
+  Validations.isValidTalk,
+  Validations.isValidWatchedAt,
+  Validations.isValidRate,
+];
+
 const router = express.Router();
 
 router.get('/', Talker.getAllTalkers);
 router.get('/:talkerId', Talker.getTalkerById);
 router.post('/', postTalkerValidations, Talker.postTalker);
+router.put('/:talkerId', putTalkerValidations, Talker.putTalker);
 
 module.exports = router;

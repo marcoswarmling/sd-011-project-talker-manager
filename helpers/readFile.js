@@ -10,6 +10,4 @@ const readContentTalker = async (path) => {
     }
 };
 
-module.exports = {
-    readContentTalker,
-};
+module.exports = readContentTalker;

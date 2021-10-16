@@ -27,5 +27,6 @@ router.get('/', Talker.getAllTalkers);
 router.get('/:talkerId', Talker.getTalkerById);
 router.post('/', postTalkerValidations, Talker.postTalker);
 router.put('/:talkerId', putTalkerValidations, Talker.putTalker);
+router.delete('/:talkerId', Validations.isValidToken, Talker.deleteTalker);
 
 module.exports = router;

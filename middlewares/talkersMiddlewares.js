@@ -65,9 +65,23 @@ async function putTalker(req, res) {
   }
 }
 
+async function deleteTalker(req, res) {
+  const { talkerId } = req.params;
+  try {
+    const data = await fs.readFile(talkersFile, 'utf-8');
+    const parsed = JSON.parse(data);
+    await fs.writeFile(talkersFile,
+      JSON.stringify(parsed.filter((talker) => talker.id !== parseInt(talkerId, 10))));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+}
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
   postTalker,
   putTalker,
+  deleteTalker,
 };

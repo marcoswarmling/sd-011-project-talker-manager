@@ -13,7 +13,7 @@ const {
 
 const FILE = 'talker.json';
 
-router.get('/search', tokenValidator, rescue(async (req, res) => {
+router.get('/search', tokenValidator, rescue((req, res) => {
     const { searchTerm } = req.query;
     let foundSearch = [];    
     readFile(FILE)
@@ -79,7 +79,7 @@ router.delete('/:id', tokenValidator, rescue((req, res) => {
 }));
 
 router.put('/:id', tokenValidator, nameValidator,
-ageValidator, talkValidator, rescue(async (req, res) => {
+ageValidator, talkValidator, rescue((req, res) => {
     const { id } = req.params;
     const foundMessage = 'Pessoa palestrante não encontrada';
     readFile(FILE)

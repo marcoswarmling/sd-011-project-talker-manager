@@ -37,7 +37,7 @@ rescue(async (req, res) => {
   const talkers = await getTalkers();
   talkers.push({ id: talkers.length + 1, ...req.body });
   await setTalkers(talkers);
-  return res.status(201).json(req.body);
+  res.status(201).json(talkers[talkers.length - 1]);
 }));
 
 module.exports = router;

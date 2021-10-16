@@ -5,8 +5,8 @@ function getTalkers() {
     .then((fileContent) => JSON.parse(fileContent));
 }
 
-function setTalkers(newTalker) {
-  return fs.writeFile('./talker.json', JSON.stringify(newTalker));
+async function setTalkers(newTalker) {
+  fs.writeFile('./talker.json', JSON.stringify(newTalker));
 }
 
 module.exports = { getTalkers, setTalkers };

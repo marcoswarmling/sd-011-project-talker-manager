@@ -1,29 +1,56 @@
 const router = require('express').Router();
-const fs = require('fs');
+const fs = require('fs').promises;
+const {
+  validToken,
+  validName,
+  validAge,
+  validWatchedAt,
+  validRate,
+  validExistsTalk,
+} = require('../middlewars/talker');
 
-router.get('/', (_req, res) => {
+router.get('/', async (_req, res) => {
   try {
-    const talkers = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
-    if (!talkers) return res.status(200).json([]);
+    const readTalkers = await fs.readFile('talker.json', 'utf-8');
+    const parseReadTalkers = JSON.parse(readTalkers);
+    if (!parseReadTalkers) return res.status(200).json([]);
 
-    res.status(200).json(talkers);
+    return res.status(200).json(parseReadTalkers);
   } catch (err) {
-    res.status(500).json({ err });
+    return res.status(500).json({ err });
   }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const searchById = JSON.parse(fs.readFileSync('talker.json', 'utf-8'))
+    const searchById = await fs.readFile('talker.json', 'utf-8');
+    const parseSearchById = JSON.parse(searchById)
     .find((talker) => talker.id === Number(id));
 
-    if (!searchById) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    if (!parseSearchById) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
+    }
 
-    res.status(200).json(searchById);
+    return res.status(200).json(parseSearchById);
   } catch (err) {
-    res.status(500).json({ err });
+    return res.status(500).json({ err });
   }
 });
 
-module.exports = { router };
+router.post('/', validToken, validName, validAge,
+validExistsTalk, validWatchedAt, validRate, async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+
+  const readTalkers = await fs.readFile('talker.json', 'utf-8');
+  const parseReadTalkers = JSON.parse(readTalkers);
+  const id = parseReadTalkers.length > 0 ? parseReadTalkers[parseReadTalkers.length - 1].id + 1 : 1;
+
+  const newTalker = { id, name, age, talk: { watchedAt, rate } };
+
+  parseReadTalkers.push(newTalker);
+  await fs.writeFile('talker.json', JSON.stringify(parseReadTalkers));
+  return res.status(201).json(newTalker);
+});
+
+module.exports = router;

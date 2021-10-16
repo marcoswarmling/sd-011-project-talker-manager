@@ -68,13 +68,21 @@ router.get('/talker', rescue(async (_request, response) => {
       fs.writeFile(talkersFile, JSON.stringify(talker));
     });
   
-    // Requisito 6:
-    router.delete('/talker/:id', tokenValidation, async (req, res) => {
-      const talkers = JSON.parse(await fs.readFile(talkersFile, 'utf-8'));
-      const talkerIndex = talkers.findIndex(({ id }) => +req.params.id === +id);
-      talkers.splice(talkerIndex, 1);
-      fs.writeFile(talkersFile, JSON.stringify(talkers));
-      return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
-      });
+    // Requisito 5:
+
+router.put('/talker/:id', tokenValidation, nameValidation, 
+ageValidation, talkValidation, watchedAtValidation, rateValidation, 
+    async (req, res) => {
+      const talker = JSON.parse(await fs.readFile(talkersFile, 'utf-8'));
+    const { name, age, talk } = req.body;
+   
+    const mapping = talker.map((e) =>
+    (Number(e.id) === Number(req.params.id) ? { id: e.id, name, age, talk } : e));
+
+    const finding = mapping.find(({ id }) => Number(id) === Number(req.params.id));
+
+    res.status(200).json(finding);
+    fs.writeFile(talkersFile, JSON.stringify(mapping));
+    });
 
 module.exports = router;

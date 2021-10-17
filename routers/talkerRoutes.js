@@ -27,17 +27,34 @@ const {
   }));
 
   router.post('/', 
-validateToken,
-validateName,
-validateAge,
-validateTalk,
-validateRate,
-validateWatchedAt,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateRate,
+  validateWatchedAt,
 rescue(async (req, res) => {
   const talkers = await getTalkers();
   talkers.push({ id: talkers.length + 1, ...req.body });
   await setTalkers(talkers);
   res.status(201).json(talkers[talkers.length - 1]);
+}));
+
+  router.put('/:id', 
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateRate,
+  validateWatchedAt,
+rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await getTalkers();
+  const indexTalkers = talkers.findIndex((p) => p.id === Number(id));
+  talkers[indexTalkers] = { ...talkers[indexTalkers], name, age, talk };
+  await setTalkers(talkers);
+  res.status(200).json(talkers[indexTalkers]);
 }));
 
 module.exports = router;

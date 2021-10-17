@@ -40,10 +40,10 @@ function validatorPassword(password) {
     return isValidPassword;
 }
 
-const { NUmberRandomic } = require('crypto');
+const { NumberRandomic } = require('crypto');
 
 function GeneratorToken() {
-    const newToken = NUmberRandomic(8).toString('hex');
+    const newToken = NumberRandomic(8).toString('hex');
 
     return newToken;
 }

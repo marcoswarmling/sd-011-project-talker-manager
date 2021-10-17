@@ -22,6 +22,20 @@ talkerRouter.get('/', (_req, res) => {
   }
 });
 
+talkerRouter.get('/search', isValidToken, (req, res) => {
+  const { q } = req.query;
+
+  try {
+    const talkers = JSON.parse(fs.readFileSync(TALKER, UTF));
+
+    const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+
+    return res.status(200).json(filteredTalkers);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
 talkerRouter.get('/:id', (req, res) => {
   const { id } = req.params;
 
@@ -94,5 +108,21 @@ talkerRouter.put(
     }
   },
 );
+
+talkerRouter.delete('/:id', isValidToken, (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const talkers = JSON.parse(fs.readFileSync(TALKER, UTF));
+
+    const filteredTalkers = talkers.filter((talker) => talker.id !== Number(id));
+
+    fs.writeFileSync(TALKER, JSON.stringify(filteredTalkers));
+
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
 
 module.exports = talkerRouter;

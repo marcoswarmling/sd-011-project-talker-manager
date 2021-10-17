@@ -16,7 +16,6 @@ const getAllTalkers = (_req, res) => res.status(200).json(readTalkers());
 
 const getTalkerById = (req, res) => {
   const { id } = req.params;
-  console.log(typeof id);
   const filterTalker = readTalkers().find((talker) => talker.id === parseInt(id, 10));
   return (!filterTalker) ? (
     res.status(404).json({ message: 'Pessoa palestrante não encontrada' })

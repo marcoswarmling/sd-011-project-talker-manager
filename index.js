@@ -26,7 +26,7 @@ const paths = {
 };
 
 const { FileRead, FileWrite } = require('./services/FilesHandler');
-const { findId } = require('./services/SearchById');
+const { findId, updateContentById } = require('./services/SearchById');
 const {
   handleSignupInfo,
   emailValidator,
@@ -97,4 +97,24 @@ app.post('/talker', async (request, response) => {
   currentFileContent.push(validatedTalkerData);
   await FileWrite(paths.talker, currentFileContent);
   return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
+});
+
+app.put('/talker/:id', async (request, response) => {
+  const { name, age, talk } = request.body;
+  const { id } = request.params;
+
+  const validatedTalkerData = handleRegistration(name, age, talk, id);
+
+  if (typeof validatedTalkerData === 'string') {
+    return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
+  }
+
+  const currentFileContent = await FileRead(paths.talker);
+  const newContent = updateContentById(currentFileContent, id);
+  const updatedTalker = { name, age: Number(age), id: Number(id), talk };
+
+  newContent.push(updatedTalker);
+  await FileWrite(paths.talker, newContent);
+
+  return response.status(HTTP_OK_STATUS).json(updatedTalker);
 });

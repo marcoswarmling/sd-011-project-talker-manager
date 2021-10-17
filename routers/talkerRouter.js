@@ -31,7 +31,8 @@ router.get('/talker/:id', (req, res) => {
   });
 
 router.post('/login', emailValidate, passwordValidate, (_req, res) => {
-  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+  const token = '7mqaVRXJSp886CGr';
+  res.status(200).json({ token });
 });
   
 router.post(

@@ -182,6 +182,7 @@ function registrationFinalObject(targetName, targetAge, talkObject) {
         age: Number(targetAge),
         id: Number(id),
         talk: {
+            // eslint-disable-next-line radix
             rate: parseInt(talkObject.rate, 10),
             watchedAt: talkObject.watchedAt,
         },

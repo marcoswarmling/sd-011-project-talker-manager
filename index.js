@@ -13,5 +13,3 @@ const PORT = '3000';
 app.listen(PORT, () => {
   console.log('Online');
 });
-
-// Linha 4: Unable to resolve path to module './routes/talker'.

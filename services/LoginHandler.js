@@ -1,20 +1,23 @@
+const { randomBytes } = require('crypto');
+
 const MIN_PASSWORD_LENGTH = 6;
 
-const errors = {
+const errorMessages = {
     emptyEmail: 'O campo "email" é obrigatório',
     invalidEmail: 'O "email" deve ter o formato "email@email.com"',
     emptyPassword: 'O campo "password" é obrigatório',
     invalidPassword: 'O "password" deve ter pelo menos 6 caracteres',
 };
 
-function validator(email) {
-    const { emptyEmail, invalidEmail } = errors;
+function emailValidator(email) {
+    const { emptyEmail, invalidEmail } = errorMessages;
 
     const REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email || email === '') {
         return emptyEmail;
     }
+
     const isValidEmail = REGEX.test(email);
 
     if (!isValidEmail) {
@@ -24,8 +27,8 @@ function validator(email) {
     return isValidEmail;
 }
 
-function validatorPassword(password) {
-    const { emptyPassword, invalidPassword } = errors;
+function passwordValidator(password) {
+    const { emptyPassword, invalidPassword } = errorMessages;
 
     if (!password) {
         return emptyPassword;
@@ -40,16 +43,14 @@ function validatorPassword(password) {
     return isValidPassword;
 }
 
-const { NumberRandomic } = require('crypto');
-
-function GeneratorToken() {
-    const newToken = NumberRandomic(8).toString('hex');
+function uniqueTokenGenerator() {
+    const newToken = randomBytes(8).toString('hex');
 
     return newToken;
 }
 
-function validatorInfo(email, password) {
-    const newUserToken = GeneratorToken();
+function handleSignupInfo(email, password) {
+    const newUserToken = uniqueTokenGenerator();
     const newUser = {
         email,
         password,
@@ -58,4 +59,5 @@ function validatorInfo(email, password) {
 
     return newUser;
 }
-module.exports = { validator, validatorPassword, validatorInfo };
+
+module.exports = { handleSignupInfo, emailValidator, passwordValidator };

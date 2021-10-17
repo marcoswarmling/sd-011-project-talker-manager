@@ -20,15 +20,15 @@ app.listen(PORT, () => {
 
 const paths = {
   talker: './talker.json',
-  
+
 };
 
 const { FileRead } = require('./services/FilesHandler');
 const { findId } = require('./services/SearchById');
 const {
-  validator,
-  validatorPassword,
-  validatorInfo,
+  handleSignupInfo,
+  emailValidator,
+  passwordValidator,
 } = require('./services/LoginHandler');
 
 app.route('/talker').get(async (_request, response) => {
@@ -58,8 +58,8 @@ app.route('/talker/:id').get(async (request, response) => {
 
 app.route('/login').post((request, response) => {
   const { email, password } = request.body;
-  const validateEmail = validator(email);
-  const validatePassword = validatorPassword(password);
+  const validateEmail = emailValidator(email);
+  const validatePassword = passwordValidator(password);
 
   if (validateEmail !== true) {
     return response
@@ -73,6 +73,6 @@ app.route('/login').post((request, response) => {
       .json({ message: validatePassword });
   }
 
-  const getToken = validatorInfo(email, password);
+  const getToken = handleSignupInfo(email, password);
   return response.status(HTTP_OK_STATUS).json({ token: getToken.token });
 });

@@ -11,6 +11,21 @@ const {
   validateWatchedAt,
   validateRate } = require('../middlewares/talkerValidate');
 
+  router.get('/search',
+  validateToken,
+rescue(async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+  const searchTalker = talkers.filter((t) => t.name.includes(q));
+  if (!q || q === '') {
+    return res.status(200).json(talkers);
+  }
+  if (searchTalker === undefined) {
+    return res.status(200).json([]);
+  }
+  res.status(200).json(searchTalker);
+}));
+
   router.get('/', rescue(async (_req, res) => {
     const talkers = await getTalkers();
     return res.status(200).json(talkers);

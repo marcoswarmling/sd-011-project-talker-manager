@@ -136,5 +136,5 @@ app.delete('/talker/:id', async (request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Online');
+  console.log('Porta disponivel');
 });

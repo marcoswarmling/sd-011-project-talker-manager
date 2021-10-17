@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const talker = require('./routes/talker');
 const postTalker = require('./routes/postTalker');
+const putTalker = require('./routes/putTalker');
 const login = require('./validations/validationLogin');
 
 const app = express();
@@ -31,6 +32,15 @@ postTalker.talkOk,
 postTalker.talkRateOk,
 postTalker.talkWatchedAtOk,
 postTalker.newTalker);
+
+app.put('/talker/:id',
+postTalker.tokenAuthentication,
+postTalker.nameOk,
+postTalker.ageOk,
+postTalker.talkOk,
+postTalker.talkRateOk,
+postTalker.talkWatchedAtOk,
+putTalker.updateTalker);
 
 app.listen(PORT, () => {
   console.log(`Online na porta ${PORT}`);

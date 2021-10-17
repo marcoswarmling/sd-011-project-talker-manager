@@ -5,7 +5,7 @@ const readFile = async (filePath) => {
     const data = await fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-  console.error(`Não encontramos o arquivo: ${filePath}, Error: ${error}`);  
+    return console.error(`Não encontramos o arquivo: ${filePath}, Error: ${error}`);  
   }
 };
 

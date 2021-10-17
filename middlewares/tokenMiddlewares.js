@@ -1,4 +1,4 @@
-const validateToken = (req, res, next) => {
+const validateToken = (req, res) => {
     const token = req.headers.authorization;
   
     if (!token || token === '') {

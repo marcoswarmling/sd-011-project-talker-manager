@@ -57,4 +57,14 @@ rescue(async (req, res) => {
   res.status(200).json(talkers[indexTalkers]);
 }));
 
+  router.delete('/:id',
+  validateToken,
+rescue(async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getTalkers();
+  const deleteTalker = talkers.filter((t) => t.id !== Number(id));
+  await setTalkers(deleteTalker);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}));
+
 module.exports = router;

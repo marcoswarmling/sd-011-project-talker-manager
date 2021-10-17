@@ -1,3 +1,9 @@
+const crypto = require('crypto');
+
+function generateToken() {
+  return crypto.randomBytes(8).toString('hex');
+}
+
 const emaill = (req, res, next) => {
     const { email } = req.body;
     if (!email || email === '') {
@@ -26,4 +32,5 @@ const passwordd = (req, res) => {
 module.exports = {
     emaill,
     passwordd,
+    generateToken,
 };

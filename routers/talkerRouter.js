@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const fs = require('fs');
+const crypto = require('crypto');
 const { readContentTalker } = require('../helpers/readFile');
 const { writeContentTalker } = require('../helpers/writeFile');
-cosnt tokenGenerate = require('../helpers/tokenAutho');
 const emailValidate = require('../helpers/validations/emailValidations');
 const passwordValidate = require('../helpers/validations/passwordValidations');
 const tokenValidate = require('../helpers/validations/tokenValidation');
@@ -11,7 +11,6 @@ const nameValidate = require('../helpers/validations/nameValidation');
 const talkValidate = require('../helpers/validations/talkValidation');
 const rateValidate = require('../helpers/validations/rateValidation');
 const watchedAtValidate = require('../helpers/validations/watchedAtValidation');
-const tokenGenerate = require('../helpers/tokenAutho');
 
 router.get('/talker', async (_req, res) => {
   const dataTalker = await readContentTalker('./talker.json') || [];
@@ -32,8 +31,12 @@ router.get('/talker/:id', (req, res) => {
     res.status(200).json(talkers);
   });
 
-  router.post('/login', emailValidate, passwordValidate, (_req, res) => {
-    res.status(200).json({ token: tokenGenerate() });
+function generateToken() {
+  return crypto.randomBytes(8).toString('hex');
+}
+
+router.post('/login', emailValidate, passwordValidate, (_req, res) => {
+    res.status(200).json({ token: generateToken() });
   });
 
 router.post(
@@ -46,6 +49,7 @@ rateValidate,
 watchedAtValidate, async (req, res) => {
   const talkers = await writeContentTalker(req.body);
   res.status(201).json(talkers);
-});
+},
+);
 
 module.exports = router;

@@ -9,9 +9,11 @@ const {
   validExistsTalk,
 } = require('../middlewars/talker');
 
+const DataBase = 'talker.json';
+
 router.get('/', async (_req, res) => {
   try {
-    const readTalkers = await fs.readFile('talker.json', 'utf-8');
+    const readTalkers = await fs.readFile(DataBase, 'utf-8');
     const parseReadTalkers = JSON.parse(readTalkers);
     if (!parseReadTalkers) return res.status(200).json([]);
 
@@ -24,7 +26,7 @@ router.get('/', async (_req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const searchById = await fs.readFile('talker.json', 'utf-8');
+    const searchById = await fs.readFile(DataBase, 'utf-8');
     const parseSearchById = JSON.parse(searchById)
     .find((talker) => talker.id === Number(id));
 
@@ -42,15 +44,47 @@ router.post('/', validToken, validName, validAge,
 validExistsTalk, validWatchedAt, validRate, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
 
-  const readTalkers = await fs.readFile('talker.json', 'utf-8');
+  const readTalkers = await fs.readFile(DataBase, 'utf-8');
   const parseReadTalkers = JSON.parse(readTalkers);
   const id = parseReadTalkers.length > 0 ? parseReadTalkers[parseReadTalkers.length - 1].id + 1 : 1;
 
   const newTalker = { id, name, age, talk: { watchedAt, rate } };
 
   parseReadTalkers.push(newTalker);
-  await fs.writeFile('talker.json', JSON.stringify(parseReadTalkers));
+  await fs.writeFile(DataBase, JSON.stringify(parseReadTalkers));
+
   return res.status(201).json(newTalker);
+});
+
+router.put('/:id', validToken, validName, validAge,
+validExistsTalk, validWatchedAt, validRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+
+  const editTalker = { id: Number(id), name, age, talk: { watchedAt, rate } };
+
+  const readTalkers = await fs.readFile(DataBase, 'utf-8');
+  const parseReadTalkers = JSON.parse(readTalkers);
+
+  const indexIdTalker = parseReadTalkers.findIndex((talker) => Number(talker.id) === Number(id));
+  parseReadTalkers[indexIdTalker] = editTalker;
+
+  await fs.writeFile(DataBase, JSON.stringify(parseReadTalkers));
+  
+  return res.status(200).json(editTalker);
+});
+
+router.delete('/:id', validToken, async (req, res) => {
+  const { id } = req.params;
+
+  const readTalkers = await fs.readFile(DataBase, 'utf-8');
+  const parseReadTalkers = JSON.parse(readTalkers);
+
+  const removeTalker = parseReadTalkers.filter((talker) => talker.id !== Number(id));
+  
+  await fs.writeFile('talker.json', JSON.stringify(removeTalker));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

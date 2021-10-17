@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 
 const fs = require('fs');
+
+const { verifyEmail, verifyPassword } = require('./middleware/loginValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -43,6 +46,11 @@ app.get('/talker/:id', (request, response) => {
   } catch (error) {
     return response.status(HTTP_ERROR_STATUS).json(error);
   }
+});
+
+app.post('/login', verifyEmail, verifyPassword, (_request, response) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  response.status(HTTP_OK_STATUS).json({ token });
 });
 
 app.listen(PORT, () => {

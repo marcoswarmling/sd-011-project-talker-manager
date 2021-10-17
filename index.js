@@ -5,12 +5,21 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 const { verifyEmail, verifyPassword } = require('./middleware/loginValidation');
+const { validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkWatchedAt,
+  validateTalkRate,
+} = require('./middleware/talkerValidation');
 
 const app = express();
 app.use(bodyParser.json());
 
 const talkers = './talker.json';
+
 const HTTP_OK_STATUS = 200;
+const HTTP_CREATED_STATUS = 201;
 const HTTP_ERROR_STATUS = 500;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
@@ -51,6 +60,29 @@ app.get('/talker/:id', (request, response) => {
 app.post('/login', verifyEmail, verifyPassword, (_request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
   response.status(HTTP_OK_STATUS).json({ token });
+});
+
+app.post('/talker', validateToken,
+validateName,
+validateAge,
+validateTalk,
+validateTalkWatchedAt,
+validateTalkRate,
+(request, response) => {
+  const { name, age, talk } = request.body;
+
+  const idTalker = talkers.length - 1;
+
+  const newTalker = {
+    name,
+    age,
+    id: idTalker,
+    talk,
+  };
+
+  fs.writeFileSync(talkers, newTalker);
+
+  response.status(HTTP_CREATED_STATUS).json(newTalker);
 });
 
 app.listen(PORT, () => {

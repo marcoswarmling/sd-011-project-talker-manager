@@ -28,6 +28,13 @@ app.get('/talker', (req, res) => {
   return res.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.get('/talker/search', verifyToken, (req, res) => {
+  const { q } = req.query;
+  const talkers = JSON.parse(fs.readFileSync(talkerRoute, 'utf-8'));
+  const talkersFound = talkers.filter((talker) => talker.name.includes(q));
+  return res.status(HTTP_OK_STATUS).json(talkersFound);
+});
+
 app.get('/talker/:id', (req, res) => {
   const talkers = JSON.parse(fs.readFileSync(talkerRoute, 'utf-8'));
   const { id } = req.params;

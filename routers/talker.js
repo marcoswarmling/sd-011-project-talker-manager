@@ -4,6 +4,7 @@ const {
   writeContent,
   updateContent,
   deleteContent,
+  searchContent,
 } = require('../services/fileHandler');
 
 const {
@@ -20,6 +21,12 @@ const talkerDB = './talker.json';
 router.get('/', async (_req, res) => {
   const talkers = await readContent(talkerDB) || [];
   res.status(200).json(talkers);
+});
+
+router.get('/search', checkToken, async (req, res) => {
+  const { q } = req.query;
+  const results = await searchContent(talkerDB, q);
+  return res.status(200).json(results);
 });
 
 router.get('/:id', async (req, res) => {

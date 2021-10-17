@@ -3,6 +3,6 @@ const login = require('../middlewares/loginMiddlewares');
 
 const router = express.Router();
 
-router.post('/', login.emaill);
+router.post('/login', login.emaill);
 
 module.exports = router;

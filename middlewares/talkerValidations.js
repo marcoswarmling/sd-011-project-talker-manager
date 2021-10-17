@@ -48,7 +48,7 @@ const checkAge = (req, res, next) => {
 
 const checkTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !(talk.rate && talk.watchedAt)) {
+  if (!talk || !((talk.rate || talk.rate === 0) && talk.watchedAt)) {
     return res
       .status(400)
       .json({ 

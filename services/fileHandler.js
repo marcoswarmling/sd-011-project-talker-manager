@@ -22,7 +22,16 @@ const writeContent = async (file, content) => {
   }
 };
 
+const updateContent = async (file, content, id) => {
+  const db = await readContent(file);
+  const newEntry = { id: Number(id), ...content };
+  const newdb = db.map((talker) => (talker.id === newEntry.id ? newEntry : talker));
+  await fs.writeFile(file, JSON.stringify(newdb));
+  return newEntry;
+};
+
 module.exports = {
   readContent,
   writeContent,
+  updateContent,
 };

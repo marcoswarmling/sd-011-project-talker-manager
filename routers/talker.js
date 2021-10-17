@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const {
   readContent,
-  writeContent, 
+  writeContent,
+  updateContent,
 } = require('../services/fileHandler');
 
 const {
@@ -38,9 +39,13 @@ router.use(
 );
 router.post('/', async (req, res) => {
   const newEntry = await writeContent(talkerDB, req.body);
-  return res
-    .status(201)
-    .json(newEntry);
+  return res.status(201).json(newEntry);
+});
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updatedEntry = await updateContent(talkerDB, req.body, id);
+  return res.status(200).json(updatedEntry);
 });
 
 module.exports = router;

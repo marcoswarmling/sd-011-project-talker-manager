@@ -5,5 +5,4 @@ const router = express.Router();
 
 router.post('/', login.emaill);
 
-
 module.exports = router;

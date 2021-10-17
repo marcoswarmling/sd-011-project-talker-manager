@@ -180,10 +180,9 @@ function registrationFinalObject(targetName, targetAge, talkObject) {
     const newTalker = {
         name: targetName,
         age: Number(targetAge),
-        id,
+        id: Number(id),
         talk: {
-            // eslint-disable-next-line radix
-            rate: parseInt(talkObject.rate),
+            rate: parseInt(talkObject.rate, 10),
             watchedAt: talkObject.watchedAt,
         },
     };

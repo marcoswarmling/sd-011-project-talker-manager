@@ -8,9 +8,10 @@ function findId(database, targetId) {
 
 function findName(database, targetName) {
     const formatString = String(targetName).toLowerCase();
-    // eslint-disable-next-line no-unused-vars
     const filteredRe = database.filter(({ name }) => name.toLowerCase().includes(formatString));
+    return filteredRe;
 }
+
 function updateContentById(database, targetId) {
     const stringToNumber = Number(targetId);
 

@@ -24,6 +24,7 @@ const putTalkerValidations = [
 const router = express.Router();
 
 router.get('/', Talker.getAllTalkers);
+router.get('/search', Validations.isValidToken, Talker.getTalkerBySearch);
 router.get('/:talkerId', Talker.getTalkerById);
 router.post('/', postTalkerValidations, Talker.postTalker);
 router.put('/:talkerId', putTalkerValidations, Talker.putTalker);

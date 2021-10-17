@@ -78,10 +78,27 @@ async function deleteTalker(req, res) {
   }
 }
 
+async function getTalkerBySearch(req, res) {
+  const { q } = req.query;
+  try {
+    const data = await fs.readFile(talkersFile, 'utf-8');
+    const parsed = JSON.parse(data);
+
+    if (!q || q === '') return res.status(200).json(parsed);
+
+    const foundTalkers = parsed.filter((talker) => talker.name.includes(q));
+    if (!foundTalkers) return res.status(200).json([]);
+    return res.status(200).json(foundTalkers);
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+}
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
   postTalker,
   putTalker,
   deleteTalker,
+  getTalkerBySearch,
 };

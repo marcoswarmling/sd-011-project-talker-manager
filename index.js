@@ -9,13 +9,15 @@ const {
   updateContentById,
   deleteContentById,
 } = require('./services/SearchById');
+
 const {
   handleSignupInfo,
   emailValidator,
   passwordValidator,
   handleRegistration,
 } = require('./services/LoginHandler');
-const { FileRead, FileWrite } = require('./services/FilesHandler');
+
+const { fileRead, fileWrite } = require('./services/FilesHandler');
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,7 +39,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_request, response) => {
-  const contentFromFile = await FileRead(paths.talker);
+  const contentFromFile = await fileRead(paths.talker);
 
   if (contentFromFile) return response.status(HTTP_OK_STATUS).json(contentFromFile);
 
@@ -48,7 +50,7 @@ app.get('/talker/search', authenticationMiddleware, searchMiddleware);
 
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
-  const talkersDatabase = await FileRead(paths.talker);
+  const talkersDatabase = await fileRead(paths.talker);
   const findedTalker = findId(talkersDatabase, id);
   const errorMessage = { message: 'Pessoa palestrante não encontrada' };
 
@@ -82,7 +84,7 @@ app.use(authenticationMiddleware);
 app.post('/talker', async (request, response) => {
   const { name, age, talk } = request.body;
 
-  const currentFileContent = await FileRead(paths.talker);
+  const currentFileContent = await fileRead(paths.talker);
   const id = currentFileContent.length + 1;
 
   const validatedTalkerData = handleRegistration(name, age, talk, id);
@@ -92,7 +94,7 @@ app.post('/talker', async (request, response) => {
   }
 
   currentFileContent.push(validatedTalkerData);
-  await FileWrite(paths.talker, currentFileContent);
+  await fileWrite(paths.talker, currentFileContent);
   return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
 });
 
@@ -106,12 +108,12 @@ app.put('/talker/:id', async (request, response) => {
     return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
   }
 
-  const currentFileContent = await FileRead(paths.talker);
+  const currentFileContent = await fileRead(paths.talker);
   const newContent = updateContentById(currentFileContent, id);
   const updatedTalker = { name, age: Number(age), id: Number(id), talk };
 
   newContent.push(updatedTalker);
-  await FileWrite(paths.talker, newContent);
+  await fileWrite(paths.talker, newContent);
 
   return response.status(HTTP_OK_STATUS).json(updatedTalker);
 });
@@ -120,12 +122,12 @@ app.delete('/talker/:id', async (request, response) => {
   const { id } = request.params;
 
   try {
-    const currentFileContent = await FileRead(paths.talker);
+    const currentFileContent = await fileRead(paths.talker);
     const deletionResults = deleteContentById(currentFileContent, id);
     const newContent = deletionResults.content;
     const successMessage = deletionResults.message;
 
-    await FileWrite(paths.talker, newContent);
+    await fileWrite(paths.talker, newContent);
 
     return response.status(HTTP_OK_STATUS).json({ message: successMessage });
   } catch ({ message }) {

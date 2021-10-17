@@ -1,5 +1,5 @@
-const { handleToken } = require('../services/LoginHandler');
-const { FileRead } = require('../services/FilesHandler.js');
+const { handleToken } = require('../services/signupAndLoginHandlers');
+const { handleFileReading } = require('../services/readAndWriteFilesHandler');
 
 const tokens = './tokens.json';
 
@@ -8,7 +8,7 @@ const HTTP_UNAUTHORIZED_STATUS = 401;
 async function authenticationMiddleware(request, response, next) {
     const token = request.headers.authorization;
 
-    const tokensDatabase = await FileRead(tokens);
+    const tokensDatabase = await handleFileReading(tokens);
 
     const validateToken = handleToken(tokensDatabase, token);
 

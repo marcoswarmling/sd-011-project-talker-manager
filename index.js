@@ -5,19 +5,17 @@ const authenticationMiddleware = require('./middlewares/authenticationMiddleware
 const searchMiddleware = require('./middlewares/searchMiddleware.js');
 
 const {
-  findId,
+  searchById,
   updateContentById,
   deleteContentById,
-} = require('./services/SearchById');
-
+} = require('./services/contentHandlers.js');
 const {
   handleSignupInfo,
   emailValidator,
   passwordValidator,
   handleRegistration,
-} = require('./services/LoginHandler');
-
-const { fileRead, fileWrite } = require('./services/FilesHandler');
+} = require('./services/signupAndLoginHandlers');
+const { handleFileReading, handleFileWriting } = require('./services/readAndWriteFilesHandler');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,7 +26,7 @@ const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
 
-const paths = {
+const filePaths = {
   talker: './talker.json',
   tokens: './tokens.json',
 };
@@ -39,7 +37,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_request, response) => {
-  const contentFromFile = await fileRead(paths.talker);
+  const contentFromFile = await handleFileReading(filePaths.talker);
 
   if (contentFromFile) return response.status(HTTP_OK_STATUS).json(contentFromFile);
 
@@ -50,8 +48,8 @@ app.get('/talker/search', authenticationMiddleware, searchMiddleware);
 
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
-  const talkersDatabase = await fileRead(paths.talker);
-  const findedTalker = findId(talkersDatabase, id);
+  const talkersDatabase = await handleFileReading(filePaths.talker);
+  const findedTalker = searchById(talkersDatabase, id);
   const errorMessage = { message: 'Pessoa palestrante não encontrada' };
 
   if (findedTalker) {
@@ -84,7 +82,7 @@ app.use(authenticationMiddleware);
 app.post('/talker', async (request, response) => {
   const { name, age, talk } = request.body;
 
-  const currentFileContent = await fileRead(paths.talker);
+  const currentFileContent = await handleFileReading(filePaths.talker);
   const id = currentFileContent.length + 1;
 
   const validatedTalkerData = handleRegistration(name, age, talk, id);
@@ -94,7 +92,7 @@ app.post('/talker', async (request, response) => {
   }
 
   currentFileContent.push(validatedTalkerData);
-  await fileWrite(paths.talker, currentFileContent);
+  await handleFileWriting(filePaths.talker, currentFileContent);
   return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
 });
 
@@ -108,12 +106,12 @@ app.put('/talker/:id', async (request, response) => {
     return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
   }
 
-  const currentFileContent = await fileRead(paths.talker);
+  const currentFileContent = await handleFileReading(filePaths.talker);
   const newContent = updateContentById(currentFileContent, id);
   const updatedTalker = { name, age: Number(age), id: Number(id), talk };
 
   newContent.push(updatedTalker);
-  await fileWrite(paths.talker, newContent);
+  await handleFileWriting(filePaths.talker, newContent);
 
   return response.status(HTTP_OK_STATUS).json(updatedTalker);
 });
@@ -122,12 +120,12 @@ app.delete('/talker/:id', async (request, response) => {
   const { id } = request.params;
 
   try {
-    const currentFileContent = await fileRead(paths.talker);
+    const currentFileContent = await handleFileReading(filePaths.talker);
     const deletionResults = deleteContentById(currentFileContent, id);
     const newContent = deletionResults.content;
     const successMessage = deletionResults.message;
 
-    await fileWrite(paths.talker, newContent);
+    await handleFileWriting(filePaths.talker, newContent);
 
     return response.status(HTTP_OK_STATUS).json({ message: successMessage });
   } catch ({ message }) {
@@ -136,5 +134,5 @@ app.delete('/talker/:id', async (request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Porta disponivel');
+  console.log('Online');
 });

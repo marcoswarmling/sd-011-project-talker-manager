@@ -1,5 +1,5 @@
-const { findName } = require('../services/SearchById.js');
-const { FileRead } = require('../services/FilesHandler');
+const { searchByName } = require('../services/contentHandlers.js');
+const { handleFileReading } = require('../services/readAndWriteFilesHandler');
 
 const HTTP_OK_STATUS = 200;
 
@@ -9,9 +9,9 @@ async function searchMiddleware(request, response) {
     const { q } = request.query;
     const searchTerm = q;
 
-    const contentFromFile = await FileRead(talkers);
+    const contentFromFile = await handleFileReading(talkers);
 
-    const searchForResults = findName(contentFromFile, searchTerm);
+    const searchForResults = searchByName(contentFromFile, searchTerm);
 
     if (!searchForResults.length) {
         return response.status(HTTP_OK_STATUS).json([]);

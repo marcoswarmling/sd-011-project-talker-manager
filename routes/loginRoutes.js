@@ -1,5 +1,5 @@
 const express = require('express');
-const { passwordd, emaill, generateToken } = require('../routes/loginRoutes.js');
+const { emaill, passwordd, generateToken } = require('../middlewares/loginMiddlewares');
 
 const loginRoute = express.Router();
 

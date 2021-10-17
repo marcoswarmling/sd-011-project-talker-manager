@@ -134,9 +134,9 @@ function isPositiveInteger(targetNumber) {
     const MIN_VALUE = 1;
     const result = true;
 
-    const stringToNumber = Number(targetNumber, 10);
+    const stringToNumber = parseInt(targetNumber, 10);
 
-    if (stringToNumber < MIN_VALUE || stringToNumber > MAX_VALUE) {
+    if (stringToNumber > MAX_VALUE || stringToNumber < MIN_VALUE) {
         return false;
     }
 

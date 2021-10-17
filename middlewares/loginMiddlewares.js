@@ -7,9 +7,9 @@ const emaill = (req, res, next) => {
         return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
     next();
-}
+};
 
-const passwordd = (req, res, next) => {
+const passwordd = (req, res) => {
     const { password } = req.body;
   
     if (!password) {

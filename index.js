@@ -28,7 +28,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', getTalker);
-app.get('/talker/search', [validationToken, searchTalker]);
+app.get('/talker/search', validationToken, searchTalker);
 app.get('/talker/:id', getId);
 app.post('/login', login);
 

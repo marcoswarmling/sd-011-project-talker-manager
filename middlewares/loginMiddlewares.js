@@ -26,4 +26,4 @@ const passwordd = (req, res) => {
 module.exports = {
     emaill,
     passwordd,
-}
+};

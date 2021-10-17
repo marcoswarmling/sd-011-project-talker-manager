@@ -30,7 +30,7 @@ function verifyPassword(request, response, next) {
       .json({ message: 'O campo "password" é obrigatório' });
   }
 
-  if (!password.length >= minNumber) {
+  if (password.length < minNumber) {
     return response
       .status(HTTP_BAD_REQUEST_STATUS)
       .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });

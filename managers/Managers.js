@@ -31,11 +31,11 @@ const isValidPassword = (req, res, next) => {
 };
 
 const isValidToken = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) {
+  const { authorization } = req.headers;
+  if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (!talkerFormatValidation('token', token)) {
+  if (!talkerFormatValidation('token', authorization)) {
     return res.status(401).json({ message: 'Token inválido' });
   }
 
@@ -55,12 +55,13 @@ const isValidName = (req, res, next) => {
 
   next();
 };
+
 const isValidAge = (req, res, next) => {
   const { age } = req.body;
   if (!age) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
-  if (!talkerFormatValidation('age', age)) {
+  if (age < 18) {
     return res
       .status(400)
       .json({ message: 'A pessoa palestrante deve ser maior de idade' });
@@ -102,28 +103,28 @@ const isValidWatchedAt = (req, res, next) => {
 const isValidRate = (req, res, next) => {
   const { talk } = req.body;
 
+  if (talk.rate < 1 || talk.rate > 5) {
+    return res
+    .status(400)
+    .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
   if (!talk.rate) {
     return res.status(400).json({
       message:
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
-  if (!talkerFormatValidation('rate', talk.rate)) {
-    return res
-      .status(400)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
 
   next();
 };
 
 module.exports = { 
-  isValidEmail,
-  isValidPassword,
-  isValidAge,
-  isValidRate,
-  isValidTalk,
-  isValidToken,
+  isValidEmail, 
+  isValidPassword, 
+  isValidToken, 
   isValidName,
+  isValidAge,
+  isValidTalk,
   isValidWatchedAt,
+  isValidRate,
 };

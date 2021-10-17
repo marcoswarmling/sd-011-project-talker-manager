@@ -30,8 +30,16 @@ const updateContent = async (file, content, id) => {
   return newEntry;
 };
 
+const deleteContent = async (file, id) => {
+  const db = await readContent(file);
+  const newdb = db.filter((talker) => (talker.id !== Number(id)));
+  await fs.writeFile(file, JSON.stringify(newdb));
+  return null;
+};
+
 module.exports = {
   readContent,
   writeContent,
   updateContent,
+  deleteContent,
 };

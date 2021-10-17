@@ -3,6 +3,7 @@ const {
   readContent,
   writeContent,
   updateContent,
+  deleteContent,
 } = require('../services/fileHandler');
 
 const {
@@ -28,9 +29,15 @@ router.get('/:id', async (req, res) => {
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(talker);
 });
+router.use(checkToken);
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  deleteContent(talkerDB, id);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
 
 router.use(
-  checkToken,
   checkName,
   checkAge,
   checkTalk,

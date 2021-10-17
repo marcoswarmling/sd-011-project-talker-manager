@@ -34,7 +34,7 @@ const {
   handleRegistration,
 } = require('./services/LoginHandler');
 const authenticationMiddleware = require('./middlewares/authenticationMiddleware.js');
-const searchMiddleware = require('./middlewares/searchMiddleware.js');
+const searchMiddleware = require('./middlewares/searchMiddleware');
 
 app.get('/talker', async (_request, response) => {
   const contentFromFile = await FileRead(paths.talker);

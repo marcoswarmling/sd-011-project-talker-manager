@@ -1,4 +1,4 @@
-const { readFile } = require('fs').promises;
+const { readFile, writeFile } = require('fs').promises;
 
 const ENCODING = 'utf8';
 
@@ -13,4 +13,15 @@ async function FileRead(filePath, encoding = ENCODING) {
         console.error(`Erro ao ler o arquivo: ${JSON.stringify(message)}`);
     }
 }
-module.exports = { FileRead };
+
+async function FileWrite(filePath, newContent, encoding = ENCODING) {
+    try {
+        const stringifyContent = JSON.stringify(newContent);
+
+      await writeFile(filePath, stringifyContent, encoding);
+    } catch ({ message }) {
+        console.error(`Erro ao escrever o arquivo: ${message}`);
+    }
+}
+
+module.exports = { FileRead, FileWrite };

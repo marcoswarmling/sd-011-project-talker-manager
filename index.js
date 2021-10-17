@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND_STATUS = 404;
 const HTTP_BAD_REQUEST_STATUS = 400;
+const HTTP_CREATED_STATUS = 201;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -20,16 +21,19 @@ app.listen(PORT, () => {
 
 const paths = {
   talker: './talker.json',
+  tokens: './tokens.json',
 
 };
 
-const { FileRead } = require('./services/FilesHandler');
+const { FileRead, FileWrite } = require('./services/FilesHandler');
 const { findId } = require('./services/SearchById');
 const {
   handleSignupInfo,
   emailValidator,
   passwordValidator,
+  handleRegistration,
 } = require('./services/LoginHandler');
+const authenticationMiddleware = require('./middlewares/authentication-middleware');
 
 app.route('/talker').get(async (_request, response) => {
   const contentFromFile = await FileRead(paths.talker);
@@ -75,4 +79,22 @@ app.route('/login').post((request, response) => {
 
   const getToken = handleSignupInfo(email, password);
   return response.status(HTTP_OK_STATUS).json({ token: getToken.token });
+});
+
+app.use(authenticationMiddleware);
+
+app.post('/talker', async (request, response) => {
+  const { name, age, talk } = request.body;
+
+  const currentFileContent = await FileRead(paths.talker);
+
+  const validatedTalkerData = handleRegistration(name, age, talk);
+
+  if (typeof validatedTalkerData === 'string') {
+    return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
+  }
+
+  currentFileContent.push(validatedTalkerData);
+  await FileWrite(paths.talker, currentFileContent);
+  return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
 });

@@ -2,14 +2,16 @@ const router = require('express').Router();
 const fs = require('fs');
 const { readContentTalker } = require('../helpers/readFile');
 const { writeContentTalker } = require('../helpers/writeFile');
+cosnt tokenGenerate = require('../helpers/tokenAutho');
 const emailValidate = require('../helpers/validations/emailValidations');
 const passwordValidate = require('../helpers/validations/passwordValidations');
+const tokenValidate = require('../helpers/validations/tokenValidation');
 const ageValidate = require('../helpers/validations/ageValidation');
 const nameValidate = require('../helpers/validations/nameValidation');
 const talkValidate = require('../helpers/validations/talkValidation');
 const rateValidate = require('../helpers/validations/rateValidation');
 const watchedAtValidate = require('../helpers/validations/watchedAtValidation');
-const tokenValidate = require('../helpers/validations/tokenValidation');
+const tokenGenerate = require('../helpers/tokenAutho');
 
 router.get('/talker', async (_req, res) => {
   const dataTalker = await readContentTalker('./talker.json') || [];
@@ -30,11 +32,10 @@ router.get('/talker/:id', (req, res) => {
     res.status(200).json(talkers);
   });
 
-router.post('/login', emailValidate, passwordValidate, (_req, res) => {
-  const token = '7mqaVRXJSp886CGr';
-  res.status(200).json({ token });
-});
-  
+  router.post('/login', emailValidate, passwordValidate, (_req, res) => {
+    res.status(200).json({ token: tokenGenerate() });
+  });
+
 router.post(
 '/talker',
 tokenValidate,
@@ -43,13 +44,8 @@ nameValidate,
 talkValidate,
 rateValidate,
 watchedAtValidate, async (req, res) => {
-  const { name, age, talk } = req.body;
-  const talker = await readContentTalker('/talker.json');
-  const newTalker = { age, id: talker.length + 1, name, talk };
-  talker.push(newTalker);
-  await writeContentTalker('./talker.json', newTalker);
-  res.status(201).json(newTalker);
-},
-);
+  const talkers = await writeContentTalker(req.body);
+  res.status(201).json(talkers);
+});
 
 module.exports = router;

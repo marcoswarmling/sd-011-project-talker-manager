@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const { readContentTalker } = require('./readFile');
 
 const writeContentTalker = async (newData) => { 
@@ -8,10 +8,10 @@ const writeContentTalker = async (newData) => {
     
     dataTalker.push(newDataTalker);
     
-    await fs.writeFileSync('./talker.json', JSON.stringify(dataTalker));
+    await fs.writeFile('./talker.json', JSON.stringify(dataTalker));
     return newDataTalker;
     } catch (error) {
-    return null;
+    return error.message;
   }
 };
 

@@ -4,7 +4,7 @@ const palestrantes = require('../connection/talkerConnection');
 const getAllTalks = async (req, res) => {
   const response = await palestrantes.getTalks();
 
-  res.status(200).json(response);
+  return res.status(200).json(response);
 };
 
 module.exports = { getAllTalks };

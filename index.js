@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const login = require('./controller/loginController');
+const talker = require('./controller/talkerController');
 
 const app = express();
 app.use(bodyParser.json());
+app.use('/login', login);
+app.use('/talker', talker);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

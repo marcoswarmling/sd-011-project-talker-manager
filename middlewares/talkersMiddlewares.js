@@ -2,13 +2,6 @@ const fs = require('fs').promises;
 
 const talkersFile = 'talker.json';
 
-async function blabla(req, res) {
-  const { q } = req.query;
-  const fileContent = JSON.parse(await fs.readFile(talkersFile, 'utf8'));
-  const talkerIndex = fileContent.filter((t) => t.name.includes(q));
-  return res.status(200).json(talkerIndex);
-}
-
 async function getAllTalkers(_req, res) {
   try {
     const data = await fs.readFile(talkersFile, 'utf-8');
@@ -44,5 +37,4 @@ async function getTalkerById(req, res) {
 module.exports = {
   getAllTalkers,
   getTalkerById,
-  blabla,
 };

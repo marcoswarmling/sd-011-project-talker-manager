@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+/* const fs = require('fs').promises;
 
 const file = './talker.json';
 
@@ -7,4 +7,4 @@ const getTalker = () => fs.readFile(file, 'utf-8')
 
 const setTalker = (talkers) => fs.writeFile(file, JSON.stringify(talkers));
 
-module.exports = { getTalker, setTalker };
+module.exports = { getTalker, setTalker }; */

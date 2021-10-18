@@ -1,9 +1,12 @@
+const bodyParser = require('body-parser');
 const router = require('express').Router();
 const TalkerModel = require('../models/talkerModel');
 
 const authTalker = require('../middleware/authTalkerMiddleware');
 
 const HTTP_OK_STATUS = 200;
+
+router.use(bodyParser.json());
 
 router.get('/', async (_req, res) => {
   try {

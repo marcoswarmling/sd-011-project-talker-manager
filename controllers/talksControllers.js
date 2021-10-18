@@ -22,4 +22,13 @@ const getIdTalks = async (req, res) => {
   }
 };
 
-module.exports = { getAllTalks, getIdTalks };
+const getLoginTalks = async (req, res) => {
+  try {
+    const response = await palestrantes.getLoginTalks();
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return error;
+  }
+};
+module.exports = { getAllTalks, getIdTalks, getLoginTalks };

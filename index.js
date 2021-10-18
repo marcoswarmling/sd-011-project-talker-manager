@@ -3,6 +3,7 @@ const express = require('express');
 
 // importa a minha rota
 const talker = require('./routes/talker');
+const login = require('./routes/login');
 
 // instancia o express
 const app = express();
@@ -14,6 +15,7 @@ const port = '3000';
 
 // usando a rota
 app.use('/talker', talker);
+app.use('/login', login);
 
 const HTTP_OK_STATUS = 200;
 

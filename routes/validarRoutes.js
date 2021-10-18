@@ -28,9 +28,9 @@ async (req, res) => {
   const adicionaId = resDados.length + 1;
   const newTalker = { id: adicionaId, name, age, talk };
 
-  fileContent.push(newTalker);
+  resDados.push(newTalker);
   await fs.writeFile('./talker.json', JSON.stringify(resDados));
   return res.status(201).json(newTalker);
 });
 
-module.exports = routi
+module.exports = routi;

@@ -109,6 +109,19 @@ validateTalkRate,
   response.status(HTTP_OK_STATUS).json(editedTalker);
 });
 
+app.delete('/talker/:id', validateToken, (request, response) => {
+  const { id } = request.params;
+
+  const data = fs.readFileSync(talkers, 'utf8');
+  const talker = JSON.parse(data);
+  const talkerIndex = talker.findIndex((t) => t.id === parseInt(id, 10));
+  
+  const editedList = talker.slice(talkerIndex, 1);
+
+  fs.writeFileSync(talkers, JSON.stringify(editedList));
+  response.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

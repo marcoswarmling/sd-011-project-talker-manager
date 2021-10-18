@@ -10,6 +10,11 @@ const { validateToken,
     validateTalk,
     validateTalkKeys } = require('../middlewares/talker.js');
 
+    const generateToken = () => {
+        const token = crypto.randomBytes(8).toString('hex');
+        return token;
+      };
+
 router.get('/', (_req, res) => {
     const json = fs.readFileSync(talkers);
     const results = JSON.parse(json);
@@ -25,9 +30,8 @@ router.get('/:id', (req, res) => {
 });
 
 router
-.post('/', validateToken, validateName, validateAge, validateTalk, validateTalkKeys, 
+.post('/', validateToken, validateName, validateAge, validateTalk, validateTalkKeys, generateToken,
 (req, res) => {
-    const token = crypto.randomBytes(8).toString('hex');
     const { name, age, talk } = req.body;
     const data = fs.readFileSync(talkers);
     const results = JSON.parse(data);

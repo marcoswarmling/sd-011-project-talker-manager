@@ -3,9 +3,12 @@ const crypto = require('crypto');
 
 const { emailVerification, passwordVerification } = require('../middlewares/login.js');
 
-router.post('/', emailVerification, passwordVerification, (_req, res) => {
+const generateToken = () => {
   const token = crypto.randomBytes(8).toString('hex');
-  res.status(200).json({ token });
+  return token;
+};
+router.post('/', emailVerification, passwordVerification, (_req, res) => {
+  res.status(200).json({ token: generateToken() });
 });
 
 module.exports = router;

@@ -1,5 +1,3 @@
-// const crypto = require('crypto');
-
 const emailVerification = (req, resp, next) => {
   const { email } = req.body;
 
@@ -26,12 +24,6 @@ const passwordVerification = (req, resp, next) => {
   }
   next();
 };
-
-// const generateToken = (req, _res, next) => {
-//   const token = crypto.randomBytes(8).toString('hex');
-//   req.token = token;
-//   next();
-// };
 
 module.exports = {
   emailVerification,

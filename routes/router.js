@@ -1,5 +1,7 @@
 const fs = require('fs');
+const crypto = require('crypto');
 const express = require('express');
+const { validateEmail, validatePassword } = require('../validation');
 
 const router = express.Router();
 
@@ -20,6 +22,16 @@ router.get('/talker/:id', (req, res) => {
   }
   
   res.status(200).json(talker);
+});
+
+router.post('/login', validateEmail, validatePassword, (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+
+  res.status(200).json({ token });
+});
+
+router.post('/talker', (req, res) => {
+  //
 });
 
 module.exports = router;

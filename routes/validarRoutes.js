@@ -16,7 +16,7 @@ const DADOS = './talker.json';
 routi.get('/search', validarToken,(req, res) => {
   const { q } = req.query;
   try {
-    const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
+    const conteudo = JSON.parse(fs.readFileSync(DADOS, 'utf8'));
     
     const filtro = conteudo.filter((talker) => talker.name.includes(q));
     return res.status(200).json(filtro);

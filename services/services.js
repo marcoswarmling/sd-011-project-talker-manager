@@ -99,7 +99,7 @@ const checkAge = (req, res, next) => {
 
 const checkTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !(talk.rate && talk.watchedAt)) {
+  if (!talk || !((talk.rate || talk.rate === 0) && talk.watchedAt)) {
     return res
       .status(400)
       .json({ 
@@ -144,6 +144,15 @@ const writeContent = async (file, content) => {
     }
   };
 
+  // referente validacao do req 5
+  const updateContent = async (file, content, id) => {
+    const db = await readContent(file);
+    const newEntry = { id: Number(id), ...content };
+    const newdb = db.map((talker) => (talker.id === newEntry.id ? newEntry : talker));
+    await fs.writeFile(file, JSON.stringify(newdb));
+    return newEntry;
+  };
+  
 module.exports = {
   readContent, 
   tokenGenerator, 
@@ -156,4 +165,5 @@ module.exports = {
   checkDate,
   checkRate,
   writeContent,
+  updateContent,
 };

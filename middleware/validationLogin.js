@@ -1,8 +1,8 @@
-const { randomBytes } = require('crypto');
+const crypto = require('crypto');
 
-const generateToken = () => {
-  randomBytes(8).toString('hex');
-};
+function generateToken() {
+  return crypto.randomBytes(8).toString('hex');
+}
 
 const emailValidate = (req, res, next) => {
   const { email } = req.body;

@@ -21,10 +21,11 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/:id', (_request, response) => {
   const { id } = _request.params;
+  const idNum = Number(id); // id vem como string e será comparada com inteiros   
   try {
     const talkerData = fs.readFileSync('./talker.json', 'utf8');
     const talkersJson = JSON.parse(talkerData);
-    const talker = talkersJson.find((e) => e.id === id);
+    const talker = talkersJson.find((e) => e.id === idNum); // so recebe "===" , nao "=="
     if (talker) {
       response.status(HTTP_OK_STATUS).json(talker);
     }

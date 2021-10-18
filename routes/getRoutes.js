@@ -1,6 +1,6 @@
 const express = require('express');
-const checkToken  = require('../middlewares/checkToken');
 const fs = require('fs').promises;
+const checkToken = require('../middlewares/checkToken');
 
 const routter = express.Router();
 const TALKER = './talker.json';

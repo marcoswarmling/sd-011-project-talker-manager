@@ -31,7 +31,7 @@ router
     const { name, age, talk } = req.body;
     const data = fs.readFileSync(talkers);
     const results = JSON.parse(data);
-    const newTalker = { ...results, name, age, talk: { ...talk }, id: results.length + 1 };
+    const newTalker = { name, age, talk: { ...talk }, id: results.length + 1 };
     results.push(newTalker);
     fs.writeFileSync(talkers, JSON.stringify(results));
     res.status(201).json(newTalker);

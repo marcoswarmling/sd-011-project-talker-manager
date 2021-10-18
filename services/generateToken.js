@@ -1,5 +1,4 @@
-// https://www.codegrepper.com/code-examples/javascript/javascript+token+generator
-
+// Link: https://www.codegrepper.com/code-examples/javascript/javascript+token+generator
 const generateToken = (length) => {
   // edit the token allowed characters
   const a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');

@@ -26,7 +26,7 @@ app.use('/talker', routee);
 
 app.use('/talker', validePutRoutes);
 
-app.use('/talker', getRoutes);
+app.use('/search', getRoutes);
 
 app.listen(PORT, () => {
   console.log('Online');

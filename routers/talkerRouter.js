@@ -63,27 +63,25 @@ watchedAtValidate, async (req, res) => {
 },
 );
 
-router.put('/:id',
+router.put('/talker/:id',
 tokenValidate,
 ageValidate,
 nameValidate,
 talkValidate,
 rateValidate,
 watchedAtValidate, async (req, res) => {
-  const dataTalkers = await fs.readFile(talkerJson, 'utf-8');
-  const talkers = await JSON.parse(dataTalkers);
-  const { name, age, talk } = req.body;
   const { id } = req.params;
-  const talkerEdit = { id: Number(id), name, age, talk };
+  const { name, age, talk } = req.body;
+  const talkers = JSON.parse(await fs.readFile(talkerJson, 'utf-8'));
 
-  const talkerIndex = talkers.map((item) => {
-    if (item.id === Number(id)) return talkerEdit;
-    return item;
+  const editTalker = { id: Number(id), name, age, talk };
+
+  const newTalkers = talkers.map((talker) => {
+    if (Number(talker.id) === Number(id)) return editTalker;
+    return talker;
   });
-  
-  await fs.writeFile(talkerJson, JSON.stringify(talkerIndex));
-
-  return res.status(200).json(talkerEdit);
+  await fs.writeFile(talkerJson, JSON.stringify(newTalkers));
+  res.status(200).json(editTalker);  
 });
 
 module.exports = router;

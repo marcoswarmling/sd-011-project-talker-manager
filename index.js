@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const rtTalker = require('./routes/rtTalker');
-const rtLogin = require('./routes/rtLogin');
+const rtTalker = require('./routes/rtTalker.js');
+const rtLogin = require('./routes/rtLogin.js');
 
 // rest codes:
 const HTTP_OK_STATUS = 200;

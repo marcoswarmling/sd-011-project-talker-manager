@@ -1,11 +1,42 @@
 const express = require('express');
 const fs = require('fs');
 
+const { 
+    validAge,
+    validDate,
+    validName,
+    validRate,
+    validRating,
+    validTalk,
+    validToken,   
+} = require('../middlewares/middlewaresTalker');
+
 const rtTalker = express.Router();
 // rest codes:
 const HTTP_OK_STATUS = 200;
+const CREATED = 201;
 const INTERNAL_SERVER_ERROR = 500;
 const NOT_FOUND = 404;
+
+rtTalker.post('/',
+    validToken,
+    validName,
+    validAge,
+    validTalk,
+    validRate,
+    validDate,
+    validRating,
+    (_request, response) => {
+        const { name, age, talk } = _request.body;
+        const talkerData = fs.readFileSync('../talker.json', 'utf8');
+        const talkersJson = JSON.parse(talkerData);
+        const putId = talkersJson[talkersJson.length - 1].id + 1;
+        const talker = { id: putId, name, age, talk };
+
+        talkersJson.push(talker);
+        fs.writeFileSync('./talker.json', JSON.stringify(talkersJson));
+        response.status(CREATED).json(talker);
+    });
 
 rtTalker.get('/', (_request, response) => {
     try {
@@ -34,6 +65,6 @@ rtTalker.get('/:id', (_request, response) => {
     } catch (error) {
       return response.status(INTERNAL_SERVER_ERROR).json({ error });
     }
-  });
+});
 
 module.exports = rtTalker;

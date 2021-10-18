@@ -13,7 +13,7 @@ const {
     updateContent,
     deleteContent,
   } = require('../services/services');
-  
+
   const {
     checkToken,
     checkName,
@@ -23,13 +23,7 @@ const {
     checkRate,
   } = require('../services/services');
 
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const updatedEntry = await updateContent(talkerDB, req.body, id);
-  return res.status(200).json(updatedEntry);
-  });
-
-  //   req 6
+//   req 6
 router.use(checkToken);
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
@@ -51,5 +45,11 @@ router.use(
     const newEntry = await writeContent(talkerDB, req.body);
     return res.status(201).json(newEntry);
 });
+//   req 5
+    router.put('/:id', async (req, res) => {
+        const { id } = req.params;
+        const updatedEntry = await updateContent(talkerDB, req.body, id);
+        return res.status(200).json(updatedEntry);
+        });
 
 module.exports = router;

@@ -38,4 +38,20 @@ router.post('/',
   return res.status(201).json({ name, age, id, talk });
 }));
 
+router.put('/',
+isValidToken,
+isValidName, 
+isValidAge, 
+isValidTalk,
+isValidDate,
+isValidRate,
+rescue(async (req, res) => {
+const { name, age, talk, id } = req.body;
+const talkers = await fsUtils.getTalker();
+const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+talkers[talkerIndex] = { name, age, id, talk };
+await fsUtils.setTalker(talkers);
+return res.status(200).json({ name, age, id, talk });
+}));
+
 module.exports = router;

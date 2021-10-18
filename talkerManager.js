@@ -70,7 +70,9 @@ router.delete('/talker/:id', validateToken, rescue(async (req, res) => {
 
   const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
 
-  if (!talkerIndex) return res.status(200).json({ message: 'Pessoa palestrante não encontrada' });
+  if (!talkerIndex) {
+    return res.status(200).json({ message: 'Pessoa palestrante não encontrada' });
+  }
 
   talkers.slice(talkerIndex, 1);
   const newTalkers = talkers.filter((talker) => talker.id !== Number(id));
@@ -83,7 +85,11 @@ router.delete('/talker/:id', validateToken, rescue(async (req, res) => {
 router.get('/talker/search', validateToken, rescue(async (req, res) => {
   const { q } = req.query;
   const talkers = await talkerUtils.getTalker();
-  const searchTalker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
+  let searchTalker = talkers;
+
+  if (q) {
+    searchTalker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
+  }
 
   return res.status(200).json(searchTalker);
 }));

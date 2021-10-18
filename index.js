@@ -73,12 +73,12 @@ validateTalkRate,
   const data = fs.readFileSync(talkers, 'utf8');
   const talker = JSON.parse(data);
 
-  const idTalker = talker.length + 1;
+  const id = talker.length + 1;
 
   const newTalker = {
     name,
     age,
-    id: idTalker,
+    id,
     talk,
   };
 

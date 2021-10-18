@@ -2,7 +2,7 @@ const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_UNAUTHORIZED_STATUS = 401;
 
 function validateToken(request, response, next) {
-  const { token } = request.headers;
+  const token = request.headers.authorization;
 
   if (!token || token === '') {
     return response
@@ -47,7 +47,7 @@ function validateAge(request, response, next) {
       .json({ message: 'O campo "age" é obrigatório' });
   }
 
-  if (age >= ageLimit) {
+  if (age < ageLimit) {
     return response
       .status(HTTP_BAD_REQUEST_STATUS)
       .json({ message: 'A pessoa palestrante deve ser maior de idade' });
@@ -72,7 +72,7 @@ function validateTalk(request, response, next) {
 function validateTalkWatchedAt(request, response, next) {
   const { talk: { watchedAt } } = request.body;
   const messageError = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
-  const watchedAtRegex = /^(0?[1-9]|[12][0-9]|3[01])\/-(0?[1-9]|1[012])\/-\d{4}$/;
+  const watchedAtRegex = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
   
   if (!watchedAt || watchedAt === '') {
     return response
@@ -83,7 +83,7 @@ function validateTalkWatchedAt(request, response, next) {
   if (!watchedAtRegex.test(watchedAt)) {
     return response
       .status(HTTP_BAD_REQUEST_STATUS)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 
   next();

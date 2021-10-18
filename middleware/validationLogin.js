@@ -1,7 +1,7 @@
 const { randomBytes } = require('crypto');
 
 const generateToken = () => {
-  randomBytes(8).toDtring('hex');
+  randomBytes(8).toString('hex');
 };
 
 const emailValidate = (req, res, next) => {

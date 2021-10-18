@@ -12,7 +12,7 @@ try {
 
 router.get('/talker', async (_req, res) => {
   const talkers = await getTalkers() || [];
-  return res.status(200).json(JSON.parse(talkers));
+  return res.status(200).json(talkers);
 });
 
 router.get('/talker/:id', async (req, res) => {
@@ -26,6 +26,10 @@ router.get('/talker/:id', async (req, res) => {
   }
   res.status(200).json(dados);
 });
+
+/* router.post('/talker', (req, res) => {
+
+}); */
 
 /*  ||
 app.post('/login', () => {});

@@ -12,19 +12,17 @@ const HTTP_OK_STATUS = 200;
 const app = express();
 
 app.use(bodyParser.json());
-
+// porta de esculta: //
+const PORT = '3000';
 // rota inicial: //
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send({});
+  response.status(HTTP_OK_STATUS).send();
 });
-
 // rotas: //
 app.use('/talker', rtTalker);
 app.use('/login', rtLogin);
 
-// porta de esculta: //
-const PORT = '3000';
 app.listen(PORT, () => {
   console.log('Online');
 });

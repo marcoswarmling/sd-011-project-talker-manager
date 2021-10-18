@@ -12,7 +12,9 @@ const HTTP_OK_STATUS = 200;
 // const NOT_FOUND = 404;
 
 rtLogin.post('/', emailChk, passChk, (_request, response) => {
-    response.status(HTTP_OK_STATUS).json({ token: mkToken(16) });    
+    const token = mkToken(16);
+    console.log(token);
+    response.status(HTTP_OK_STATUS).json(token);    
 });
 
 // rtLogin.get('/', (_request, response) => {

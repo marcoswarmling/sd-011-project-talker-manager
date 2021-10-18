@@ -7,7 +7,6 @@ function mkToken() { return crypto.randomBytes(8).toString('hex'); }
 
 const emailChk = (_request, response, next) => {
     const { email } = _request.body;
-    
     console.log(email);
     
     if (!email) {

@@ -139,6 +139,16 @@ const deleteTalker = (req, res, next) => {
   next();
 };
 
+const searchTalker = (req, res) => {
+  const { q } = req.query;
+  const talkers = readTalkers();
+  let result = talkers;
+  if (q) {
+    result = talkers.filter((talker) => talker.name.includes(q));
+  }
+  return res.status(200).json(result);
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
@@ -151,4 +161,5 @@ module.exports = {
   verifyTalkRate,
   editTalker,
   deleteTalker,
+  searchTalker,
 };

@@ -11,10 +11,10 @@ const {
   verifyTalkDate,
   editTalker,
   deleteTalker,
+  searchTalker,
 } = require('../middlewares/talkerMiddlewares');
 
 router.get('/', getAllTalkers);
-router.get('/:id', getTalkerById);
 
 router.post(
   '/',
@@ -43,5 +43,13 @@ router.delete(
   verifyToken,
   deleteTalker,
 );
+
+router.get(
+  '/search',
+  verifyToken,
+  searchTalker,
+);
+
+router.get('/:id', getTalkerById);
 
 module.exports = router;

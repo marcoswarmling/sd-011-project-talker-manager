@@ -2,7 +2,7 @@
 const express = require('express');
 
 // importa a minha rota
-const talks = require('./routes/talks');
+const talker = require('./routes/talker');
 
 // instancia o express
 const app = express();
@@ -13,7 +13,7 @@ app.use(express.json());
 const port = '3000';
 
 // usando a rota
-app.use('/talks', talks);
+app.use('/talker', talker);
 
 const HTTP_OK_STATUS = 200;
 

@@ -9,6 +9,23 @@ validatePassword } = require('./validateLogin');
 const { validateToken, checkName,
 checkAge, checkDateFormat, checkRates, checkTalk } = require('./validateData');
 
+router.post('/login', validateEmail, validatePassword, (req, res, next) => {
+  const token = generationToken(16);
+  res.status(200).json({ token: `${token}` });
+  next();
+});
+
+router.get('/talker/search', validateToken, rescue(async (req, res) => {
+  const { q } = req.query;
+  const talkers = await talkerUtils.getTalker();
+  const searchTalker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
+  if (q) {
+   res.status(200).json(searchTalker);
+   console.log(q);
+  }
+  return res.status(200).json(talkers);
+}));
+
 router.get('/talker', rescue(async (_req, res) => {
   const talkers = await talkerUtils.getTalker();
   if (!talkers) {
@@ -25,12 +42,6 @@ router.get('/talker/:id', rescue(async (req, res) => {
   
   res.status(200).json(talker);
 }));
-
-router.post('/login', validateEmail, validatePassword, (req, res, next) => {
-  const token = generationToken(16);
-  res.status(200).json({ token: `${token}` });
-  next();
-});
 
 router.post('/talker', validateToken, checkName, checkAge, 
 checkTalk, checkDateFormat, checkRates, rescue(async (req, res) => {
@@ -80,18 +91,6 @@ router.delete('/talker/:id', validateToken, rescue(async (req, res) => {
   await talkerUtils.setTalker(newTalkers);
 
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
-}));
-
-router.get('/talker/search', validateToken, rescue(async (req, res) => {
-  const { q } = req.query;
-  const talkers = await talkerUtils.getTalker();
-  let searchTalker = talkers;
-
-  if (q) {
-    searchTalker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
-  }
-
-  return res.status(200).json(searchTalker);
 }));
 
 module.exports = router;

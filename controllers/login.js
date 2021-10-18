@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
+const crypto = require('crypto');
 
 const emailValidate = (req, res, next) => {
   const { email } = req.body;
@@ -31,7 +32,15 @@ const passwordValidate = (req, res, next) => {
   next();
 };
 
+const createToken = (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  return res
+    .status(StatusCodes.OK)
+    .json({ token });
+};
+
 module.exports = {
   emailValidate,
   passwordValidate,
+  createToken,
 };

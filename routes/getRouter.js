@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
-
+// r
 const { checarToken } = require('../middlewares/delete');
 
 const rota = express.Router();

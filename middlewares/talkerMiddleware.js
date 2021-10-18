@@ -45,13 +45,11 @@
 
   const isValidTalk = (req, res, next) => {
     const { talk } = req.body;
-    const keysTalk = Object.keys(talk);
 
-    if (!talk || keysTalk.length !== 2) {
+    if (!talk || !((talk.rate || talk.rate === 0) && talk.watchedAt)) {
       return res.status(400).json(
-        { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-      },
-      );
+        { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+    );
     }
 
     next();
@@ -73,7 +71,7 @@
   const isValidRate = (req, res, next) => {
     const { rate } = req.body.talk;
 
-    if (rate < 1 || rate > 5) {
+    if (rate < 1 || rate > 5 || rate % 1 !== 0) {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
 

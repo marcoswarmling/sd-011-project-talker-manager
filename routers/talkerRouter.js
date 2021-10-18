@@ -22,20 +22,19 @@ router.get('/:id', rescue(async (req, res) => {
   return res.status(200).json(talker);
 }));
 
-router.use(isValidAge, 
-  isValidName, 
+router.post('/', 
   isValidToken,
+  isValidName, 
+  isValidAge, 
+  isValidTalk,
   isValidDate,
   isValidRate,
-  isValidTalk);
-
-router.post('/', 
   rescue(async (req, res) => {
   const { name, age, talk } = req.body;
   const talkers = await fsUtils.getTalker();
   const id = talkers.length + 1;
   const talker = { name, age, id, talk };
-  talkers.push(talker);
+  await talkers.push(talker);
   await fsUtils.setTalker(talkers);
   return res.status(201).json(talker);
 }));

@@ -7,7 +7,7 @@ async function blabla(req, res) {
   const fileContent = JSON.parse(await fs.readFile(talkersFile, 'utf8'));
   const talkerIndex = fileContent.filter((t) => t.name.includes(q));
   return res.status(200).json(talkerIndex);
-};
+}
 
 async function getAllTalkers(_req, res) {
   try {

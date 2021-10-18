@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { getTalkers } = require("../helpers/readFile");
+const { getTalkers } = require('../helpers/readFile');
 
 router.get('/', async (_request, response) => {
   const talkers = await getTalkers('talker.json');

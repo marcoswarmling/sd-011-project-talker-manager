@@ -51,27 +51,26 @@ rtTalker.get('/search', (_request, response) => { // Falta terminar requisito 7
   return response.status(HTTP_OK_STATUS).send(dadosFilter);
 });
 
-// rtTalker.post('/:id',
-//     validToken,
-//     validName,
-//     validAge,
-//     validTalk,
-//     validRate,
-//     validDate,
-//     validRating,
-//     (request, response) => {
-        // const { name, age, talk } = _request.body;
-        // const talkerData = fs.readFileSync(dbTalkers, 'utf8');
-        // const talkersJson = JSON.parse(talkerData);
-
-        // const putId = talkersJson[talkersJson.length - 1].id + 1;
-        // const talker = { id: putId, name, age, talk };
-
-        // talkersJson.push(talker);
+rtTalker.put('/:id',
+    validToken,
+    validName,
+    validAge,
+    validTalk,
+    validRate,
+    validDate,
+    validRating,
+    (request, response) => {
+        const { id } = request.params;
+        const { name, age, talk } = request.body;
+        const talkerData = fs.readFileSync(dbTalkers, 'utf8');
+        const talkersJson = JSON.parse(talkerData);
+        const dbTalkersMod = talkersJson.filter((e) => e.id !== Number(id));
+        const newTalker = { name, age, talk, id: Number(id) };
+        const newDbTalkers = [...dbTalkersMod, newTalker];
+        fs.writeFileSync('./talker.json', JSON.stringify(newDbTalkers));
         
-        // fs.writeFileSync(dbTalkers, JSON.stringify(talkersJson));
-        // response.status(CREATED).json(talker);
-// });
+        response.status(HTTP_OK_STATUS).json(newTalker);
+});
 
 rtTalker.get('/:id', (_request, response) => {
   const { id } = _request.params;

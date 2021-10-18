@@ -10,6 +10,7 @@ const {
 } = require('../middlewares/talkerMiddlewares');
 
 const router = express.Router();
+const talke = './talker.json';
 
 router.get('/', (req, res) => {
   const talker = getTalker();
@@ -30,7 +31,7 @@ router.get('/:id', (req, res) => {
 router
 .post('/', validateToken, validateName, validateAge, validateTalk, validateData, (req, res) => {
   const { name, age, talk } = req.body;
-  const talker = JSON.parse(fs.readFileSync('./talker.json', { encoding: 'utf8' }));
+  const talker = JSON.parse(fs.readFileSync(talke, { encoding: 'utf8' }));
   const nextId = talker.length + 1;
   
   talker.push({ id: nextId, name, age, talk });
@@ -43,7 +44,7 @@ router
 .put('/:id', validateToken, validateName, validateAge, validateTalk, validateData, (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-  const talker = JSON.parse(fs.readFileSync('./talker.json', { encoding: 'utf8' }));
+  const talker = JSON.parse(fs.readFileSync(talke, { encoding: 'utf8' }));
 
   const person = talker.findIndex((item) => item.id === +id);
 
@@ -52,6 +53,18 @@ router
   fs.writeFileSync('./talker.json', JSON.stringify(talker));
 
   return res.status(200).json(talker[person]);
+});
+
+router.delete('/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+  const talker = JSON.parse(fs.readFileSync(talke, { encoding: 'utf8' }));
+  const talkerId = talker.findIndex((item) => +item.id === +id);
+  
+  talker.splice(talkerId, 1);
+
+  fs.writeFileSync('./talker.json', JSON.stringify(talker));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

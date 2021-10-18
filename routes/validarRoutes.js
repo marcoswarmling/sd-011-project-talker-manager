@@ -33,4 +33,23 @@ async (req, res) => {
   return res.status(201).json(newTalker);
 });
 
+routi.delete('/:id', validarToken,
+async (req, res) => {
+  const { id } = req.params;
+  const Conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
+  const index = Conteudo.filter((esse) => esse.id !== Number(id));
+  Conteudo.push(index);
+  await fs.writeFile(DADOS, JSON.stringify(index));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+routi.get('/search', validarToken,
+async (req, res) => {
+  const { q } = req.query;
+  const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
+  const index = conteudo.filter((esse) => esse.name.includes(q));
+  return res.status(200).json(index);
+});
+
 module.exports = routi;

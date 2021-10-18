@@ -82,7 +82,7 @@ const validateTalkerTalk = (request, response, next) => {
     );
   }
   const { watchedAt, rate } = talk;
-  if (!watchedAt || !rate) {
+  if (!watchedAt || (!rate && rate !== 0)) {
     return response.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
     );

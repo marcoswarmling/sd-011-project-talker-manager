@@ -1,5 +1,5 @@
-const readFile = require('../services/readFile');
-const writeFile = require('../services/writeFile');
+const readFile = require('./services/writeFile');
+const writeFile = require('./services/writeFile');
 
 const OK_STATUS = 200;
 const CREATED_STATUS = 201;

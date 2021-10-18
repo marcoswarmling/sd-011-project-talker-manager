@@ -1,10 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const rescue = require('express-rescue');
-const utils = require('./fs-utils');
+const talkerRoutes = require('./routes/talkerRoutes');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
@@ -13,15 +11,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', rescue(async (req, res) => {
-  const talkers = await utils.getTalkers();
-
-  if (!talkers) {
-    return res.status(200).json([]);
-  }
-
-  res.status(200).json(talkers);
-}));
+app.use('/talker', talkerRoutes);
 
 app.listen(PORT, () => {
   console.log('Online');

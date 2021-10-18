@@ -13,6 +13,14 @@ const {
 const routi = express.Router();
 const DADOS = './talker.json';
 
+routi.get('/search', validarToken,
+async (req, res) => {
+  const { q } = req.query;
+  const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
+  const index = conteudo.filter((esse) => esse.name.includes(q));
+  return res.status(200).json(index);
+});
+
 routi.post('/',
 validarToken,
 validarName,
@@ -42,14 +50,6 @@ async (req, res) => {
   await fs.writeFile(DADOS, JSON.stringify(index));
 
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
-});
-
-routi.get('/search', validarToken,
-async (req, res) => {
-  const { q } = req.query;
-  const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
-  const index = conteudo.filter((esse) => esse.name.includes(q));
-  return res.status(200).json(index);
 });
 
 module.exports = routi;

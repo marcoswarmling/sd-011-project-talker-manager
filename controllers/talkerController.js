@@ -3,6 +3,7 @@ const router = require('express').Router();
 const TalkerModel = require('../models/talkerModel');
 
 const authTalker = require('../middleware/authTalkerMiddleware');
+const authToken = require('../middleware/validTokenMiddleware');
 
 const HTTP_OK_STATUS = 200;
 
@@ -22,11 +23,11 @@ router.get('/', async (_req, res) => {
   }
 });
 
-router.get('/search', async (req, res) => {
-  const { authorization: token } = req.headers;
+router.get('/search', authToken, async (req, res) => {
+  // const { authorization: token } = req.headers;
 
-  if (!token) res.status(401).json({ message: 'Token não encontrado' });
-  if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
+  // if (!token) res.status(401).json({ message: 'Token não encontrado' });
+  // if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
 
   const { q } = req.query;
 
@@ -67,11 +68,11 @@ router.put('/:id', authTalker, async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  const { authorization: token } = req.headers;
+router.delete('/:id', authToken, async (req, res) => {
+  // const { authorization: token } = req.headers;
 
-  if (!token) res.status(401).json({ message: 'Token não encontrado' });
-  if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
+  // if (!token) res.status(401).json({ message: 'Token não encontrado' });
+  // if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
 
   const { id } = req.params;
   const deleteSuccessMessage = await TalkerModel.deleteTalker(id);

@@ -13,12 +13,16 @@ const {
 const routi = express.Router();
 const DADOS = './talker.json';
 
-routi.get('/search', validarToken,
-async (req, res) => {
+routi.get('/search', validarToken,(req, res) => {
   const { q } = req.query;
-  const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
-  const inde = conteudo.filter((t) => t.name.includes(q));
-  return res.status(200).json(inde);
+  try {
+    const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
+    
+    const filtro = conteudo.filter((talker) => talker.name.includes(q));
+    return res.status(200).json(filtro);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
 });
 
 routi.post('/',

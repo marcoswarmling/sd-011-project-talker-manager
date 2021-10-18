@@ -1,8 +1,8 @@
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
-const readFile = async (path) => {
+const readFile = async () => {
   try {
-    const file = await fs.readFile(path, 'utf-8');
+    const file = await fs.readFile('./talker.json', 'utf-8');
     const fileParsed = await JSON.parse(file);
 
     return fileParsed;
@@ -11,4 +11,12 @@ const readFile = async (path) => {
   }
 };
 
-module.exports = readFile;
+const writeFile = async (data) => {
+    try {
+      await fs.writeFile('./talker.json', JSON.stringify(data));
+    } catch (err) {
+      return { code: err.code, message: err.message };
+    }
+  };
+  
+  module.exports = { readFile, writeFile };

@@ -8,4 +8,4 @@ const checarToken = (req, res, next) => {
     next();
 };
 
-module.exports = { checarToken, };
+module.exports = { checarToken };

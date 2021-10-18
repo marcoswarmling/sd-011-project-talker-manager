@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const fs = require('fs').promises;
 const crypto = require('crypto');
-const { readContentTalker } = require('../helpers/readFile');
+// const { readContentTalker } = require('../helpers/readFile');
 // const { writeContentTalker } = require('../helpers/writeFile');
 const emailValidate = require('../helpers/validations/emailValidations');
 const passwordValidate = require('../helpers/validations/passwordValidations');
@@ -14,22 +14,23 @@ const watchedAtValidate = require('../helpers/validations/watchedAtValidation');
 
 const talkerJson = './talker.json'; 
 router.get('/talker', async (_req, res) => {
-  const dataTalker = await readContentTalker(talkerJson) || [];
-  res.status(200).json(dataTalker);
+  try {
+    const dataTalker = await fs.readFile(talkerJson, 'utf-8');
+    return res.status(200).json(JSON.parse(dataTalker));
+  } catch (error) {
+      return res.status(200).json([]);
+  }
 });
 
-router.get('/talker/:id', (req, res) => {
+router.get('/talker/:id', async (req, res) => {
     const { id } = req.params;
-    const dataId = fs.readFileSync(talkerJson, 'utf-8');
-    const talkerId = JSON.parse(dataId);
+    const talker = await fs.readFile(talkerJson, 'utf-8');
+    const talkerId = JSON.parse(talker).find((item) => item.id === parseInt(id, 10));
     
-    const talkers = talkerId.find((item) => item.id === Number(id));
-    
-    if (!talkers) {
+    if (!talkerId) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-    }
-    
-    res.status(200).json(talkers);
+    }    
+    res.status(200).json(talkerId);
   });
 
 function generateToken() {
@@ -49,10 +50,11 @@ talkValidate,
 rateValidate,
 watchedAtValidate, async (req, res) => {
   const { name, age, talk } = req.body;
+  const { rate, watchedAt } = talk;
     const data = await fs.readFile(talkerJson, 'utf-8');
     const talkers = JSON.parse(data);
     const id = talkers.length + 1;
-    const newTalker = { name, age, id, talk: { ...talk } };
+    const newTalker = { name, age, id, talk: { rate, watchedAt } };
 
     talkers.push(newTalker);
     fs.writeFile(talkerJson, JSON.stringify(talkers));

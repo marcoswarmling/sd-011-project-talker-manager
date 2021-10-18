@@ -22,7 +22,7 @@
     }
     
     if (name.length < limit) {
-      return res.status(401).json({ message: 'O "name" ter pelo menos 3 caracteres' });
+      return res.status(400).json({ message: 'O "name" ter pelo menos 3 caracteres' });
     }
   
     next();
@@ -36,8 +36,8 @@
       return res.status(400).json({ message: 'O campo "age" é obrigatório' });
     }
     
-    if (age.length < limit) {
-      return res.status(401).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+    if (age < limit) {
+      return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
     }
   
     next();
@@ -59,8 +59,7 @@
 
   const isValidDate = (req, res, next) => {
     const { watchedAt } = req.body.talk;
-    // Link: https://www.codegrepper.com/code-examples/javascript/javascript+validate+date+dd%2Fmm%2Fyyyy
-    const dateFormat = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
+    const dateFormat = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/;
   
     if (!(dateFormat.test(watchedAt))) {
       return res.status(400).json(
@@ -73,9 +72,8 @@
 
   const isValidRate = (req, res, next) => {
     const { rate } = req.body.talk;
-    const rateLimit = /^[1-5]$/;
 
-    if (rateLimit.test(rate)) {
+    if (rate < 1 || rate > 5) {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
 

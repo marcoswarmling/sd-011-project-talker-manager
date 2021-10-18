@@ -29,7 +29,7 @@ router.use(isValidAge,
   isValidRate,
   isValidTalk);
 
-router.post('/talker', 
+router.post('/', 
   rescue(async (req, res) => {
   const { name, age, talk } = req.body;
   const talkers = await fsUtils.getTalker();

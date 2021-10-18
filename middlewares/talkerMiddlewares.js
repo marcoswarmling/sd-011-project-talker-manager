@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 function validateName(req, res, next) {
   const { name } = req.body;
 
@@ -34,7 +36,7 @@ function validateData(req, res, next) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 
-  if (Number.isInteger(talk.rate) && (talk.rate < 1 || talk.rate > 5)) {
+  if (Number.isInteger(talk.rate) && (+talk.rate < 1 || +talk.rate > 5)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
@@ -44,7 +46,7 @@ function validateData(req, res, next) {
 function validateTalk(req, res, next) {
   const { talk } = req.body;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!(talk && (talk.rate || talk.rate === 0) && talk.watchedAt)) {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
     });
@@ -67,4 +69,11 @@ function validateToken(req, res, next) {
   next();
 }
 
-module.exports = { validateName, validateAge, validateData, validateTalk, validateToken };
+function getTalker() {
+  const talker = fs.readFileSync('./talker.json');
+  return talker;
+}
+
+module.exports = { 
+  validateName, validateAge, validateData, validateTalk, validateToken, getTalker, 
+};

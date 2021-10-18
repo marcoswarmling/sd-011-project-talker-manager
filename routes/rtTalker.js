@@ -72,6 +72,28 @@ rtTalker.put('/:id',
         response.status(HTTP_OK_STATUS).json(newTalker);
 });
 
+rtTalker.delete('/:id',
+    validToken,
+    // validName,
+    // validAge,
+    // validTalk,
+    // validRate,
+    // validDate,
+    // validRating,
+    (request, response) => {
+        const { id } = request.params;
+        // const { name, age, talk } = request.body;
+        const talkerData = fs.readFileSync(dbTalkers, 'utf8');
+        const talkersJson = JSON.parse(talkerData);
+        const dbTalkersMod = talkersJson.filter((e) => e.id !== Number(id));
+
+        const newDbTalkers = [...dbTalkersMod];
+        fs.writeFileSync('./talker.json', JSON.stringify(newDbTalkers));
+        
+        response.status(HTTP_OK_STATUS)
+                .json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 rtTalker.get('/:id', (_request, response) => {
   const { id } = _request.params;
   const idNum = Number(id); // id vem como string e será comparada com inteiros   

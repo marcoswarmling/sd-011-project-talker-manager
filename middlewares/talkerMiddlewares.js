@@ -47,7 +47,12 @@ const verifyAge = (req, res, next) => {
 
 const verifyTalkRate = (req, res, next) => {
   const { rate } = req.body.talk;
-  const validRate = rate > 1 && rate < 6;
+  const validRate = rate > 0 && rate < 6;
+  if (!rate && rate !== 0) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
   if (!validRate) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -65,7 +70,7 @@ const verifyTalkDate = (req, res, next) => {
 
 const verifyTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -101,6 +106,25 @@ const addTalker = (req, res, next) => {
   next();
 };
 
+const editTalker = (req, res, next) => {
+  const id = parseFloat(req.params.id);
+  const talkers = readTalkers();
+  const newTalkers = talkers.map((talker) => {
+    if (talker.id === id) {
+      return { ...req.body, id };
+    }
+    return talker;
+  });
+  try {
+    fs.writeFileSync('talker.json', JSON.stringify(newTalkers));
+  } catch (err) {
+    console.error(`Erro ao ler o arquivo: ${err.path}`);
+    console.log(err);
+  }
+  res.status(200).json({ id, ...req.body });
+  next();
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
@@ -111,4 +135,5 @@ module.exports = {
   verifyTalk,
   verifyTalkDate,
   verifyTalkRate,
+  editTalker,
 };

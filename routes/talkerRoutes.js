@@ -9,6 +9,7 @@ const {
   verifyTalk,
   verifyTalkRate,
   verifyTalkDate,
+  editTalker,
 } = require('../middlewares/talkerMiddlewares');
 
 router.get('/', getAllTalkers);
@@ -23,6 +24,17 @@ router.post(
   verifyTalkRate,
   verifyTalkDate,
   addTalker,
+);
+
+router.put(
+  '/:id',
+  verifyToken,
+  verifyName,
+  verifyAge,
+  verifyTalk,
+  verifyTalkRate,
+  verifyTalkDate,
+  editTalker,
 );
 
 module.exports = router;

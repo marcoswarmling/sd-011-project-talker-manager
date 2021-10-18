@@ -63,4 +63,24 @@ watchedAtValidate, async (req, res) => {
 },
 );
 
+router.put('/:id',
+tokenValidate,
+ageValidate,
+nameValidate,
+talkValidate,
+rateValidate,
+watchedAtValidate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkerEdit = { id: Number(id), name, age, talk };
+  const dataTalkers = await fs.readFile(talkerJson, 'utf-8');
+  const talkers = JSON.parse(dataTalkers);
+
+  const talkerIndex = talkers.findIndex((item) => item.id === Number(id));
+  talkers[talkerIndex] = talkerEdit;
+  await fs.writeFile(talkerJson, JSON.stringify(talkers));
+
+  return res.status(200).json(talkerEdit);
+});
+
 module.exports = router;

@@ -51,4 +51,16 @@ router.put('/:id', authTalker, async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  const { authorization: token } = req.headers;
+
+  if (!token) res.status(401).json({ message: 'Token não encontrado' });
+  if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
+
+  const { id } = req.params;
+  const deleteSuccessMessage = await TalkerModel.deleteTalker(id);
+
+  res.status(200).json(deleteSuccessMessage);
+});
+
 module.exports = router;

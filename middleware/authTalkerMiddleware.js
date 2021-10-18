@@ -1,4 +1,4 @@
-const authTokenLength = (token, res) => {
+const authToken = (token, res) => {
   if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
 };
 
@@ -54,7 +54,7 @@ const checkTalkers = (req, res, next) => {
   
   if (!token) res.status(401).json({ message: 'Token não encontrado' });
 
-  authTokenLength(token, res);
+  authToken(token, res);
 
   const { name, age, talk } = req.body;
 

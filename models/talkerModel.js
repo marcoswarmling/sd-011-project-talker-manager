@@ -40,8 +40,6 @@ const edit = async (talkerObj, id) => {
 
   formatTalker.id = parseInt(id, 0);
 
-  // console.log(formatTalker);
-
   const newDb = db.map((talker) => (talker.id !== formatTalker.id ? talker : formatTalker));
 
   fs.writeFile(file, JSON.stringify(newDb, undefined, 2), (err) => {
@@ -51,4 +49,16 @@ const edit = async (talkerObj, id) => {
   return formatTalker;
 };
 
-module.exports = { getAll, getById, create, edit };
+const deleteTalker = async (id) => {
+  const db = JSON.parse(await getAll());
+
+  const newDb = db.filter((talker) => (talker.id !== parseInt(id, 0)));
+
+  fs.writeFile(file, JSON.stringify(newDb, undefined, 2), (err) => {
+    if (err) return console.log(err);
+  });
+
+  return { message: 'Pessoa palestrante deletada com sucesso' };
+};
+
+module.exports = { getAll, getById, create, edit, deleteTalker };

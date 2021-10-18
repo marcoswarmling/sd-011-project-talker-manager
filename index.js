@@ -6,6 +6,7 @@ const loginRoutes = require('./routes/loginRoutes.js');
 const routee = require('./routes/validarRoutes');
 const validePutRoutes = require('./routes/validePutRoutes');
 const deleteRoutes = require('./routes/deleteRoutes');
+const getRouter = require('./routes/getRouter');
 
 const app = express();
 app.use(bodyParser.json());
@@ -27,6 +28,8 @@ app.use('/talker', routee);
 app.use('/talker', validePutRoutes);
 
 app.use('/talker', deleteRoutes);
+
+app.use('/talker', getRouter);
 
 app.listen(PORT, () => {
   console.log('Online');

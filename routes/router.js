@@ -21,6 +21,17 @@ router.get('/talker', (_req, res) => {
   res.status(200).json(file);
 });
 
+router.get('/talker/search', validateToken, (req, res) => {
+  const { q } = req.query;
+  const file = JSON.parse(fs.readFileSync(talkersPath, 'utf-8'));
+    
+  if (!q) return res.status(400).json(file);
+
+  const filteredByTerm = file.filter((talker) => talker.name.includes(q));
+
+  res.status(200).json(filteredByTerm);
+});
+
 router.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   const file = JSON.parse(fs.readFileSync(talkersPath, 'utf-8'));

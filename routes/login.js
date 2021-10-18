@@ -1,14 +1,11 @@
 const router = require('express').Router();
-const rtg = require('random-token-generator');
+const crypto = require('crypto');
 
-router.put('/', (req, res) => {
-  // The below options are also the defaults
-rtg.generateKey({
-  len: 16, // Generate 16 characters or bytes of data
-  string: true, // Output keys as a hex string
-  strong: false, // Use the crypographically secure randomBytes function
-  retry: false, // Retry once on error
-}, (_err, key) => res.status(200).json(key));
+const { emailVerification, passwordVerification } = require('../middlewares/login.js');
+
+router.post('/', emailVerification, passwordVerification, (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(200).json({ token });
 });
 
 module.exports = router;

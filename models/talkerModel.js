@@ -16,4 +16,22 @@ const getById = async (id) => {
   return talker;
 };
 
-module.exports = { getAll, getById };
+const create = async (talkerObj) => {
+  const db = JSON.parse(await fs.readFile(file, 'utf8'));
+
+  const createTalkerId = db.length + 1;
+  const fomatTalker = talkerObj;
+
+  fomatTalker.id = createTalkerId;
+
+  db.push(fomatTalker);
+
+  fs.writeFile(file, JSON.stringify(db, undefined, 2), (err, result) => {
+    if (err) return console.log(err);
+    console.log(result);
+  });
+
+  return talkerObj;
+};
+
+module.exports = { getAll, getById, create };

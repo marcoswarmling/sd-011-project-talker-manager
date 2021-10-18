@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const TalkerModel = require('../models/talkerModel');
 
+const authTalker = require('../middleware/authTalkerMiddleware');
+
 const HTTP_OK_STATUS = 200;
 
 router.get('/', async (_req, res) => {
@@ -30,6 +32,12 @@ router.get('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+router.post('/', authTalker, async (req, res) => {
+  const talker = await TalkerModel.create(req.body);
+
+  res.status(201).json(talker);
 });
 
 module.exports = router;

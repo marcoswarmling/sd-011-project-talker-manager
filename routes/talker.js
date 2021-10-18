@@ -30,17 +30,18 @@ router.get('/search', checkToken, async (req, res) => {
     return res.status(200).json(results);
     });
 
-//   req 6
+router.get('/', talksController.getAllTalks);
 
+router.get('/:id', talksController.getIdTalks);
+//   req 6
+router.use(checkToken);
 router.delete('/:id', checkToken, async (req, res) => {
   const { id } = req.params;
   deleteContent(talkerDB, id);
   console.log(id);
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
-router.get('/', talksController.getAllTalks);
 
-router.get('/:id', talksController.getIdTalks);
 
 router.use(
     checkToken,

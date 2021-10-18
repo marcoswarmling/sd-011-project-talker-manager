@@ -13,14 +13,6 @@ const {
 const routi = express.Router();
 const DADOS = './talker.json';
 
-routi.get('/search', validarToken,
-async (req, res) => {
-  const { q } = req.query;
-  const fileContent = JSON.parse(await fs.readFile(DADOS, 'utf8'));
-  const talkerIndex = fileContent.filter((t) => t.name.includes(q));
-  return res.status(200).json(talkerIndex);
-});
-
 routi.post('/',
 validarToken,
 validarName,

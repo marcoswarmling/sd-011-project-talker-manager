@@ -16,9 +16,9 @@ const DADOS = './talker.json';
 routi.get('/search', validarToken,
 async (req, res) => {
   const { q } = req.query;
-  const conteudo = JSON.parse(await fs.readFile(DADOS, 'utf8'));
-  const index = conteudo.filter((esse) => esse.name.includes(q));
-  return res.status(200).json(index);
+  const fileContent = JSON.parse(await fs.readFile(DADOS, 'utf8'));
+  const talkerIndex = fileContent.filter((t) => t.name.includes(q));
+  return res.status(200).json(talkerIndex);
 });
 
 routi.post('/',

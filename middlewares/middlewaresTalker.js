@@ -1,23 +1,27 @@
 // rest codes:
 const BAD_REQUEST = 400;
+const UNAUTHORIZED = 401;
 
-const validToken = (_request, response, next) => {
-    const { authKey } = _request.headers;
+const validToken = (request, response, next) => {
+    const token = request.headers.authorization;
     
-    if (!authKey) { 
-        return response.status(BAD_REQUEST)
-                       .json({ message: 'Token não encontrado' });
+    if (!token) { 
+        return response.status(UNAUTHORIZED)
+                       .json({
+                        message: 'Token não encontrado',
+                      });
     }
-    if (authKey.length !== 16) {
-        return response.status(BAD_REQUEST)
-                       .json({ message: 'Token não encontrado' });
+    if (token.length !== 16) {
+        return response.status(UNAUTHORIZED)
+                       .json({
+                        message: 'Token inválido',
+                      });
     }
-
     next();
 };
 
-const validName = (_request, response, next) => {
-    const { name } = _request.body;
+const validName = (request, response, next) => {
+    const { name } = request.body;
     
     if (!name) { 
         return response.status(BAD_REQUEST)
@@ -31,8 +35,8 @@ const validName = (_request, response, next) => {
     next();
 };
 
-const validAge = (_request, response, next) => {
-    const { age } = _request.body;
+const validAge = (request, response, next) => {
+    const { age } = request.body;
     
     if (!age) { 
         return response.status(BAD_REQUEST)
@@ -40,14 +44,14 @@ const validAge = (_request, response, next) => {
     }
     if (Number(age) < 18) {
         return response.status(BAD_REQUEST)
-                       .json({ message: 'A pesoa palestrante deve ser maior de idade' });
+                       .json({ message: 'A pessoa palestrante deve ser maior de idade' });
     }
 
     next();
 };
 
-const validTalk = (_request, response, next) => {
-    const { talk } = _request.body;
+const validTalk = (request, response, next) => {
+    const { talk } = request.body;
     const msg = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
     if (!talk || !talk.watchedAt) { 
         return response.status(BAD_REQUEST)
@@ -57,8 +61,8 @@ const validTalk = (_request, response, next) => {
     next();
 };
 
-const validRate = (_request, response, next) => {
-    const { talk } = _request.body;
+const validRate = (request, response, next) => {
+    const { talk } = request.body;
     const { rate } = talk;
 
     const msg = 'O campo "rate" deve ser um inteiro de 1 à 5';
@@ -71,8 +75,8 @@ const validRate = (_request, response, next) => {
     next();
 };
 
-const validDate = (_request, response, next) => {
-    const { talk } = _request.body;
+const validDate = (request, response, next) => {
+    const { talk } = request.body;
     const { watchedAt } = talk;
     
     const watchedAtRgx = /([0-2][0-9]|3[0-1])\/(0[0-9]|1[0-2])\/[0-9]{4}/;
@@ -87,8 +91,8 @@ const validDate = (_request, response, next) => {
     next();
 };
 
-const validRating = (_request, response, next) => {
-    const { talk } = _request.body;
+const validRating = (request, response, next) => {
+    const { talk } = request.body;
     const { watchedAt, rate } = talk;
 
     const msg = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';

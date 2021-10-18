@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const fs = require('fs');
+const fs = require('fs').promises;
 const crypto = require('crypto');
 const { readContentTalker } = require('../helpers/readFile');
-const { writeContentTalker } = require('../helpers/writeFile');
+// const { writeContentTalker } = require('../helpers/writeFile');
 const emailValidate = require('../helpers/validations/emailValidations');
 const passwordValidate = require('../helpers/validations/passwordValidations');
 const tokenValidate = require('../helpers/validations/tokenValidation');
@@ -12,14 +12,15 @@ const talkValidate = require('../helpers/validations/talkValidation');
 const rateValidate = require('../helpers/validations/rateValidation');
 const watchedAtValidate = require('../helpers/validations/watchedAtValidation');
 
+const talkerJson = './talker.json'; 
 router.get('/talker', async (_req, res) => {
-  const dataTalker = await readContentTalker('./talker.json') || [];
+  const dataTalker = await readContentTalker(talkerJson) || [];
   res.status(200).json(dataTalker);
 });
 
 router.get('/talker/:id', (req, res) => {
     const { id } = req.params;
-    const dataId = fs.readFileSync('./talker.json', 'utf-8');
+    const dataId = fs.readFileSync(talkerJson, 'utf-8');
     const talkerId = JSON.parse(dataId);
     
     const talkers = talkerId.find((item) => item.id === Number(id));
@@ -47,8 +48,16 @@ nameValidate,
 talkValidate,
 rateValidate,
 watchedAtValidate, async (req, res) => {
-  const talkers = await writeContentTalker(req.body);
-  res.status(201).json(talkers);
+  const { name, age, talk } = req.body;
+    const data = await fs.readFile(talkerJson, 'utf-8');
+    const talkers = JSON.parse(data);
+    const id = talkers.length + 1;
+    const newTalker = { name, age, id, talk: { ...talk } };
+
+    talkers.push(newTalker);
+    fs.writeFile(talkerJson, JSON.stringify(talkers));
+    
+    res.status(201).json(newTalker);
 },
 );
 

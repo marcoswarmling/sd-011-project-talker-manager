@@ -125,6 +125,20 @@ const editTalker = (req, res, next) => {
   next();
 };
 
+const deleteTalker = (req, res, next) => {
+  const id = parseFloat(req.params.id);
+  const talkers = readTalkers();
+  const newTalkers = talkers.filter((talker) => talker.id !== id);
+  try {
+    fs.writeFileSync('talker.json', JSON.stringify(newTalkers));
+  } catch (err) {
+    console.error(`Erro ao ler o arquivo: ${err.path}`);
+    console.log(err);
+  }
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  next();
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
@@ -136,4 +150,5 @@ module.exports = {
   verifyTalkDate,
   verifyTalkRate,
   editTalker,
+  deleteTalker,
 };

@@ -33,10 +33,9 @@ router.post('/',
   const { name, age, talk } = req.body;
   const talkers = await fsUtils.getTalker();
   const id = talkers.length + 1;
-  const talker = { name, age, id, talk };
-  await talkers.push(talker);
-  await fsUtils.setTalker(talkers);
-  return res.status(201).json(talker);
+  const newEntry = [...talkers, { name, age, id, talk }];
+  await fsUtils.setTalker(newEntry);
+  return res.status(201).json({ name, age, id, talk });
 }));
 
 module.exports = router;

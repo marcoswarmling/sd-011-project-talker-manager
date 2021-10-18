@@ -1,12 +1,11 @@
   const isValidToken = (req, res, next) => {
     const token = req.headers.authorization;
-    const validToken = () => (token.length === 16);
 
     if (!token) {
       return res.status(401).json({ message: 'Token não encontrado' });
     }
     
-    if (!validToken() || token === '') {
+    if (token.length !== 16) {
       return res.status(401).json({ message: 'Token inválido' });
     }
 
@@ -22,7 +21,7 @@
     }
     
     if (name.length < limit) {
-      return res.status(400).json({ message: 'O "name" ter pelo menos 3 caracteres' });
+      return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
   
     next();
@@ -57,7 +56,7 @@
 
   const isValidDate = (req, res, next) => {
     const { watchedAt } = req.body.talk;
-    const dateFormat = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/;
+    const dateFormat = /(\d{2})[/](\d{2})[/](\d{4})/;
   
     if (!(dateFormat.test(watchedAt))) {
       return res.status(400).json(

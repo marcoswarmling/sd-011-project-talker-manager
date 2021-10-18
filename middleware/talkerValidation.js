@@ -93,18 +93,18 @@ function validateTalkRate(request, response, next) {
   const { talk: { rate } } = request.body;
   const messageError = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
 
-  if (!rate || rate === '') {
-    return response
-      .status(HTTP_BAD_REQUEST_STATUS)
-      .json({ message: messageError });
-  }
-
   if (rate < 1 || rate > 5) {
     return response
       .status(HTTP_BAD_REQUEST_STATUS)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
+  if (!rate || rate === '') {
+    return response
+    .status(HTTP_BAD_REQUEST_STATUS)
+    .json({ message: messageError });
+  }
+  
   next();
 }
 

@@ -89,6 +89,26 @@ validateTalkRate,
   response.status(HTTP_CREATED_STATUS).json(newTalker);
 });
 
+app.put('/talker/:id', validateToken,
+validateName,
+validateAge,
+validateTalk,
+validateTalkWatchedAt,
+validateTalkRate,
+(request, response) => {
+  const { id } = request.params;
+  const { name, age, talk } = request.body;
+
+  const data = fs.readFileSync(talkers, 'utf8');
+  const talker = JSON.parse(data);
+  const talkerIndex = talker.findIndex((t) => t.id === parseInt(id, 10));
+  talker[talkerIndex] = { ...talker[talkerIndex], name, age, talk };
+
+  fs.writeFileSync(talkers, JSON.stringify(talker));
+  const editedTalker = talker.find((t) => t.id === parseInt(id, 10));
+  response.status(HTTP_OK_STATUS).json(editedTalker);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });

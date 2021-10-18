@@ -43,10 +43,10 @@ rtTalker.post('/',
         response.status(CREATED).json(talker);
 });
 
-rtTalker.get('/search', (_request, response) => { // Falta terminar requisito 7
-  const { q } = _request.query;
+rtTalker.get('/search', validToken, (request, response) => {
+  const { q } = request.query;
   const dados = JSON.parse(fs.readFileSync(dbTalkers, 'utf8'));
-  const dadosFilter = dados.find((e) => e.name === q);
+  const dadosFilter = dados.filter((e) => e.name.includes(q));
   
   return response.status(HTTP_OK_STATUS).send(dadosFilter);
 });

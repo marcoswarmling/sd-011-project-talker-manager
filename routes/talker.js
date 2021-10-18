@@ -6,10 +6,12 @@ router.get('/', talksController.getAllTalks);
 
 router.get('/:id', talksController.getIdTalks);
 
+const talkerDB = './talker.json';
 const {
     // readContent,
     writeContent, 
     updateContent,
+    deleteContent,
   } = require('../services/services');
   
   const {
@@ -21,6 +23,21 @@ const {
     checkRate,
   } = require('../services/services');
 
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updatedEntry = await updateContent(talkerDB, req.body, id);
+  return res.status(200).json(updatedEntry);
+  });
+
+  //   req 6
+router.use(checkToken);
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  deleteContent(talkerDB, id);
+  console.log(id);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 router.use(
     checkToken,
     checkName,
@@ -30,16 +47,9 @@ router.use(
     checkRate,
   );
 
-  const talkerDB = './talker.json';
   router.post('/', async (req, res) => {
     const newEntry = await writeContent(talkerDB, req.body);
     return res.status(201).json(newEntry);
 });
-
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const updatedEntry = await updateContent(talkerDB, req.body, id);
-  return res.status(200).json(updatedEntry);
-  });
 
 module.exports = router;

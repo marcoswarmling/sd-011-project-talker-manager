@@ -68,6 +68,7 @@ const checkToken = (req, res, next) => {
 
 const checkName = (req, res, next) => {
   const { name } = req.body;
+  console.log(name);
   if (!name || validator.isEmpty(name)) {
     return res
       .status(400)
@@ -153,6 +154,14 @@ const writeContent = async (file, content) => {
     return newEntry;
   };
   
+  // referente validacao do req 6
+    const deleteContent = async (file, id) => {
+        const db = await readContent(file);
+        const newdb = db.filter((talker) => (talker.id !== Number(id)));
+        await fs.writeFile(file, JSON.stringify(newdb));
+        return null;
+        };
+
 module.exports = {
   readContent, 
   tokenGenerator, 
@@ -166,4 +175,5 @@ module.exports = {
   checkRate,
   writeContent,
   updateContent,
+  deleteContent,
 };

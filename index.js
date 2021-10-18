@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+
+const talkerRouter = require('./routes/talkerRouter');
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,12 +14,8 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.use('./talker', talkerRouter);
+
 app.listen(PORT, () => {
   console.log('Online');
-});
-
-app.get('/talker', async (_req, res) => {
-  const data = await fs.readFileSync('./talker.json', 'utf-8');
-  if (!JSON.parse(data).length) return res.status(200).send([]);
-  res.status(200).send(JSON.parse(data));
 });

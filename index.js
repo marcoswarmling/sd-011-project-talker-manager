@@ -1,48 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const rescue = require('express-rescue');
+const utils = require('./fs-utils');
 
 const app = express();
 app.use(bodyParser.json());
-
 const HTTP_OK_STATUS = 200;
-const INTERNAL_SERVER_ERROR = 500;
 const PORT = '3000';
-const NOT_FOUND = 400;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send({
-
-  });
+  response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker/:id', (_request, response) => {
-  const { id } = _request.params;
-  try {
-    const talkerData = fs.readFileSync('./talker.json', 'utf8');
-    const talkersJson = JSON.parse(talkerData);
-    const talker = talkersJson.find((e) => e.id === id);
-    if (talker) {
-      response.status(HTTP_OK_STATUS).json(talker);
-    }
-    response.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
-  } catch (error) {
-    return response.status(INTERNAL_SERVER_ERROR).json({ error });
+app.get('/talker', rescue(async (req, res) => {
+  const talkers = await utils.getTalkers();
+
+  if (!talkers) {
+    return res.status(200).json([]);
   }
-});
-app.get('/talker', (_request, response) => {
-  try {
-    const talkerData = fs.readFileSync('./talker.json', 'utf8');
-    const talkersJson = JSON.parse(talkerData);
-    if (talkersJson === null) {
-      return response.status(HTTP_OK_STATUS).json([]);
-    }
-    return response.status(HTTP_OK_STATUS).json(talkersJson);
-  } catch (error) {
-    return response.status(INTERNAL_SERVER_ERROR).json({ error });
-  }
-});
+
+  res.status(200).json(talkers);
+}));
+
 app.listen(PORT, () => {
   console.log('Online');
 });

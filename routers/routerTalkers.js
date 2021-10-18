@@ -11,14 +11,14 @@ router.get('/', async (_request, response) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const response = await getTalkers('talker.json');
-  const result = JSON.parse(response).find((talker) => Number(talker.id) === Number(id));
 
-  if (!result) {
-    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  }
+  const talkers = await getTalkers('talker.json');
+  if (!talkers) res.status(200).json([]);
+  const findTalker = talkers.find((target) => target.id === parseInt(id, 10));
+  if (!findTalker)
+    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-  return res.status(200).json(result);
+  res.status(200).json(findTalker);
 });
 
 module.exports = router;

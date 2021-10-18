@@ -5,8 +5,10 @@ const BAD_REQUEST = 400;
 
 function mkToken() { return crypto.randomBytes(8).toString('hex'); }
 
-const emailChk = (_require, response, next) => {
-    const { email } = _require.body;
+const emailChk = (_request, response, next) => {
+    const { email } = _request.body;
+    
+    console.log(email);
     
     if (!email) {
         return response.status(BAD_REQUEST)
@@ -23,8 +25,8 @@ const emailChk = (_require, response, next) => {
     next();
 };
 
-const passChk = (_require, response, next) => {
-    const { password } = _require.body;
+const passChk = (_request, response, next) => {
+    const { password } = _request.body;
     
     if (!password) {
         return response.status(BAD_REQUEST)

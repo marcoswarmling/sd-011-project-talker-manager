@@ -15,7 +15,6 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-
 app.use('/talker', usuarioRoute);
 
 app.use('/login', loginRoute);

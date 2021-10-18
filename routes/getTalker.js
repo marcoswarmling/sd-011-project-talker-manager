@@ -18,6 +18,18 @@ router.get('/', (req, res) => {
   res.status(200).json(parseTalk);
 });
 
+router.get('/search', validateToken, (req, res) => {
+  const { q } = req.query;
+  const talkers = JSON.parse(fs.readFileSync(talke, 'utf8'));
+  let result = talkers;
+  console.log(q);
+  console.log(talkers);
+  if (q) {
+    result = talkers.filter((talker) => talker.name.includes(q));
+  }
+  return res.status(200).json(result);
+});
+
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const talker = getTalker();

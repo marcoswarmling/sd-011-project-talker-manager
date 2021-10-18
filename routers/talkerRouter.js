@@ -12,6 +12,19 @@ router.get('/', rescue(async (_req, res) => {
   return res.status(200).json(talkers);
 }));
 
+router.get('/search', isValidToken, rescue(async (req, res) => {
+  const { q } = req.query;
+  const talkers = await fsUtils.getTalker();
+
+  if (!q || q === '') return res.status(200).json(talkers);
+
+  const talker = talkers.filter((t) => t.name.includes(q));
+
+  if (!talker) return res.status(200).json([]);
+
+  return res.status(200).json(talker);
+}));
+
 router.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
 
@@ -19,21 +32,6 @@ router.get('/:id', rescue(async (req, res) => {
   const talker = talkers.find((t) => parseInt(t.id, 10) === parseInt(id, 10));
 
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  return res.status(200).json(talker);
-}));
-
-router.get('/search',
- isValidToken,
- rescue(async (req, res) => {
-  const { q } = req.query;
-  const talkers = await fsUtils.getTalker();
-
-  if (!q) {
-    return res.status(200).json(talkers);
-  }
-
-  const talker = talkers.find((t) => t.name.includes(q));
-
   return res.status(200).json(talker);
 }));
 

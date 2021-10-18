@@ -6,6 +6,6 @@ const checarToken = (req, res, next) => {
       return res.status(401).json({ message: 'Token inválido' });
     }
     next();
-  };
+};
 
-  module.exports = { checarToken, };
+module.exports = { checarToken, };

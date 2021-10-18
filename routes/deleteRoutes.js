@@ -1,11 +1,11 @@
 const express = require('express');
 const fs = require('fs').promises;
-const { checarToken, } = require('../middleware/userValidation');
+const { delet } = require('../middlewares/delete');
 
 const deleteRoutes = express.Router();
 const BD = './talker.json';
 
-deleteRoutes.delete('/:id', checarToken,
+deleteRoutes.delete('/:id', delet,
 async (req, res) => {
   const { id } = req.params;
   const Conteudo = JSON.parse(await fs.readFile(BD, 'utf8'));

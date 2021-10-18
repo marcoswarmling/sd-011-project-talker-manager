@@ -40,4 +40,15 @@ router.post('/', authTalker, async (req, res) => {
   res.status(201).json(talker);
 });
 
+router.put('/:id', authTalker, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const editedTalker = await TalkerModel.edit(req.body, id);
+  
+    res.status(200).json(editedTalker);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;

@@ -34,4 +34,21 @@ const create = async (talkerObj) => {
   return talkerObj;
 };
 
-module.exports = { getAll, getById, create };
+const edit = async (talkerObj, id) => {
+  const db = JSON.parse(await getAll());
+  const formatTalker = talkerObj;
+
+  formatTalker.id = parseInt(id, 0);
+
+  // console.log(formatTalker);
+
+  const newDb = db.map((talker) => (talker.id !== formatTalker.id ? talker : formatTalker));
+
+  fs.writeFile(file, JSON.stringify(newDb, undefined, 2), (err) => {
+    if (err) return console.log(err);
+  });
+
+  return formatTalker;
+};
+
+module.exports = { getAll, getById, create, edit };

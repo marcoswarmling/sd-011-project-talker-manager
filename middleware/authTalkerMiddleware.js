@@ -39,7 +39,7 @@ const validWatchedAt = (watchedAt, res) => {
 const authTalk = (talk, res) => {
   const { rate, watchedAt } = talk || { rate: null, watchedAt: null };
 
-  if (!talk || !rate || !watchedAt) {
+  if (!talk || !('rate' in talk) || !('watchedAt' in talk)) {
     res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });

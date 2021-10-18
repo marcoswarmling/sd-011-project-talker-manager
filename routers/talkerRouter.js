@@ -50,9 +50,9 @@ router.put('/:id',
     const { id } = req.params;
     const talkers = await fsUtils.getTalker();
     const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
-    talkers[talkerIndex] = { name, age, id, talk };
+    talkers[talkerIndex] = { name, age, id: parseInt(id, 10), talk };
     await fsUtils.setTalker(talkers);
-    return res.status(200).json({ name, age, id, talk });
+    return res.status(200).json({ name, age, id: parseInt(id, 10), talk });
   }));
 
 router.delete('/:id', 

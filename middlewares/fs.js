@@ -5,4 +5,4 @@ function readFile() {
   return talkers.then((data) => JSON.parse(data));
 }
 
-module.exports = { readFile }
+module.exports = { readFile };

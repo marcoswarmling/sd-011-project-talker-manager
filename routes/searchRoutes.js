@@ -1,16 +1,27 @@
-const express = require('express');
-const { readFile } = require('../middlewares/fs');
+/* const router = require('express').Router();
+const rescue = require('express-rescue');
+const fsUtils = require('../middlewares/utils');
+const { isValidToken } = require('../middlewares/fs');
 
-const searchRoutes = express.Router();
+  router.get('/', rescue(async (_req, res) => {
+    const talkers = await fsUtils.getTalker();
+    if (!talkers) {
+      return res.status(200).json(talkers);
+    } 
+    return res.status(200).json(talkers);
+  }));
+  
+  router.get('/search', isValidToken, rescue(async (req, res) => {
+    const { q } = req.query;
+    const talkers = await fsUtils.getTalker();
+  
+    if (!q || q === '') return res.status(200).json(talkers);
+  
+    const talker = talkers.filter((t) => t.name.includes(q));
+  
+    if (!talker) return res.status(200).json([]);
+  
+    return res.status(200).json(talker);
+  }));
 
-searchRoutes.get('/search', async (req, res) => {
-  const lista = await readFile();
-  const { q } = req.query;
-  if (!q) {
-    return res.status(200).json(lista);
-  }
-  lista.filter(({ name }) => name.includes(q));
-  return res.status(200).json(lista);
-});
-
-module.exports = searchRoutes;
+  module.exports = router; */

@@ -37,10 +37,7 @@ const ageOk = (req, res, next) => {
 
 const talkRateOk = (req, res, next) => {
   const { talk } = req.body;
-  if (talk.rate < 1) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-  if (talk.rate > 5) {
+  if (talk.rate < 1 || talk.rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
@@ -77,7 +74,7 @@ const newTalker = async (req, res) => {
   };
   db.push(talker);
   await writeTalker(db);
-  res.status(201).json(talker);
+  return res.status(201).json(talker);
 };
 
 module.exports = {

@@ -30,28 +30,40 @@ router.post('/',
   isValidDate,
   isValidRate,
   rescue(async (req, res) => {
-  const { name, age, talk } = req.body;
-  const talkers = await fsUtils.getTalker();
-  const id = talkers.length + 1;
-  const newEntry = [...talkers, { name, age, id, talk }];
-  await fsUtils.setTalker(newEntry);
-  return res.status(201).json({ name, age, id, talk });
-}));
+    const { name, age, talk } = req.body;
+    const talkers = await fsUtils.getTalker();
+    const id = talkers.length + 1;
+    const newEntry = [...talkers, { name, age, id, talk }];
+    await fsUtils.setTalker(newEntry);
+    return res.status(201).json({ name, age, id, talk });
+  }));
 
-router.put('/',
-isValidToken,
-isValidName, 
-isValidAge, 
-isValidTalk,
-isValidDate,
-isValidRate,
-rescue(async (req, res) => {
-const { name, age, talk, id } = req.body;
-const talkers = await fsUtils.getTalker();
-const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
-talkers[talkerIndex] = { name, age, id, talk };
-await fsUtils.setTalker(talkers);
-return res.status(200).json({ name, age, id, talk });
-}));
+router.put('/:id',
+  isValidToken,
+  isValidName, 
+  isValidAge, 
+  isValidTalk,
+  isValidDate,
+  isValidRate,
+  rescue(async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+    const talkers = await fsUtils.getTalker();
+    const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+    talkers[talkerIndex] = { name, age, id, talk };
+    await fsUtils.setTalker(talkers);
+    return res.status(200).json({ name, age, id, talk });
+  }));
+
+router.delete('/:id', 
+  isValidToken,
+  rescue(async (req, res) => { 
+    const { id } = req.params;
+    const talkers = await fsUtils.getTalker();
+    const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+    const newTalkers = talkers.splice(talkerIndex, 1);
+    await fsUtils.setTalker(newTalkers);
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  }));
 
 module.exports = router;

@@ -5,8 +5,9 @@ const BAD_REQUEST = 400;
 
 function mkToken() { return crypto.randomBytes(8).toString('hex'); }
 
-const emailChk = (_require, response, next) => {
-    const { email } = _require.body;
+const emailChk = (_request, response, next) => {
+    const { email } = _request.body;
+    console.log(email);
     
     if (!email) {
         return response.status(BAD_REQUEST)

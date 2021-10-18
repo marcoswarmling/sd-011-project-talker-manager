@@ -42,7 +42,6 @@ router.delete('/:id', checkToken, async (req, res) => {
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
-
 router.use(
     checkToken,
     checkName,

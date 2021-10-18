@@ -4,7 +4,7 @@ const authName = (name, res) => {
   } else {
     const isValidName = name.length >= 3;
     if (!isValidName) {
-      res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' })
+      res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
   }
 };

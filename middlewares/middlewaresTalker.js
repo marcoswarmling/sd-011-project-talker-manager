@@ -101,7 +101,7 @@ const validRating = (_request, response, next) => {
     next();
 };
 
-module.export = {
+module.exports = {
   validAge,
   validDate,
   validName,

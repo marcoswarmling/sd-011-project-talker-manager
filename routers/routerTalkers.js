@@ -9,13 +9,15 @@ router.get('/', async (_request, response) => {
   response.status(200).json(talkers);
 });
 
-router.get('/:id', async (request, res) => {
-  const { id } = request.params;
-  const res = await getTalkers('talker.json');
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const response = await getTalkers('talker.json');
   const result = JSON.parse(response).find((talker) => Number(talker.id) === Number(id));
+
   if (!result) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
+
   return res.status(200).json(result);
 });
 

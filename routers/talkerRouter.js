@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const fs = require('fs').promises;
+const rescue = require('express-rescue');
 const crypto = require('crypto');
 // const { readContentTalker } = require('../helpers/readFile');
 // const { writeContentTalker } = require('../helpers/writeFile');
@@ -83,5 +84,16 @@ watchedAtValidate, async (req, res) => {
   await fs.writeFile(talkerJson, JSON.stringify(newTalkers));
   res.status(200).json(editTalker);  
 });
+
+router.delete('/talker/:id', tokenValidate, rescue(async (req, res) => {
+  const { id } = req.params;
+  const talkers = JSON.parse(await fs.readFile(talkerJson, 'utf-8'));
+
+  const deleteTalkers = talkers.filter((item) => Number(item.id) !== Number(id));
+
+  await fs.writeFile(talkerJson, JSON.stringify(deleteTalkers));
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+}));
 
 module.exports = router;

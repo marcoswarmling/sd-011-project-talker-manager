@@ -5,7 +5,7 @@ const talkersRoutes = require('./routes/talkerRoutes.js');
 const loginRoutes = require('./routes/loginRoutes.js');
 const routee = require('./routes/validarRoutes');
 const validePutRoutes = require('./routes/validePutRoutes');
-const getRoutes = require('./routes/getRoutes');
+const { searchMiddleware } = require('./middlewares/searchMiddleware');
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,6 +17,7 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+app.get('/talker/search', searchMiddleware);
 
 app.use('/talker', talkersRoutes);
 
@@ -25,8 +26,6 @@ app.use('/login', loginRoutes);
 app.use('/talker', routee);
 
 app.use('/talker', validePutRoutes);
-
-app.use('/search', getRoutes);
 
 app.listen(PORT, () => {
   console.log('Online');

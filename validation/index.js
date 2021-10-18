@@ -1,3 +1,19 @@
+// const middlewareFactory = (field, size) => (req, res, next) => {
+//   const field1 = req.body[field];
+  
+//   if (!field1) {
+//     return res.status(400).json({ message: `O campo ${field1} é obrigatório` });
+//   }
+
+//   if (field1.length < size) {
+//     return res
+//       .status(400)
+//       .json({ message: `O ${field1} deve ter pelo menos ${size} caracteres` });
+//   }
+
+//   next();
+// };
+
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
 

@@ -23,6 +23,17 @@ router.get('/talker', async (_req, res) => {
   }
 });
 
+router.get('/talker/search', tokenValidate, async (req, res) => {
+  const talkers = await fs.readFile(talkerJson, 'utf-8');
+  const data = JSON.parse(talkers);
+  const searchTalker = req.query.q;
+
+  if (!searchTalker || searchTalker === '') return res.status(200).json(data);
+  const talkerFounded = data.filter((item) => item.name.includes(searchTalker));
+
+  res.status(200).json(talkerFounded);
+});
+
 router.get('/talker/:id', async (req, res) => {
     const { id } = req.params;
     const talker = await fs.readFile(talkerJson, 'utf-8');

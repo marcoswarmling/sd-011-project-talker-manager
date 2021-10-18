@@ -19,7 +19,7 @@ app.use('/', talkerRoutes);
 
 app.post('/login', validateEmail, validatePassword, (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
-  const { email, password } = req.body;
+  // const { email, password } = req.body;
   return res.status(HTTP_OK_STATUS).send({ token });
 });
 

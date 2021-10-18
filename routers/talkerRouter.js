@@ -22,6 +22,21 @@ router.get('/:id', rescue(async (req, res) => {
   return res.status(200).json(talker);
 }));
 
+router.get('/search',
+ isValidToken,
+ rescue(async (req, res) => {
+  const { q } = req.query;
+  const talkers = await fsUtils.getTalker();
+
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+
+  const talker = talkers.find((t) => t.name.includes(q));
+
+  return res.status(200).json(talker);
+}));
+
 router.post('/', 
   isValidToken,
   isValidName, 

@@ -1,4 +1,4 @@
-const { json } = require('body-parser');
+// const { json } = require('body-parser');
 const express = require('express');
 const fs = require('fs');
 
@@ -50,7 +50,29 @@ rtTalker.get('/search', (_request, response) => { // Falta terminar requisito 7
   
   return response.status(HTTP_OK_STATUS).send(dadosFilter);
 });
-    
+
+// rtTalker.post('/:id',
+//     validToken,
+//     validName,
+//     validAge,
+//     validTalk,
+//     validRate,
+//     validDate,
+//     validRating,
+//     (request, response) => {
+        // const { name, age, talk } = _request.body;
+        // const talkerData = fs.readFileSync(dbTalkers, 'utf8');
+        // const talkersJson = JSON.parse(talkerData);
+
+        // const putId = talkersJson[talkersJson.length - 1].id + 1;
+        // const talker = { id: putId, name, age, talk };
+
+        // talkersJson.push(talker);
+        
+        // fs.writeFileSync(dbTalkers, JSON.stringify(talkersJson));
+        // response.status(CREATED).json(talker);
+// });
+
 rtTalker.get('/:id', (_request, response) => {
   const { id } = _request.params;
   const idNum = Number(id); // id vem como string e será comparada com inteiros   

@@ -5,14 +5,23 @@ const { readContent } = require('../services/services');
 const talkerDB = './talker.json';
 
 async function getTalks() {
-    const talkers = await readContent(talkerDB) || [];
     try {
+        const talkers = await readContent(talkerDB) || [];
         return talkers;
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getIdTalks(id) {
+    try {
+        const talkersId = await readContent(talkerDB) || [];
+        const talker = talkersId.find((obj) => obj.id === Number(id));
+        return talker;
+    } catch (error) {
+        return error;
     }
 }
 
 module.exports = {
-    getTalks,
-};
+    getTalks, getIdTalks };

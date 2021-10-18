@@ -22,7 +22,6 @@ const fs = require('fs').promises;
 // }
 
 const readContent = async (file) => {
-    console.log(file);
   try {
     const content = await fs.readFile(file, 'utf8');
     return JSON.parse(content);

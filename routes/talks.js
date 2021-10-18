@@ -4,6 +4,8 @@ const talksController = require('../controllers/talksControllers');
 
 router.get('/', talksController.getAllTalks);
 
+router.get('/:id', talksController.getIdTalks);
+
 // router.get('/names/:id', moviesController.getMovieById);
 
 module.exports = router;

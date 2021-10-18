@@ -1,7 +1,15 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const express = require('express');
-const { validateEmail, validatePassword } = require('../validation');
+const {
+  validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+} = require('../validation');
+// const { response } = require('express');
 
 const router = express.Router();
 
@@ -30,8 +38,21 @@ router.post('/login', validateEmail, validatePassword, (_req, res) => {
   res.status(200).json({ token });
 });
 
-router.post('/talker', (req, res) => {
-  //
-});
+router.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  (req, res) => {
+    const file = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+    const { name, age, talk } = req.body;
+
+    file.push(({ id: file.length + 1, name, age, talk }));
+    fs.writeFileSync('./talker.json', JSON.stringify(file));
+
+    res.status(201).json({ id: file.length, name, age, talk });
+},
+);
 
 module.exports = router;

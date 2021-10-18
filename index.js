@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
-// const BAD_REQUEST = 400;
+const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const PORT = '3000';
 
@@ -35,6 +35,23 @@ app.get('/talker/:id', async (req, res) => {
   const talker = fileContentParsed.find((t) => t.id === parseInt(id, 2));
   if (!talker) res.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(HTTP_OK_STATUS).json(talker);
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email) res.status(BAD_REQUEST).json({ message: 'O campo "email" é obrigatório' });
+  if (!password) res.status(BAD_REQUEST).json({ message: 'O campo "password" é obrigatório' });
+  const regex = /\S+@\S+\.\S+/;
+  const emailIsValid = regex.test(email);
+  if (!emailIsValid) { 
+    return res.status(BAD_REQUEST)
+      .json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (password.length < 6) { 
+    return res.status(BAD_REQUEST)
+      .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+  res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.listen(PORT, () => {

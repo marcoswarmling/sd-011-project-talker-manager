@@ -1,12 +1,12 @@
-const authToken = (token, res) => {
-  if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
-};
-
 const authName = (name, res) => {
-  if (!name) res.status(400).json({ message: 'O campo "name" é obrigatório' });
-
-  const isValidName = name.length >= 3;
-  if (!isValidName) res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!name) {
+    res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  } else {
+    const isValidName = name.length >= 3;
+    if (!isValidName) {
+      res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' })
+    }
+  }
 };
 
 const authAge = (age, res) => {
@@ -50,12 +50,6 @@ const authTalk = (talk, res) => {
 };
 
 const checkTalkers = (req, res, next) => {
-  const { authorization: token } = req.headers;
-  
-  if (!token) res.status(401).json({ message: 'Token não encontrado' });
-
-  authToken(token, res);
-
   const { name, age, talk } = req.body;
 
   authName(name, res);

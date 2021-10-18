@@ -51,13 +51,13 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', authTalker, async (req, res) => {
+router.post('/', authToken, authTalker, async (req, res) => {
   const talker = await TalkerModel.create(req.body);
 
   res.status(201).json(talker);
 });
 
-router.put('/:id', authTalker, async (req, res) => {
+router.put('/:id', authToken, authTalker, async (req, res) => {
   try {
     const { id } = req.params;
     const editedTalker = await TalkerModel.edit(req.body, id);

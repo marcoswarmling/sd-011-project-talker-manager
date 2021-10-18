@@ -13,7 +13,7 @@ const {
 const routi = express.Router();
 const DADOS = './talker.json';
 
-routi.get('/search', validarToken,(req, res) => {
+routi.get('/search', validarToken, (req, res) => {
   const { q } = req.query;
   try {
     const conteudo = JSON.parse(fs.readFileSync(DADOS, 'utf8'));

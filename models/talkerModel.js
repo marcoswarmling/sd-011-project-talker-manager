@@ -61,4 +61,9 @@ const deleteTalker = async (id) => {
   return { message: 'Pessoa palestrante deletada com sucesso' };
 };
 
-module.exports = { getAll, getById, create, edit, deleteTalker };
+const searchTalker = async (query) => {
+  const db = JSON.parse(await getAll());
+  return db.filter((value) => value.name.includes(query));
+};
+
+module.exports = { getAll, getById, create, edit, deleteTalker, searchTalker };

@@ -19,6 +19,19 @@ router.get('/', async (_req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  const { authorization: token } = req.headers;
+
+  if (!token) res.status(401).json({ message: 'Token não encontrado' });
+  if (token.length !== 16) res.status(401).json({ message: 'Token inválido' });
+
+  const { q } = req.query;
+
+  const result = await TalkerModel.searchTalker(q);
+
+  res.status(200).json(result);
+});
+
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;

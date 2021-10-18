@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const talker = require('./routes/talker');
+const search = require('./routes/searchTalk');
 const postTalker = require('./routes/postTalker');
 const putTalker = require('./routes/putTalker');
 const deleteTalker = require('./routes/deleteTalker');
@@ -17,6 +18,10 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.use('/talker/search',
+  postTalker.tokenAuthentication,
+  search.search);
 
 app.use('/login',
   login.emailOk,

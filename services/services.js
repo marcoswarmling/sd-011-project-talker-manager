@@ -147,21 +147,31 @@ const writeContent = async (file, content) => {
 
   // referente validacao do req 5
   const updateContent = async (file, content, id) => {
-    const db = await readContent(file);
+    const db = await readContent(file) || [];
     const newEntry = { id: Number(id), ...content };
     const newdb = db.map((talker) => (talker.id === newEntry.id ? newEntry : talker));
     await fs.writeFile(file, JSON.stringify(newdb));
     return newEntry;
   };
-  
+
   // referente validacao do req 6
     const deleteContent = async (file, id) => {
-        const db = await readContent(file);
+        const db = await readContent(file) || [];
         const newdb = db.filter((talker) => (talker.id !== Number(id)));
         await fs.writeFile(file, JSON.stringify(newdb));
         return null;
         };
 
+// referente validacao do req 7
+const searchContent = async (file, queryTerm) => {
+    const db = await readContent(file) || [];
+    if (!queryTerm || queryTerm === '') {
+        return db;
+    }
+    const response = db.filter((talker) => talker.name.includes(queryTerm));
+    return response;
+    };
+  
 module.exports = {
   readContent, 
   tokenGenerator, 
@@ -176,4 +186,5 @@ module.exports = {
   writeContent,
   updateContent,
   deleteContent,
+  searchContent,
 };

@@ -50,9 +50,12 @@ router.put('/:id',
     const { id } = req.params;
     const talkers = await fsUtils.getTalker();
     const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
-    talkers[talkerIndex] = { name, age, id: parseInt(id, 10), talk };
+
+    if (talkerIndex === -1) return res.status(404).json({ message: 'Talker not found!' });
+
+    talkers[talkerIndex] = { id: parseInt(id, 10), name, age, talk };
     await fsUtils.setTalker(talkers);
-    return res.status(200).json({ name, age, id: parseInt(id, 10), talk });
+    return res.status(200).json({ id: parseInt(id, 10), name, age, talk });
   }));
 
 router.delete('/:id', 
@@ -61,7 +64,10 @@ router.delete('/:id',
     const { id } = req.params;
     const talkers = await fsUtils.getTalker();
     const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
-    const newTalkers = talkers.splice(talkerIndex, 1);
+
+    if (talkerIndex === -1) return res.status(404).json({ message: 'Talker not found!' });
+
+    const newTalkers = talkers.filter((t) => t.id !== parseInt(id, 10));
     await fsUtils.setTalker(newTalkers);
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   }));

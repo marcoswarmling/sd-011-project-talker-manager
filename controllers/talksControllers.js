@@ -31,4 +31,5 @@ const getLoginTalks = async (req, res) => {
     return error;
   }
 };
+
 module.exports = { getAllTalks, getIdTalks, getLoginTalks };

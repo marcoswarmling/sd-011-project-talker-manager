@@ -1,4 +1,4 @@
-const validarToken = (req, res, next) => {
+const valideToken = (req, res, next) => {
     const { authorization } = req.headers;
   
     if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
@@ -8,7 +8,7 @@ const validarToken = (req, res, next) => {
     next();
   };
   
-  const validarName = (req, res, next) => {
+  const valideName = (req, res, next) => {
     const { name } = req.body;
   
     if (!name) return res.status(400).json({ message: 'O campo "name" é obrigatório' });
@@ -18,7 +18,7 @@ const validarToken = (req, res, next) => {
     next();
   };
   
-  const validarAge = (req, res, next) => {
+  const valideAge = (req, res, next) => {
     const { age } = req.body;
   
     if (!age) return res.status(400).json({ message: 'O campo "age" é obrigatório' });
@@ -28,7 +28,7 @@ const validarToken = (req, res, next) => {
     next();
   };
   
-  const validarTalk = (req, res, next) => {
+  const valideTalk = (req, res, next) => {
     const { talk } = req.body;
   
     if (!talk || !talk.watchedAt) {
@@ -40,7 +40,7 @@ const validarToken = (req, res, next) => {
     next();
   };
   
-  const validarRate = (req, res, next) => {
+  const valideRate = (req, res, next) => {
     const { talk } = req.body;
     const { rate } = talk;
   
@@ -51,7 +51,7 @@ const validarToken = (req, res, next) => {
     next();
   };
   
-  const validarDateFormat = (req, res, next) => {
+  const valideDateFormat = (req, res, next) => {
     const { talk } = req.body;
     const { watchedAt } = talk;
     const watchedAtFormat = /([0-2][0-9]|3[0-1])\/(0[0-9]|1[0-2])\/[0-9]{4}/;
@@ -63,7 +63,7 @@ const validarToken = (req, res, next) => {
     next();
   };
   
-  const validarRateDate = (req, res, next) => {
+  const valideRateDate = (req, res, next) => {
     const { talk } = req.body;
     const { watchedAt, rate } = talk;
   
@@ -76,11 +76,11 @@ const validarToken = (req, res, next) => {
   };
   
   module.exports = {
-    validarToken,
-    validarName,
-    validarAge,
-    validarTalk,
-    validarRate,
-    validarDateFormat,
-    validarRateDate,
+    valideToken,
+    valideName,
+    valideAge,
+    valideTalk,
+    valideRate,
+    valideDateFormat,
+    valideRateDate,
   };

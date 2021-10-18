@@ -70,15 +70,18 @@ nameValidate,
 talkValidate,
 rateValidate,
 watchedAtValidate, async (req, res) => {
-  const { id } = req.params;
-  const { name, age, talk } = req.body;
-  const talkerEdit = { id: Number(id), name, age, talk };
   const dataTalkers = await fs.readFile(talkerJson, 'utf-8');
-  const talkers = JSON.parse(dataTalkers);
+  const talkers = await JSON.parse(dataTalkers);
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const talkerEdit = { id: Number(id), name, age, talk };
 
-  const talkerIndex = talkers.findIndex((item) => item.id === Number(id));
-  talkers[talkerIndex] = talkerEdit;
-  await fs.writeFile(talkerJson, JSON.stringify(talkers));
+  const talkerIndex = talkers.map((item) => {
+    if (item.id === Number(id)) return talkerEdit;
+    return item;
+  });
+  
+  await fs.writeFile(talkerJson, JSON.stringify(talkerIndex));
 
   return res.status(200).json(talkerEdit);
 });

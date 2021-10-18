@@ -5,8 +5,8 @@ const BAD_REQUEST = 400;
 
 function mkToken() { return crypto.randomBytes(8).toString('hex'); }
 
-const emailChk = (_request, response, next) => {
-    const { email } = _request.body;
+const emailChk = (request, response, next) => {
+    const { email } = request.body;
     console.log(email);
     
     if (!email) {
@@ -16,7 +16,7 @@ const emailChk = (_request, response, next) => {
 
     const emailRgx = /\S+@\S+\.\S+/;
 
-    if (emailRgx.test(email)) {
+    if (!emailRgx.test(email)) {
         return response.status(BAD_REQUEST)
                        .json({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
@@ -24,17 +24,15 @@ const emailChk = (_request, response, next) => {
     next();
 };
 
-const passChk = (_request, response, next) => {
-    const { password } = _request.body;
+const passChk = (request, response, next) => {
+    const { password } = request.body;
     
     if (!password) {
         return response.status(BAD_REQUEST)
                        .json({ message: 'O campo "password" é obrigatório' });
     }
 
-    const passwordRgx = /(.){6,}/;
-
-    if (passwordRgx.test(password)) {
+    if (password.length < 6) {
         return response.status(BAD_REQUEST)
                        .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
     }

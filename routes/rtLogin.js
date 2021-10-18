@@ -11,10 +11,9 @@ const HTTP_OK_STATUS = 200;
 // const INTERNAL_SERVER_ERROR = 500;
 // const NOT_FOUND = 404;
 
-rtLogin.post('/', emailChk, passChk, (_request, response) => {
+rtLogin.post('/', emailChk, passChk, (request, response) => {
     const token = mkToken(16);
-    console.log(token);
-    response.status(HTTP_OK_STATUS).json(token);    
+    response.status(HTTP_OK_STATUS).json({ token });    
 });
 
 // rtLogin.get('/', (_request, response) => {

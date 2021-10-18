@@ -70,8 +70,10 @@ validateTalkWatchedAt,
 validateTalkRate,
 (request, response) => {
   const { name, age, talk } = request.body;
+  const data = fs.readFileSync(talkers, 'utf8');
+  const talker = JSON.parse(data);
 
-  const idTalker = talkers.length - 1;
+  const idTalker = talker.length + 1;
 
   const newTalker = {
     name,
@@ -80,7 +82,9 @@ validateTalkRate,
     talk,
   };
 
-  fs.writeFileSync(talkers, newTalker);
+  talker.push(newTalker);
+
+  fs.writeFileSync(talkers, JSON.stringify(talker));
 
   response.status(HTTP_CREATED_STATUS).json(newTalker);
 });

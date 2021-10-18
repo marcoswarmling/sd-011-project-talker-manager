@@ -73,7 +73,7 @@ function validateTalkWatchedAt(request, response, next) {
   const { talk: { watchedAt } } = request.body;
   const messageError = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
   const watchedAtRegex = /^(0?[1-9]|[12][0-9]|3[01])\/-(0?[1-9]|1[012])\/-\d{4}$/;
-
+  
   if (!watchedAt || watchedAt === '') {
     return response
       .status(HTTP_BAD_REQUEST_STATUS)

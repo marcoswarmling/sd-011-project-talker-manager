@@ -45,9 +45,8 @@ router.post('/talker',
     const talkers = await getTalkers();
     const talkerPosition = talkers.length + 1;
     const talker = { id: talkerPosition, name, age, talk };
-    console.log(talkers);
     talkers.push(talker);
-    await fs.writeFile('./talkers.json', JSON.stringify(talkers));
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
     return res.status(201).json(talker);
   });
 

@@ -42,7 +42,6 @@ function validateToken(req, res, next) {
       message: 'Token inválido',
     });
   }
-  console.log('Entrei no token');
   next();
 }
 
@@ -58,8 +57,6 @@ function validateName(req, res, next) {
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
-  console.log('Entrei no name');
-
   next();
 }
 
@@ -75,8 +72,6 @@ function validateAge(req, res, next) {
       message: 'A pessoa palestrante deve ser maior de idade',
     });
   }
-  console.log('Entrei no age');
-
   next();
 }
 
@@ -93,8 +88,6 @@ function validateTalk(req, res, next) {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
-  console.log('Entrei no talk');
-
   next();
 }
 
@@ -112,8 +105,6 @@ function validateTalkKeys(req, res, next) {
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
   });
   }
-  console.log('Entrei no keys');
-
   next();
 }
 

@@ -15,19 +15,19 @@ const authPassword = (password, res) => {
 const checkLogin = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email) res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  if (!password) res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  if (!password) return res.status(400).json({ message: 'O campo "password" é obrigatório' });
 
   const validEmail = authEmail(email);
 
   if (!validEmail) {
-    res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
 
   authPassword(password, res);
   const validPassword = authPassword(password);
   if (validPassword) {
-    res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
   next();

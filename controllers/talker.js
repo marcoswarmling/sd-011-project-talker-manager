@@ -3,14 +3,16 @@ const { StatusCodes } = require('http-status-codes');
 const readFile = require('../services/readFile');
 const writeFile = require('../services/writeFile');
 
+const talkerJson = 'talker.json';
+
 const getAllTalkers = async (req, res) => {
-  const talkers = await readFile('talker.json');
+  const talkers = await readFile(talkerJson);
   return res.status(StatusCodes.OK).json(talkers);
 };
 
 const getIdTalkers = async (req, res) => {
   const { id } = req.params;
-  const talkersList = await readFile('talker.json');
+  const talkersList = await readFile(talkerJson);
 
   const talkerId = talkersList.find((talker) => talker.id === parseInt(id, 10));
 
@@ -25,7 +27,7 @@ const getIdTalkers = async (req, res) => {
 
 const addTalker = async (req, res) => {
   const { body } = req;
-  const talkersList = await readFile('talker.json');
+  const talkersList = await readFile(talkerJson);
 
   const newTalker = {
     id: talkersList.length + 1,
@@ -33,7 +35,7 @@ const addTalker = async (req, res) => {
   };
 
   talkersList.push(newTalker);
-  await writeFile('talker.json', JSON.stringify(talkersList));
+  await writeFile(talkerJson, JSON.stringify(talkersList));
   
   return res.status(StatusCodes.CREATED).json(newTalker);
 };
@@ -45,10 +47,10 @@ const editTalker = async (req, res) => {
     id: parseInt(id, 10),
   };
 
-  const talkersList = await readFile('talker.json');
+  const talkersList = await readFile(talkerJson);
   const newTalkersList = talkersList.filter((talker) => talker.id !== parseInt(id, 10));
   newTalkersList.push(newTalker);
-  await writeFile('talker.json', JSON.stringify(newTalkersList));
+  await writeFile(talkerJson, JSON.stringify(newTalkersList));
 
   return res.status(StatusCodes.OK).json(newTalker);
 };

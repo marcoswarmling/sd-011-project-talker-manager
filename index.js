@@ -73,9 +73,13 @@ app.put('/talker/:id',
   (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;
+
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
+    console.log('Getting here');
     const person = file.filter((p) => p.id === parseInt(id, 10));
     fs.writeFileSync(fileName, file[person] = { ...file[person], name, age, talk });
+    const file2 = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
+    console.log(file2);
     res.status(200).json(file[person]);
   });
 

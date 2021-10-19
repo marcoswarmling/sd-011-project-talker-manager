@@ -26,12 +26,10 @@ app.get('/talker/search',
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     if (!q) res.status(200).json(file);
     const filteredNamesByQuery = file.filter((p) => p.name.includes(q));
-    console.log(filteredNamesByQuery);
     res.status(200).json(filteredNamesByQuery);
 });
 
 app.get('/talker/:id', (req, res) => {
-  console.log('Rota delete');
   const { id } = req.params;
   const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
   const person = file.filter((p) => p.id === parseInt(id, 10));
@@ -75,7 +73,6 @@ app.put('/talker/:id',
   (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;
-    console.log(req.headers.authorization);
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     const person = file.filter((p) => p.id === parseInt(id, 10));
     fs.writeFileSync(fileName, file[person] = { ...file[person], name, age, talk });

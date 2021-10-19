@@ -8,8 +8,8 @@ router.get('/', async (_req, res) => {
   const talkers = JSON.parse(data);
 
   if (!talkers.length) return res.status(200).send([]);
-  
-  return res.status(200).send(JSON.parse(talkers));
+
+  return res.status(200).send(talkers);
 });
 
 router.get('/:id', async (req, res) => {

@@ -75,7 +75,7 @@ async (req, res) => {
   const data = await fs.readFileSync(talkerJsonPath, 'utf-8');
   const talkers = JSON.parse(data);
   const talker = talkers.find((t) => t.id === Number(id));
-  const editedTalker = { ...talker, body };
+  const editedTalker = { ...talker, ...body };
 
   const editedTalkers = talkers.map((t) => {
     if (t.id === Number(id)) return editedTalker;

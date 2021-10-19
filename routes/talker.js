@@ -8,9 +8,9 @@ router.post('/',
   talkerCrontroller.tokenValid,
   talkerCrontroller.nameValid,
   talkerCrontroller.ageValid,
+  talkerCrontroller.talkValid,
   talkerCrontroller.watchedAtValid,
   talkerCrontroller.rateValid,
-  talkerCrontroller.talkValid,
   talkerCrontroller.addTalker);
 
 module.exports = router;

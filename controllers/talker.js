@@ -58,7 +58,7 @@ const ageValid = (req, res, next) => {
     return res.status(StatusCodes.BAD_REQUEST)
       .json({ message: 'O campo "age" é obrigatório' });
   }
-  if (age >= 18) {
+  if (parseInt(age, 10) < 18) {
     return res.status(StatusCodes.BAD_REQUEST)
       .json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
@@ -75,7 +75,7 @@ const watchedAtValid = (req, res, next) => {
   }
 
   const watchedAtRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
-  
+
   if (!watchedAtRegex.test(watchedAt)) {
     return res.status(StatusCodes.BAD_REQUEST)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });

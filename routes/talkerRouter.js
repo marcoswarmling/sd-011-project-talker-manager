@@ -28,7 +28,7 @@ talkerRouter.get('/:id', async (req, res) => {
 
 talkerRouter.post('/',
 (req, res, next) => {
-  const { token } = req.headers;
+  const { authorization: token } = req.headers;
 
   if (!token) return res.status(401).send({ message: 'Token não encontrado' });
 

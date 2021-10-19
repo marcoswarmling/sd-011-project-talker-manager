@@ -53,6 +53,7 @@ app.get('/talker/:id', async (req, res) => {
     const { id } = req.params;
     const fileContent = await fs.readFile('talker.json', 'utf8');
     const fileContentParsed = JSON.parse(fileContent);
+    console.log(typeof fileContentParsed[0].id);
     const talker = fileContentParsed.find((t) => t.id === parseInt(id, 2));
     if (!talker) res.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
     res.status(HTTP_OK_STATUS).json(talker);
@@ -80,7 +81,7 @@ app.post('/login', (req, res) => {
 
 app.post('/talker', validateToken, validateName, validateAge, validateTalk, async (req, res) => {
   try {
-    const data = await fs.readFile('talker.json', 'utf8');
+    const data = await fs.readFile(TALKER_JSON, 'utf8');
     const fileContent = JSON.parse(data);
     const newId = fileContent.length + 1;
     const newTalker = { ...req.body, id: newId };

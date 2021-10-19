@@ -119,6 +119,18 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(talkers);
 });
 
+// Req 7
+app.get('/talker/search',  
+  validateToken,
+  async (request, response) => {
+    const { query } = request.query;
+    const talkers = await getTalkers();
+    if (!query || query === '') return response.status(200).json(talkers);
+    const searchName = talkers.filter((talker) => talker.name.includes(query));
+    if (!query) return response.status(200).json([]);
+    return response.status(200).json(searchName);
+});
+
 // Req 2
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
@@ -181,18 +193,6 @@ app.delete('/talker/:id',
   return response.status(200).json({
     message: 'Pessoa palestrante deletada com sucesso',
   });
-});
-
-// Req 7
-app.get('/talker/search',  
-  validateToken,
-  async (request, response) => {
-    const { query } = request.query;
-    const talkers = await getTalkers();
-    if (!query || query === '') return response.status(200).json(talkers);
-    const searchName = talkers.filter((talker) => talker.name.includes(query));
-    if (!query) return response.status(200).json([]);
-    return response.status(200).json(searchName);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

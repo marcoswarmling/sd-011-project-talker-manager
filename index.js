@@ -91,11 +91,11 @@ const checkAge = (req, res, next) => {
 
   if (!age) {
     return res.status(400)
-      .json({ message: 'O campo "age" é obrigatório' })
+      .json({ message: 'O campo "age" é obrigatório' });
   }
   if (Number(age) < 18) {
     return res.status(400)
-      .json({ message: 'A pessoa palestrante deve ser maior de idade'})
+      .json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
@@ -108,7 +108,7 @@ const checkName = (req, res, next) => {
   }
   if (name.length < 3) {
     return res.status(400)
-      .json({ message: 'O "name" deve ter pelo menos 3 caracteres'});
+      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 };
@@ -117,7 +117,7 @@ const checkRate = (req, res, next) => {
   const { talk } = req.body;
   const { rate } = talk;
 
-  if (rate < 1 || rate > 5) {
+  if (typeof talk.rate !== 'number' || rate < 1 || rate > 5) {
     return res.status(400)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -143,6 +143,93 @@ app.get('/talker', async (req, res) => {
   const talkers = await talkersArray();
   if (talkers.length === 0) return res.status(200).json([]);
       res.status(200).send(talkers);
+});
+
+// 2
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talkers = await talkersArray();
+  const arrayId = talkers.find((a) => a.id === Number(id));
+
+    if (!arrayId) {
+      return res.status(404)
+        .json({ message: 'Pessoa palestrante não encontrada' });
+    }
+  return res.status(200).json(arrayId);
+});
+
+// 3
+// Como referência o randomToken: https://www.npmjs.com/package/random-token
+
+app.post('/login', checkEmail, checkPassword, async (req, res) => {
+  const token = randomToken(16);
+  res.status(200).json({ token });
+});
+
+// 4
+
+app.post('/talker',
+checkAge,
+checkName,
+checkRate,
+checkTalk,
+checkToken,
+checkWatched,
+async (req, res) => {
+  const talkers = await talkersArray();
+  const { age, name, talk } = req.body;
+  const talker1 = { id: talkers.length + 1, age, name, talk };
+  talkers.push(talker1);
+  await fs.writeFile(talkersArray, JSON.stringify(talkers));
+
+  return res.status(201).json(talker1);
+});
+
+// 5
+
+app.put('/talker/:id',
+checkAge,
+checkName,
+checkRate,
+checkTalk,
+checkToken,
+checkWatched,
+async (req, res) => {
+  const { id } = req.params;
+  const talkers = await talkersArray();
+  const updateTalker = talkers.findIndex((uId) => uId.id === Number(id));
+  talkers[updateTalker] = { ...talkers[updateTalker], ...req.body };
+  await fs.writeFile(talkersArray, JSON.stringify(talkers));
+  return res.status(200)
+    .json(talkers[updateTalker]);
+});
+
+// 6
+
+app.delete('/talker/:id', checkToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await talkersArray();
+  const deleteTalker = talkers.findIndex((delId) => delId.id === Number(id));
+  talkers.splice(deleteTalker, 1);
+  await fs.writeFile(talkersArray, JSON.stringify(talkers));
+  return res.status(200)
+    .json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+// 7
+
+app.get('/talker/search', checkToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await talkersArray();
+  const filteredArray = talkers.filter((a) => a.name.includes(q));
+
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+  if (!filteredArray) {
+    return res.status(200).json([]);
+  }
+  res.status(200).json(filteredArray);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

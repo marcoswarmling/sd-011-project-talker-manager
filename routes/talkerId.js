@@ -11,7 +11,7 @@ const {
     talkIsValid,
     watchedAtIsValid,
     rateIsValid,  
-} = require('../middlewares/validateOtherTalker');
+} = require('../midlewares/validateOtherTalker');
 
 const editTalkerById = [
     tokenIsValid,

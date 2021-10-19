@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const fs = require('fs').promises;
+// const fs = require('fs').promises;
 // const crypto = require('crypto');
 
-const writeTalker = (newFile) => fs.writeFile('./talker.json', JSON.stringify(newFile));
+// const writeTalker = (newFile) => fs.writeFile('./talker.json', JSON.stringify(newFile));
 
 // const generateToken = (req, res) => {
 //   const token = crypto.randomBytes(8).toString('hex');
@@ -32,17 +32,19 @@ const passwordOk = (req, res) => {
 };
 
 router.post('/', async (req, res) => {
-  const user = {
-    email: req.body.email,
-    password: req.body.password,
-  };
-  emailOk(user.email, res);
-  passwordOk(user.password, res);
-  const db = await fs.readFile('./talker.json', 'utf8')
-  .then((data) => JSON.parse(data));
-  db.push(user);
-  await writeTalker(db);
-  res.status(201).json(user);
+  passwordOk();
+  emailOk();
+  // const user = {
+  //   email: req.body.email,
+  //   password: req.body.password,
+  // };
+  // emailOk(user.email, res);
+  // passwordOk(user.password, res);
+  // const db = await fs.readFile('./talker.json', 'utf8')
+  // .then((data) => JSON.parse(data));
+  // db.push(user);
+  // await writeTalker(db);
+  res.status(201).json();
 });
 
 module.exports = router;

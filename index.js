@@ -35,17 +35,17 @@ postTalker.tokenAuthentication,
 postTalker.nameOk,
 postTalker.ageOk,
 postTalker.talkOk,
-postTalker.talkRateOk,
 postTalker.talkWatchedAtOk,
+postTalker.talkRateOk,
 postTalker.newTalker);
 
 app.put('/talker/:id',
-postTalker.tokenAuthentication,
+// postTalker.tokenAuthentication,
 postTalker.nameOk,
 postTalker.ageOk,
 postTalker.talkOk,
-postTalker.talkRateOk,
 postTalker.talkWatchedAtOk,
+postTalker.talkRateOk,
 putTalker.updateTalker);
 
 app.delete('/talker/:id',

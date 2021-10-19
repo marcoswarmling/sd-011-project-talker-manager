@@ -18,8 +18,7 @@ function checkTalk(request, response, next) {
     return response.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  const { talk: { watchedAt, rate } } = request.body;  
-  if (!watchedAt || !rate) {
+  if (!('watchedAt' in talk) || !('rate' in talk)) {
     return response.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -47,14 +46,14 @@ function checkDate(request, response, next) {
   next();
 }
 
-function checkRate(request, response, next) {
-  const { talk: { rate } } = request.body;
+function checkRate(req, res, next) {
+  const { talk: { rate } } = req.body;
 
   if (!Number.isInteger(parseInt(rate, 10))) {
-    return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   if (rate < 1 || rate > 5) {
-    return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 }

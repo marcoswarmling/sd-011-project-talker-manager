@@ -1,5 +1,7 @@
 const express = require('express');
 const fs = require('fs');
+const { validateWatchedAt, validateRate } = require('../helpers/validateTalk');
+const { validateToken } = require('../helpers/validateToken');
 
 const talkerRouter = express.Router();
 
@@ -22,6 +24,74 @@ talkerRouter.get('/:id', async (req, res) => {
   if (!talker) return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
 
   return res.status(200).send(talker);
+});
+
+talkerRouter.post('/',
+(req, res, next) => {
+  const { token } = req.headers;
+
+  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
+
+  if (!validateToken(token)) return res.status(401).send({ message: 'Token inválido' });
+
+  next();
+},
+(req, res, next) => {
+  const { name } = req.body;
+
+  if (!name || name === '') {
+    return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  }
+
+  if (name.length < 3) {
+    return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+
+  next();
+},
+(req, res, next) => {
+  const { age } = req.body;
+
+  if (!age || age === '') return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+
+  if (age < 18) {
+    return res.status(400).send({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+
+  next();
+},
+(req, res, next) => {
+  const { talk } = req.body;
+
+  if (!talk || !talk.watchedAt || !talk.rate) {
+    const message = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
+    return res.status(400).send({ message });
+  }
+
+  next();
+},
+(req, res, next) => {
+  const { talk: { watchedAt, rate } } = req.body;
+
+  if (!validateWatchedAt(watchedAt)) {
+    return res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+
+  if (!validateRate(rate)) {
+    return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  next();
+},
+async (req, res) => {
+  const { body } = req;
+
+  const data = await fs.readFileSync('./talker.json', 'utf-8');
+  const talkers = JSON.parse(data);
+
+  const newTalker = { id: talkers[talkers.length - 1].id + 1, ...body };
+
+  return res.status(201).send({ ...newTalker });
 });
 
 module.exports = talkerRouter;

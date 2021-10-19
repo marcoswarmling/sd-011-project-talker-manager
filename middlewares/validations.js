@@ -64,7 +64,7 @@ const validateTalkItems = (req, res, next) => {
   const { talk } = req.body;
   if (!dateRegex.test(talk.watchedAt)) {
     res.status(400).json({
-      message: 'O campo "watchedAt" deve ter o formato dd/mm/aaaa' });
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
     }
 if (!talkRateRegex.test(talk.rate)) {
     res.status(400).json({

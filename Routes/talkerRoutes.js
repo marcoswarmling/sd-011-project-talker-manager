@@ -31,7 +31,7 @@ router.get('/talker/:id', async (req, res) => {
   if (!dados) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
-  res.status(200).json(dados);
+  return res.status(200).json(dados);
 });
 
 router.post('/talker',
@@ -45,14 +45,13 @@ router.post('/talker',
     const talkers = await getTalkers();
     const talkerPosition = talkers.length + 1;
     const talker = { id: talkerPosition, name, age, talk };
+    console.log(talkers);
     talkers.push(talker);
-    await fs.writeFile(talkers, JSON.stringify(getTalkers()));
-    res.status(201).json(talker);
+    await fs.writeFile('./talkers.json', JSON.stringify(talkers));
+    return res.status(201).json(talker);
   });
 
 /*  ||
-
-app.post('/talker', () => {});
 app.put('/talker/:id', () => {});
 app.delete('/talker/:id', () => {});
 app.get('/talker/search?q=searchTerm', () => {}); */

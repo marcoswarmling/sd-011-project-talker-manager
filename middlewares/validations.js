@@ -42,6 +42,7 @@ function validateToken(req, res, next) {
       message: 'Token inválido',
     });
   }
+  console.log('Entrei no token');
   next();
 }
 
@@ -57,6 +58,8 @@ function validateName(req, res, next) {
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
+  console.log('Entrei no name');
+
   next();
 }
 
@@ -72,20 +75,30 @@ function validateAge(req, res, next) {
       message: 'A pessoa palestrante deve ser maior de idade',
     });
   }
+  console.log('Entrei no age');
+
   next();
 }
 
 function validateTalk(req, res, next) {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || (!talk.rate && Number(talk.rate) !== 0)) {
+  if (!talk) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
+
+  if (!talk.watchedAt || (!talk.rate && Number(talk.rate) !== 0)) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+  console.log('Entrei no talk');
+
   next();
 }
 
-async function validateTalkKeys(req, res, next) {
+function validateTalkKeys(req, res, next) {
   const { watchedAt, rate } = req.body.talk;
   const regex = /([0-2][0-9]|3[0-1])\/(0[0-9]|1[0-2])\/[0-9]{4}/;
   if (!regex.test(watchedAt)) {
@@ -94,11 +107,13 @@ async function validateTalkKeys(req, res, next) {
   });
   }
 
-  if (!(rate > 0 && rate < 6)) {
+  if (Number(rate) < 1 || Number(rate) > 5) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
   });
   }
+  console.log('Entrei no keys');
+
   next();
 }
 

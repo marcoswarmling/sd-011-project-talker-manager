@@ -83,7 +83,7 @@ app.put('/talker/:id',
   const onChangeProfileIndex = talkersArr.findIndex((talker) => Number(talker.id) === Number(id));
   const changesOnDemand = { name, age, id: Number(id), talk };
   talkersArr[onChangeProfileIndex] = changesOnDemand;
-  fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
+  await fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
   res.status(200).json(changesOnDemand);
 });
 

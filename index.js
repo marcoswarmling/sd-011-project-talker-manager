@@ -20,12 +20,13 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker/search',
-  // validateToken,
+  validateToken,
   (req, res) => {
     const { q } = req.query;
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
-    if (!q) res.status(200).json(file);
-    const filteredNamesByQuery = file.filter((p) => p.name.includes(q));
+    const filteredNamesByQuery = file
+      .filter((p) => p.name.toLocaleLowerCase().includes(q.toLocaleLowerCase()));
+    if (!q || q === '') res.status(200).json(file);
     res.status(200).json(filteredNamesByQuery);
 });
 

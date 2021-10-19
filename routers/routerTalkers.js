@@ -48,17 +48,16 @@ router.post('/', checkToken, checkTalker, checkTalk, checkDate, checkRate, async
 router.put('/:id', checkToken, checkTalker, checkTalk, checkDate, checkRate, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk: { watchedAt, rate } } = req.body;
-  const newTalker = {
+  const newDataTalker = {
     name,
     age,
     talk: { watchedAt, rate },
   };
-
   const currentTalkers = await getTalkers(database);
-  const idUpdatedTalker = currentTalkers.findIndex((target) => target.id === parseInt(id, 10));
-  currentTalkers[idUpdatedTalker] = { ...currentTalkers[idUpdatedTalker], ...newTalker };
+  const idUpdateTalk = currentTalkers.findIndex((t) => t.id === parseInt(id, 10));
+  currentTalkers[idUpdateTalk] = { ...currentTalkers[idUpdateTalk], ...newDataTalker };
   await updateTalkers(database, currentTalkers);
-  res.status(200).json(currentTalkers[idUpdatedTalker]);
+  res.status(200).json(currentTalkers[idUpdateTalk]);
 });
   
 module.exports = router;

@@ -28,6 +28,7 @@ function checkTalk(request, response, next) {
 
 function checkDate(request, response, next) {
   const { talk: { watchedAt } } = request.body;
+  console.log(watchedAt);
   if (watchedAt.split('/').length !== 3) {
     return response.status(400).json({
         message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });

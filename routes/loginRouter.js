@@ -26,7 +26,7 @@ loginRouter.post('/',
   }
 
   if (validatePassword(password, minLength)) {
-    return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+    return res.status(400).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
   next();

@@ -54,10 +54,18 @@ router.put('/:id', checkToken, checkTalker, checkTalk, checkDate, checkRate, asy
     talk: { watchedAt, rate },
   };
   const currentTalkers = await getTalkers(database);
-  const idUpdateTalk = currentTalkers.findIndex((t) => t.id === parseInt(id, 10));
-  currentTalkers[idUpdateTalk] = { ...currentTalkers[idUpdateTalk], ...newTalker };
+  const idUpdateTalker = currentTalkers.findIndex((target) => target.id === parseInt(id, 10));
+  currentTalkers[idUpdateTalker] = { ...currentTalkers[idUpdateTalker], ...newTalker };
   await updateTalkers(database, currentTalkers);
-  res.status(200).json(currentTalkers[idUpdateTalk]);
+  res.status(200).json(currentTalkers[idUpdateTalker]);
 });
-  
+
+router.delete('/:id', checkToken, async (req, res) => {
+  const { id } = req.params;
+  const currentTalkers = await getTalkers(database);
+  const deleteTalkers = currentTalkers.filter((target) => target.id !== parseInt(id, 10));
+  await updateTalkers(database, deleteTalkers);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

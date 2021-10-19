@@ -4,7 +4,7 @@ function validateWatchedAt(watchedAt) {
 }
 
 function validateRate(rate) {
-  return (rate === parseInt(rate, 10) && rate > 1 && rate < 5);
+  return (rate === parseInt(rate, 10) && rate >= 1 && rate <= 5);
 }
 
 module.exports = { validateWatchedAt, validateRate };

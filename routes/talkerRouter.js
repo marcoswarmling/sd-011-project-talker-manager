@@ -1,7 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const { validateWatchedAt, validateRate } = require('../helpers/validateTalk');
-// const { validateToken } = require('../helpers/validateToken');
 const { authValidator } = require('../middlewares/authValidator');
 
 const talkerJsonPath = './talker.json';
@@ -45,15 +44,6 @@ talkerRouter.get('/', async (_req, res) => {
 });
 
 talkerRouter.post('/',
-/* (req, res, next) => {
-  const { authorization: token } = req.headers;
-
-  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
-
-  if (!validateToken(token)) return res.status(401).send({ message: 'Token inválido' });
-
-  next();
-} */
 authValidator,
 (req, res, next) => {
   const { name } = req.body;
@@ -112,6 +102,20 @@ async (req, res) => {
   await fs.writeFileSync(talkerJsonPath, JSON.stringify([...talkers, newTalker]));
 
   return res.status(201).send({ ...newTalker });
+});
+
+talkerRouter.delete('/:id',
+authValidator,
+async (req, res) => {
+  const { id } = req.params;
+
+  const data = await fs.readFileSync(talkerJsonPath, 'utf-8');
+  const talkers = JSON.parse(data);
+  const filteredTalkers = talkers.filter((t) => t.id !== Number(id));
+
+  await fs.writeFileSync(talkerJsonPath, JSON.stringify([...filteredTalkers]));
+
+  return res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = talkerRouter;

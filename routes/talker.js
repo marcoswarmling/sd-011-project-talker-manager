@@ -13,13 +13,15 @@ router.post('/',
   talkerCrontroller.validateRate,
   talkerCrontroller.addTalker);
 router.put('/:id',
-talkerCrontroller.validateToken,
-talkerCrontroller.validateName,
-talkerCrontroller.validateAge,
-talkerCrontroller.validateTalk,
-talkerCrontroller.validateWatchedAt,
-talkerCrontroller.validateRate,
-talkerCrontroller.addTalker,
-talkerCrontroller.editTalker);
+  talkerCrontroller.validateToken,
+  talkerCrontroller.validateName,
+  talkerCrontroller.validateAge,
+  talkerCrontroller.validateTalk,
+  talkerCrontroller.validateWatchedAt,
+  talkerCrontroller.validateRate,
+  talkerCrontroller.editTalker);
+router.delete('/:id',
+  talkerCrontroller.validateToken,
+  talkerCrontroller.deleteTalker);
 
 module.exports = router;

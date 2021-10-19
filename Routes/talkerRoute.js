@@ -8,6 +8,7 @@ const dataPath = './talker.json';
 const CREATED = 201;
 const HTTP_OK_STATUS = 200;
 
+routes.get('/search', talkerController.searchTalker);
 routes.get('/', talkerController.getAllTalkers);
 routes.get('/:id', talkerController.getTalkersID);
 routes.post('/', validations, (req, res) => {

@@ -36,8 +36,25 @@ const deleteTalker = (req, res) => {
   res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchTalker = (req, res) => {
+  const { name } = req.query;
+  const rawData = fs.readFileSync(talkersData);
+  const talkers = JSON.parse(rawData);
+  const token = req.headers.authorization;
+  if (!token) return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  if (token.length !== minimumTokenLength) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+  if (name) {
+    const filteredTalker = talkers.filter((talkerName) => talkerName.name.includes(name));
+    res.status(HTTP_OK_STATUS).json(filteredTalker);
+  }
+  res.status(HTTP_OK_STATUS).json(talkers);
+};
+
 module.exports = {
   getAllTalkers,
   getTalkersID,
   deleteTalker,
+  searchTalker,
 };

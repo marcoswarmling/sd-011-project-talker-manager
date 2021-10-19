@@ -82,7 +82,7 @@ const searchTalker = async (req, res) => {
 const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization) {
+  if (!authorization || authorization === '') {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Token não encontrado' });
   }
 

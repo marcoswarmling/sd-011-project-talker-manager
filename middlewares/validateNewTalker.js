@@ -38,6 +38,24 @@ const validateToken = (req, res, next) => {
     next();
   };
   
+  const validateTalkeBodyInfos = (req, res, next) => {
+    const { talk: { watchedAt, rate } } = req.body;
+  
+    const dataRegex = /(\d{2})[/](\d{2})[/](\d{4})/;
+    const rateRegex = /^[1-5]{0,1}$/;
+  
+    if (!dataRegex.test(watchedAt)) {
+      return res.status(400).json({
+           message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+    }
+  
+    if (!rateRegex.test(rate)) {
+      return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    }
+  
+    next();
+  };
+  
   const validateTalkBody = (req, res, next) => {
     const { talk } = req.body;
   
@@ -57,33 +75,7 @@ const validateToken = (req, res, next) => {
   
     next();
   };
-  
-  /* 
-    Regex para Data: 
-    https://pt.stackoverflow.com/questions/130541/regex-para-validar-data-yyyy-mm-dd
-    
-    Regex para limitar tamanho:
-    https://qastack.com.br/programming/1649435/regular-expression-to-limit-number-of-characters-to-10
-  */
-  
-  const validateTalkeBodyInfos = (req, res, next) => {
-    const { talk: { watchedAt, rate } } = req.body;
-  
-    const dataRegex = /(\d{2})[/](\d{2})[/](\d{4})/;
-    const rateRegex = /^[1-5]{0,1}$/;
-  
-    if (!dataRegex.test(watchedAt)) {
-      return res.status(400).json({
-           message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-    }
-  
-    if (!rateRegex.test(rate)) {
-      return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-    }
-  
-    next();
-  };
-  
+
   module.exports = {
     validateToken,
     validateTalkerName,

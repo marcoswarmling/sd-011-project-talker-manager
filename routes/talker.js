@@ -7,7 +7,7 @@ const {
     validateName,
     validateAge,
     validateTalkBody,
-    validateTalkKeys,
+    validateTKeys,
      } = require('../middlewares/talker.js');
 
        const validateToken = async (req, res, next) => {
@@ -48,7 +48,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router
-.post('/', validateToken, validateName, validateAge, validateTalkBody, validateTalkKeys,
+.post('/', validateToken, validateName, validateAge, validateTalkBody, validateTKeys,
 async (req, res) => {
         const { name, age, talk } = req.body;
         const data = await fs.readFile(talkers);
@@ -60,7 +60,7 @@ async (req, res) => {
 });
 
 router.put('/:id', validateToken, 
-validateName, validateAge, validateTalkBody, validateTalkKeys, async (req, res) => {
+validateName, validateAge, validateTalkBody, validateTKeys, async (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;
     const data = await fs.readFile(talkers, 'utf-8');

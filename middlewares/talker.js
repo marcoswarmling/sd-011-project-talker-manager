@@ -26,7 +26,7 @@ const validateTalkBody = (req, res, next) => {
   }
   next();
 };
-const validateTalkKeys = (req, res, next) => {
+const validateTKeys = (req, res, next) => {
   // referencia do validacao regexData tirada de regexr.com
   const regexData = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
   const { talk } = req.body;
@@ -55,5 +55,5 @@ module.exports = {
   validateName,
   validateAge,
   validateTalkBody,
-  validateTalkKeys,
+  validateTKeys,
 };

@@ -25,9 +25,10 @@ router.get('/', async (_req, res) => {
     const results = JSON.parse(json);
      return res.status(200).json(results);
 });
-router.get('/:id', (req, res) => {
+
+router.get('/:id', async (req, res) => {
     const { id } = req.params;
-    const data = fs.readFileSync(talkers);
+    const data = await fs.readFile(talkers);
     const results = JSON.parse(data);
     const Matchid = results.find((result) => result.id === Number(id));
     if (!Matchid) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
@@ -37,7 +38,6 @@ router.get('/:id', (req, res) => {
 router
 .post('/', validateToken, validateName, validateAge, validateTalk, validateTalkKeys,
 async (req, res) => {
-    try {
         const { name, age, talk } = req.body;
         const data = await fs.readFile(talkers);
         const results = JSON.parse(data);
@@ -45,9 +45,19 @@ async (req, res) => {
         results.push(newTalker);
          fs.writeFile(talkers, JSON.stringify(results));
         res.status(201).json(newTalker);
-    } catch (error) {
-        return res.status(400).json({ message: error });
-    }
+});
+
+router.put('/:id', validateToken, 
+validateName, validateAge, validateTalk, validateTalkKeys, async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const data = await fs.readFile(talkers, 'utf-8');
+    const results = JSON.parse(data);
+    const matchTalker = results.map((talker) => talker.id === +id);
+    const newTalker = { name, age, talk: { ...talk }, id: +id };
+    matchTalker.push(newTalker);
+    fs.writeFile(talkers, JSON.stringify(matchTalker));
+    res.status(200).json(newTalker);
 });
 
 module.exports = router;

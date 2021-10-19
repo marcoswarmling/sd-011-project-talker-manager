@@ -88,8 +88,9 @@ async (req, res) => {
 
   const data = await fs.readFileSync('./talker.json', 'utf-8');
   const talkers = JSON.parse(data);
-
   const newTalker = { id: talkers[talkers.length - 1].id + 1, ...body };
+
+  await fs.writeFileSync('./talker.json', JSON.stringify([...talkers, newTalker]));
 
   return res.status(201).send({ ...newTalker });
 });

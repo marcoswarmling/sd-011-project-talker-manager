@@ -14,7 +14,7 @@ const getIdTalkers = async (req, res) => {
   const { id } = req.params;
   const talkersList = await readFile(talkerJson);
 
-  const talkerId = talkersList.find((talker) => talker.id === parseInt(id, 10));
+  const talkerId = talkersList.find((talker) => talker.id === Number(id));
 
   if (!talkerId) {
     return res

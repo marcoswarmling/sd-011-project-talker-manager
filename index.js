@@ -76,9 +76,8 @@ app.put('/talker/:id',
     const { id } = req.params;
     const { name, age, talk } = req.body;
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
-    console.log('Getting here');
-    const person = file.filter((p) => p.id === parseInt(id, 10));
-    const updatedTalker = { name, age, id: parseInt(id, 10), talk };
+    const person = file.findIndex((p) => p.id === parseInt(id, 10));
+    const updatedTalker = { name, age, id: Number(id), talk };
     file[person] = updatedTalker;
     fs.writeFileSync(fileName, JSON.stringify(file));
     return res.status(200).json(file[person]);

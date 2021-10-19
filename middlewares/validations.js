@@ -18,7 +18,7 @@ const validatePassword = (req, res, next) => {
 const validateToken = (req, res, next) => {
     const token = req.headers.authorization;
     const validTokenSize = 16;
-    if (!token) res.status(401).json({ message: 'Token não encontrado' });
+    if (!token) return res.status(401).json({ message: 'Token não encontrado' });
 
     if (token.length < validTokenSize) {
       res.status(401).json({ message: 'Token inválido' });

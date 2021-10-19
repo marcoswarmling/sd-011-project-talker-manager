@@ -64,6 +64,18 @@ const deleteTalker = async (req, res) => {
   return res.status(StatusCodes.OK).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchTalker = async (req, res) => {
+  const { q } = req.query;
+  const talkersList = await readFile(talkerJson);
+
+  if (!q) {
+    return res.status(StatusCodes.OK).json(talkersList);
+  }
+
+  const newTalkersList = talkersList.filter(({ name }) => name.includes(q));
+  return res.status(StatusCodes.OK).json(newTalkersList);
+};
+
 const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
 
@@ -164,4 +176,5 @@ module.exports = {
   addTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
 };

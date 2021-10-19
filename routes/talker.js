@@ -23,5 +23,8 @@ router.put('/:id',
 router.delete('/:id',
   talkerCrontroller.validateToken,
   talkerCrontroller.deleteTalker);
+router.get('/search',
+  talkerCrontroller.validateToken,
+  talkerCrontroller.searchTalker);
 
 module.exports = router;

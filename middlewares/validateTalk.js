@@ -1,7 +1,7 @@
 const BAD_REQUEST = 400;
 
 const validateWatchedAt = (watchedAt, res) => {
-  const regexFormatDate = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+  const regexFormatDate = /\d\d\/\d\d\/\d\d\d\d\b/;
   const whatchedAtIsValid = regexFormatDate.test(watchedAt);
   if (!whatchedAtIsValid) { 
     return res.status(BAD_REQUEST)

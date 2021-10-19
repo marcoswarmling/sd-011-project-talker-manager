@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 const talkers = './talker.json';
 

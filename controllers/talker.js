@@ -70,10 +70,10 @@ const searchTalker = async (req, res) => {
   try {
     const talkersList = await readFile(talkerJson);
 
-    // if (!q || q === '') return res.status(StatusCodes.OK).json(talkersList);
+    if (!q || q === '') return res.status(StatusCodes.OK).json(talkersList);
 
     const newTalkersList = talkersList.filter((talker) => talker.name.includes(q));
-    // if (!newTalkersList) return res.status(StatusCodes.OK).json([]);
+    if (!newTalkersList) return res.status(StatusCodes.OK).json([]);
     return res.status(StatusCodes.OK).json(newTalkersList);
   } catch (error) {
     return res.status(500).json({ error });

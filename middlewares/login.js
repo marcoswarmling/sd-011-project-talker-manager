@@ -28,5 +28,4 @@ const passwordVerification = (req, resp, next) => {
 module.exports = {
   emailVerification,
   passwordVerification,
-  // generateToken,
 };

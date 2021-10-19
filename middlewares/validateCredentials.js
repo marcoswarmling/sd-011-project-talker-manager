@@ -1,10 +1,3 @@
-/*
-  REGEX VALIDATION REFERENCES
-  https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-  https://pt.stackoverflow.com/questions/1386/express%C3%A3o-regular-para-valida%C3%A7%C3%A3o-de-e-mail
-  https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
-*/
-
 const validateEmail = (req, res, next) => {
     const { email } = req.body;
   

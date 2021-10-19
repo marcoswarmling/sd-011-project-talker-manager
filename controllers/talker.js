@@ -27,12 +27,12 @@ const tokenValid = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(StatusCodes.UNAUTHORIZED)
-      .json({ message: 'Token não encontrado' });
+    .json({ message: 'Token não encontrado' });
   }
 
   if (authorization.length !== 16) {
     return res.status(StatusCodes.UNAUTHORIZED)
-      .json({ message: 'Token inválido' });
+    .json({ message: 'Token inválido' });
   }
 
   next();
@@ -42,11 +42,11 @@ const nameValid = (req, res, next) => {
   const { name } = req.body;
   if (!name) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'O campo "name" é obrigatório' });
+    .json({ message: 'O campo "name" é obrigatório' });
   }
-  if (name.length < 3) {
+  if (name.length <= 3) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'O campo "name" deve ter pelo menos 3 caracteres' });
+    .json({ message: 'O campo "name" deve ter pelo menos 3 caracteres' });
   }
 
   next();
@@ -56,11 +56,11 @@ const ageValid = (req, res, next) => {
   const { age } = req.body;
   if (!age) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'O campo "age" é obrigatório' });
+    .json({ message: 'O campo "age" é obrigatório' });
   }
   if (parseInt(age, 10) < 18) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'A pessoa palestrante deve ser maior de idade' });
+    .json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
 
   next();
@@ -70,15 +70,15 @@ const watchedAtValid = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
   if (!watchedAt) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ 
+    .json({ 
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 
-  const watchedAtRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+  const isDateValid = new RegExp(/\d\d\/\d\d\/\d\d\d\d/).test(watchedAt);
 
-  if (!watchedAtRegex.test(watchedAt)) {
+  if (!isDateValid) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+    .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 
   next();
@@ -88,13 +88,13 @@ const rateValid = (req, res, next) => {
   const { talk: { rate } } = req.body;
   if (!rate) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ 
+    .json({ 
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   
   if (rate > 5 || rate < 1) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   next();
@@ -104,7 +104,7 @@ const talkValid = (req, res, next) => {
   const { talk } = req.body;
   if (!talk) {
     return res.status(StatusCodes.BAD_REQUEST)
-      .json({ 
+    .json({ 
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 

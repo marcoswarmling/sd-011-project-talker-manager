@@ -55,4 +55,24 @@ dateRateValidate,
   res.status(201).json(newTalker);
 });
 
+router.put('/:id',
+checkToken,
+nameValidate,
+ageValidate,
+talkValidate,
+rateValidate,
+formatDateValidate,
+dateRateValidate,
+(req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const fileContent = JSON.parse(fs.readFileSync(talkersList));
+  const copyTalkers = fileContent.filter((t) => t.id !== Number(id));
+
+  const updateTalker = { name, age, talk, id: Number(id) };
+  const updateList = [...copyTalkers, updateTalker];
+  fs.writeFileSync(talkersList, JSON.stringify(updateList));
+  res.status(200).json(updateTalker);
+});
+
 module.exports = router;

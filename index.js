@@ -158,18 +158,17 @@ app.put('/talker/:id',
 });
 
 // 6°
+app.delete('/talker/:id',
+  validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkersArr = JSON.parse(await fsAsync.readFile(listTalkers, 'utf8'));
+  const onChangeProfileIndex = talkersArr.findIndex((talker) => Number(talker.id) === Number(id));
+  talkersArr.splice(onChangeProfileIndex, 1);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
+});
 
-// app.delete('/talker/:id',
-//   validateToken, async (req, res) => {
-//   const { name, age, talk } = req.body;
-//   const { id } = req.params;
-//   const talkersArr = JSON.parse(await fsAsync.readFile(listTalkers, 'utf8'));
-//   const onChangeProfileIndex = talkersArr.findIndex((talker) => Number(talker.id) === Number(id));
-//   const changesOnDemand = { name, age, id: Number(id), talk };
-//   talkersArr[onChangeProfileIndex] = changesOnDemand;
-//   res.status(200).json(changesOnDemand);
-//   fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
-// });
+// 7°
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -2,11 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 // const { response } = require('express');
 const fs = require('fs').promises;
+const { validateToken } = require('./middlewares/validateToken');
+const { validateName } = require('./middlewares/validateName');
+const { validateAge } = require('./middlewares/validateAge');
+const { validateTalk } = require('./middlewares/validateTalk');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
+const CREATED = 201;
 const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const PORT = '3000';
@@ -52,6 +57,16 @@ app.post('/login', (req, res) => {
       .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
+});
+
+app.post('/talker', validateToken, validateName, validateAge, validateTalk, async (req, res) => {
+  const data = await fs.readFile('talker.json', 'utf8');
+  const fileContent = JSON.parse(data);
+  const newId = fileContent.length + 1;
+  const newTalker = { ...req.body, id: newId };
+  fileContent.push(newTalker);
+  fs.writeFile('talker.json', JSON.stringify(fileContent));
+  res.status(CREATED).json(newTalker);
 });
 
 app.listen(PORT, () => {

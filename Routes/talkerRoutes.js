@@ -1,13 +1,20 @@
 const router = require('express').Router();
 const fs = require('fs').promises;
+const {
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkKeys,
+} = require('../middlewares/validations');
 
 const getTalkers = async () => {
-try {
-  const talkers = await fs.readFile('./talker.json', 'utf8');
-  return JSON.parse(talkers);
-} catch (error) {
-  return null;
-}
+  try {
+    const talkers = await fs.readFile('./talker.json', 'utf8');
+    return JSON.parse(talkers);
+  } catch (error) {
+    return null;
+  }
 };
 
 router.get('/talker', async (_req, res) => {
@@ -27,12 +34,24 @@ router.get('/talker/:id', async (req, res) => {
   res.status(200).json(dados);
 });
 
-/* router.post('/talker', (req, res) => {
-
-}); */
+router.post('/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkKeys,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const talkers = await getTalkers();
+    const talkerPosition = talkers.length + 1;
+    const talker = { id: talkerPosition, name, age, talk };
+    talkers.push(talker);
+    await fs.writeFile(talkers, JSON.stringify(getTalkers()));
+    res.status(201).json(talker);
+  });
 
 /*  ||
-app.post('/login', () => {});
+
 app.post('/talker', () => {});
 app.put('/talker/:id', () => {});
 app.delete('/talker/:id', () => {});

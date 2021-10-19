@@ -19,13 +19,14 @@ loginRouter.post('/',
 },
 (req, res, next) => {
   const { password } = req.body;
-  const minLength = 6;
 
   if (!password || password === '') {
     return res.status(400).send({ message: 'O campo "password" é obrigatório' });
   }
 
-  if (validatePassword(password, minLength)) {
+  const minLength = 6;
+
+  if (!validatePassword(password, minLength)) {
     return res.status(400).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 

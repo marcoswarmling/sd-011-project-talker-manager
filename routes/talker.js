@@ -3,16 +3,22 @@ const fs = require('fs/promises');
 
 const talkers = './talker.json';
 
-const { validateToken,
+const {
     validateName,
     validateAge,
     validateTalk,
     validateTalkKeys } = require('../middlewares/talker.js');
 
-    // const generateToken = () => {
-    //     const token = crypto.randomBytes(8).toString('hex');
-    //     return token;
-    //   };
+       const validateToken = async (req, res, next) => {
+        const { authorization } = req.headers;
+        if (!authorization) {
+          return res.status(401).json({ message: 'Token não encontrado' });
+        }
+        if (authorization.length < 16 || authorization.length > 16) {
+          return res.status(401).json({ message: 'Token inválido' });
+        }
+        next();
+      };
 
 router.get('/', async (_req, res) => {
     const json = await fs.readFile(talkers);

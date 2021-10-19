@@ -1,11 +1,11 @@
-const validateToken = async (req, res, next) => {
- const { authorization } = req.headers;
-  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
-  if (authorization.length < 16 || authorization.length > 16) {
-    return res.status(401).json({ messsage: 'Token inválido' });
-  }
-  next();
-};
+// const validateToken = async (req, res, next) => {
+//  const { authorization } = req.headers;
+//   if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+//   if (authorization.length < 16 || authorization.length > 16) {
+//     return res.status(401).json({ messsage: 'Token inválido' });
+//   }
+//   next();
+// };
 
 const validateName = (req, res, next) => {
   const { name } = req.body;
@@ -52,7 +52,6 @@ const validateTalkKeys = (req, res, next) => {
 };
 
 module.exports = {
-  validateToken,
   validateName,
   validateAge,
   validateTalk,

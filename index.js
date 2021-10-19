@@ -1,9 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
 const talkersSeed = require('./talker.json');
-
-const randomToken = ('randomToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -160,10 +159,10 @@ app.get('/talker/:id', async (req, res) => {
 
 // 3
 // Como referência o randomToken: https://www.npmjs.com/package/random-token
+// fix: não consegui usar a API e tive que usar o crypto mesmo.
 
 app.post('/login', checkEmail, checkPassword, async (req, res) => {
-  const token = randomToken(16);
-  res.status(200).json({ token });
+  res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
 });
 
 // 4

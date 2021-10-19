@@ -14,10 +14,21 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1
-app.get('/talker', async (req, res) => {
-  const content = await fs.readFile('/talker.json', 'utf-8');
-  if (!content) return res.status(200).json([]);
-  res.status(200).json(JSON.parse(content));
+// app.get('/talker', async (req, res) => {
+//   const content = await fs.readFile('/talker.json', 'utf-8');
+//   if (!content) return res.status(200).json([]);
+//   res.status(200).json(JSON.parse(content));
+// });
+
+// Requisito 2
+app.get('/talker/:id', async (req, res) => {
+  const content = await fs.readFile('./talker.json', 'utf-8');
+  const contentParse = JSON.parse(content);
+  const { id } = req.params;
+
+  const getId = contentParse.find((o) => o.id === Number(id));
+  if (!getId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  res.status(200).json(getId);
 });
 
 app.listen(PORT, () => {

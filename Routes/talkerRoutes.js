@@ -22,6 +22,18 @@ router.get('/talker', async (_req, res) => {
   return res.status(200).json(talkers);
 });
 
+router.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+  const result = talkers
+    .filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+
+  if (!q || q === '') {
+    return res.status(200).json(talkers);
+  }
+  return res.status(200).json(result);
+});
+
 router.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talkers = await getTalkers() || [];
@@ -77,8 +89,6 @@ router.delete('/talker/:id', validateToken, async (req, res) => {
     message: 'Pessoa palestrante deletada com sucesso',
     });
 });
-
-/*  ||
-app.get('/talker/search?q=searchTerm', () => {}); */
+//  ||
 
 module.exports = router;

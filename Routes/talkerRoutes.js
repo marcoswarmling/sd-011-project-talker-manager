@@ -75,4 +75,13 @@ dateRateValidate,
   res.status(200).json(updateTalker);
 });
 
+router.delete('/:id', checkToken, (req, res) => {
+  const { id } = req.params;
+  const fileContent = JSON.parse(fs.readFileSync(talkersList));
+  const filterTalkers = fileContent.filter((t) => t.id !== Number(id));
+
+  fs.writeFileSync(talkersList, JSON.stringify(filterTalkers));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;

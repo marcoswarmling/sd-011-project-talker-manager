@@ -17,7 +17,7 @@ const nameValidation = (req, res, next) => {
   const { name } = req.body;
   if (!name) return res.status(BAD_REQUEST).json({ message: 'O campo "name" é obrigatório' });
   if (name.length < minNameLength) {
-    return res.status(BAD_REQUEST).json({ message: 'O campo "name" ter pelo menos 3 caracteres' });
+    return res.status(BAD_REQUEST).json({ message: 'O "name" ter pelo menos 3 caracteres' });
   }
   next();
 };
@@ -56,13 +56,13 @@ const rateValidation = (req, res, next) => {
 const dateValidation = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
   const date = /^[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/.test(watchedAt); // // Regex utilizado encontrodo em: https://stackoverflow.com/questions/5465375/javascript-date-regex-dd-mm-yyyy
-  if (!date) {
-    return res.status(BAD_REQUEST)
-    .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
   if (!watchedAt) {
     return res.status(BAD_REQUEST)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  if (!date) {
+    return res.status(BAD_REQUEST)
+    .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   next();
 };

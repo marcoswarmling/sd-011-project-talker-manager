@@ -40,7 +40,7 @@ app.get('/talker/:id', (req, res) => {
       message: 'Pessoa palestrante não encontrada',
   });
 }
-  res.status(200).json(person);
+  res.status(200).json(person[0]);
 });
 
 app.post('/login',

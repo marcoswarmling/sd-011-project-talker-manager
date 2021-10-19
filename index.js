@@ -86,7 +86,7 @@ app.post('/talker', validateToken, validateName, validateAge, validateTalk, asyn
     const newId = fileContent.length + 1;
     const newTalker = { ...req.body, id: newId };
     fileContent.push(newTalker);
-    fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
+    await fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
     res.status(CREATED).json(newTalker);
   } catch (error) {
     console.log(error);
@@ -97,12 +97,12 @@ app.put('/talker/:id', validateToken, validateName, validateAge, validateTalk, a
   try {
     const { id } = req.params;
     const idInt = parseInt(id, 10);
-    const data = await fs.readFile('talker.json', 'utf8');
+    const data = await fs.readFile(TALKER_JSON, 'utf8');
     const fileContent = JSON.parse(data);
     const index = fileContent.findIndex((talker) => talker.id === idInt);
     const newTalker = { ...req.body, id: idInt };
     fileContent[index] = newTalker;
-    fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
+    await fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
     res.status(HTTP_OK_STATUS).json(newTalker);
   } catch (error) {
     console.log(error);
@@ -117,7 +117,7 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
     const fileContent = JSON.parse(data);
     const index = fileContent.findIndex((talker) => talker.id === idInt);
     fileContent.splice(index, 1);
-    fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
+    await fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
     res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
   } catch (error) {
     console.log(error); 

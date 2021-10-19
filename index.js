@@ -14,11 +14,11 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1
-// app.get('/talker', async (req, res) => {
-//   const content = await fs.readFile('/talker.json', 'utf-8');
-//   if (!content) return res.status(200).json([]);
-//   res.status(200).json(JSON.parse(content));
-// });
+app.get('/talker', async (req, res) => {
+  const content = await fs.readFile('./talker.json', 'utf-8');
+  if (!content) return res.status(200).json([]);
+  res.status(200).json(JSON.parse(content));
+});
 
 // Requisito 2
 app.get('/talker/:id', async (req, res) => {

@@ -24,22 +24,18 @@ app.get('/talker', (_req, res) => {
 });
 
 // 2°
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  fsAsync.readFile(listTalkers, 'utf8')
-  .then((response) => JSON.parse(response).find((talker) => talker.id === parseInt(id, 10)))
-  .then((data) => res.status(HTTP_OK_STATUS).json(data))
-  .catch(() => res.status(404).json(JSON.parse({ message: 'Pessoa palestrante não encontrada' })));
+  const talkerFind = await fsAsync.readFile(listTalkers, 'utf8')
+  .then((response) => JSON.parse(response).find((talker) => talker.id === parseInt(id, 10)));
+  if (!talkerFind) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(HTTP_OK_STATUS).json(talkerFind);
 });
+
+// 3°
 
 app.listen(PORT, () => {
   console.log('Online');
 });
-
-// // app.get('/talker/:id', async (req, res) => {
-// //   const { id } = req.params;
-// //   const talkerSync = await listTalkers();
-// //   const talkerFind = talkerSync.find((talker) => talker.id === parseInt(id, 10));
-// //   if (!talkerFind) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-// //   res.status(200).json(talkerFind);
-// // });

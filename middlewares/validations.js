@@ -1,17 +1,17 @@
 const validateEmail = (req, res, next) => {
     const { email } = req.body;
     const emailRegex = /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (!email) res.status(400).json({ message: 'O campo \"email\" é obrigatório' });
+    if (!email) res.status(400).json({ message: 'O campo "email" é obrigatório' });
     if (!emailRegex.test(email)) {
-      res.status(400).json({ message: 'O email deve ter o formato email@email.com' });
+      res.status(400).json({ message: 'O "email" deve ter o formato email@email.com' });
     }
     next();
 };
 const validatePassword = (req, res, next) => {
     const { password } = req.body;
-    if (!password) res.status(400).json({ message: 'O campo password é obrigatório' });
+    if (!password) res.status(400).json({ message: 'O campo "password" é obrigatório' });
     if (password.length < 6) {
-      res.status(400).json({ message: 'O password deve ter pelo menos 6 caracteres' });
+      res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
     }
     next();
 };

@@ -7,12 +7,17 @@ const { checkEmail, checkPassword } = require('../midlewares/validateLogin');
 
 const loginIsValid = [checkEmail, checkPassword];
 
-router.post('/', loginIsValid, (req, res) => {
-    const token = '7mqaVRXJSp886CGr';
-    if (token) return res.status(200).json({ token });
+function generateToken() {
+  return (
+    Math.random().toString(36).substring(2, 15)
+    + Math.random().toString(36).substring(2, 15)
+  ).substr(0, 16);
+}
 
-    const { email, password } = req.body;
-    if (email && password) return res.status(200).json({ email, password });
+router.post('/', loginIsValid, (req, res) => {
+  const token = generateToken();
+
+  return res.status(200).json({ token });
 });
 
-module.exports = { router };
+module.exports = router;

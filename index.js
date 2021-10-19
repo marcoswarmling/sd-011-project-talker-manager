@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-const loginRoute = require('./routes/loginRoute');
-const otherTalker = require('./routes/otherTalker');
-const editTalker = require('./routes/talkerId');
+const loginRoute = require('./routes/login');
+const createTalker = require('./routes/createTalker');
+const editTalker = require('./routes/editTalker');
+const deleteTalker = require('./routes/deleteTalker');
+const searchTalker = require('./routes/searchTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,6 +17,9 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+// Requisito 7 pt1
+app.use('/talker', searchTalker);
 
 // Requisito 1
 app.get('/talker', async (req, res) => {
@@ -37,11 +42,14 @@ app.get('/talker/:id', async (req, res) => {
 // Requisito 3 pt1
 app.use('/login', loginRoute);
 
-// Requisito 4 pt1
-app.use('/talker', otherTalker);
+// // Requisito 4 pt1
+app.use('/talker', createTalker);
 
-// Requisito 5 pt1
+// // Requisito 5 pt1
 app.use('/talker', editTalker);
+
+// // Requisito 6 pt1
+app.use('/talker', deleteTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

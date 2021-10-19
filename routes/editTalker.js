@@ -13,7 +13,7 @@ const {
     rateIsValid,  
 } = require('../midlewares/validateOtherTalker');
 
-const editTalkerById = [
+const validations = [
     tokenIsValid,
     nameIsValid,
     ageIsValid,
@@ -22,7 +22,7 @@ const editTalkerById = [
     rateIsValid,
 ];
 
-router.put('/:id', editTalkerById, (req, res) => {
+router.put('/:id', validations, (req, res) => {
   const content = fs.readFileSync('./talker.json');
   const talkList = JSON.parse(content);
 

@@ -12,6 +12,13 @@ const {
 
 const talkersList = './talker.json';
 
+router.get('/search', checkToken, (req, res) => {
+  const { q } = req.query;
+  const fileContent = JSON.parse(fs.readFileSync(talkersList));
+  const includesTalker = fileContent.filter((t) => t.name.includes(q));
+  res.status(200).json(includesTalker);
+});
+
 router.get('/', (_req, res) => {
   try {
     const talkers = JSON.parse(fs.readFileSync(talkersList));

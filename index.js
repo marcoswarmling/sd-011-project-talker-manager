@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
-const talkersSeed = require('./talker.json');
+
+const talkersSeed = './talker.json';
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,7 +20,7 @@ const talkersArray = async () => {
 const checkEmail = (req, res, next) => {
   const { email } = req.body;
   // https://pt.stackoverflow.com/questions/1386/express%C3%A3o-regular-para-valida%C3%A7%C3%A3o-de-e-mail
-  const regexValidation = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
+  const regexValidation = /\S+@\S+\.\S+/;
 
   if (!email) {
     return res.status(400)
@@ -144,6 +145,21 @@ app.get('/talker', async (req, res) => {
       res.status(200).send(talkers);
 });
 
+// 7
+
+app.get('/talker/search', checkToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await talkersArray();
+
+  if (!q || q === '') return res.status(200).json(talkers);
+    const filteredArray = talkers.filter((a) => a.name.includes(q));
+
+  if (!filteredArray) {
+    return res.status(200).json([]);
+  }
+  res.status(200).json(filteredArray);
+});
+
 // 2
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
@@ -161,7 +177,7 @@ app.get('/talker/:id', async (req, res) => {
 // Como referência o randomToken: https://www.npmjs.com/package/random-token
 // fix: não consegui usar a API e tive que usar o crypto mesmo.
 
-app.post('/login', checkEmail, checkPassword, async (req, res) => {
+app.post('/login', checkEmail, checkPassword, (req, res) => {
   res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
 });
 
@@ -213,22 +229,6 @@ app.delete('/talker/:id', checkToken, async (req, res) => {
   await fs.writeFile(talkersArray, JSON.stringify(talkers));
   return res.status(200)
     .json({ message: 'Pessoa palestrante deletada com sucesso' });
-});
-
-// 7
-
-app.get('/talker/search', checkToken, async (req, res) => {
-  const { q } = req.query;
-  const talkers = await talkersArray();
-  const filteredArray = talkers.filter((a) => a.name.includes(q));
-
-  if (!q) {
-    return res.status(200).json(talkers);
-  }
-  if (!filteredArray) {
-    return res.status(200).json([]);
-  }
-  res.status(200).json(filteredArray);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

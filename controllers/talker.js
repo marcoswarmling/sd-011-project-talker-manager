@@ -66,24 +66,29 @@ const deleteTalker = async (req, res) => {
 
 const searchTalker = async (req, res) => {
   const { q } = req.query;
+
+  try {
     const talkersList = await readFile(talkerJson);
 
-    if (!q || q === '') return res.status(StatusCodes.OK).json(talkersList);
+    // if (!q || q === '') return res.status(StatusCodes.OK).json(talkersList);
 
-    const newTalkersList = talkersList.filter(({ name }) => name.includes(q));
-    if (!newTalkersList) return res.status(StatusCodes.OK).json([]);
+    const newTalkersList = talkersList.filter((talker) => talker.name.includes(q));
+    // if (!newTalkersList) return res.status(StatusCodes.OK).json([]);
     return res.status(StatusCodes.OK).json(newTalkersList);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
 };
 
 const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || authorization === '') {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
 
   if (authorization.length !== 16) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
 
   next();

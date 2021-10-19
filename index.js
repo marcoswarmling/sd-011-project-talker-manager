@@ -101,5 +101,3 @@ app.delete('/talker/:id',
 app.listen(PORT, () => {
   console.log('Online');
 });
-
-// Novo PR para saber se o 5° não passou por bug

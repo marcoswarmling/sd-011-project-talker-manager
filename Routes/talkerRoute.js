@@ -29,14 +29,6 @@ routes.put('/:id', validations, (req, res) => {
   fs.writeFileSync(dataPath, JSON.stringify(talkers, null, 2));
   res.status(HTTP_OK_STATUS).json(talkers[editedTalkerIndex]);
 });
-routes.delete('/:id', validations.tokenValidation, (req, res) => {
-  const rawData = fs.readFileSync(dataPath);
-  const talkers = JSON.parse(rawData);
-  const { id } = req.params;
-  const deletedTalkerIndex = talkers.findIndex((talker) => talker.id === +id);
-  talkers.splice(deletedTalkerIndex, 1);
-  fs.writeFileSync(dataPath, JSON.stringify(talkers, null, 2));
-  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
-});
+routes.delete('/:id', talkerController.deleteTalker);
 
 module.exports = routes;

@@ -1,6 +1,8 @@
 const fs = require('fs');
 
 const HTTP_OK_STATUS = 200;
+const UNAUTHORIZED = 401;
+const minimumTokenLength = 16;
 
 const talkersData = './talker.json';
 
@@ -19,7 +21,23 @@ const getTalkersID = (req, res) => {
   return res.status(HTTP_OK_STATUS).json(talker);
 };
 
+const deleteTalker = (req, res) => {
+  const rawData = fs.readFileSync(talkersData);
+  const talkers = JSON.parse(rawData);
+  const { id } = req.params;
+  const token = req.headers.authorization;
+  if (!token) return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  if (token.length !== minimumTokenLength) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+  const deletedTalkerIndex = talkers.findIndex((talker) => talker.id === +id);
+  talkers.splice(deletedTalkerIndex, 1);
+  fs.writeFileSync(talkersData, JSON.stringify(talkers, null, 2));
+  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   getAllTalkers,
   getTalkersID,
+  deleteTalker,
 };

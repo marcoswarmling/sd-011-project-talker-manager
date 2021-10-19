@@ -60,7 +60,7 @@ const isValidAge = (req, res, next) => {
   if (!age) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
-  if (!talkerFormatValidation('age', age)) {
+  if (age < 18) {
     return res
       .status(400)
       .json({ message: 'A pessoa palestrante deve ser maior de idade' });
@@ -108,10 +108,10 @@ const isValidRate = (req, res, next) => {
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
-  if (!talkerFormatValidation('rate', talk.rate)) {
+  if (talk.rate < 1 || talk.rate > 5) {
     return res
-      .status(400)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    .status(400)
+    .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   next();

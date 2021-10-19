@@ -1,6 +1,15 @@
 const express = require('express');
 const fs = require('fs');
 
+const { 
+  isValidToken, 
+  isValidName, 
+  isValidAge, 
+  isValidTalk, 
+  isValidWatchedAt, 
+  isValidRate, 
+} = require('../managers/Managers');
+
 const talkerRouter = express.Router();
 
 talkerRouter.get('/', (_req, res) => {
@@ -27,5 +36,32 @@ talkerRouter.get('/:id', (req, res) => {
     return res.status(500).json({ error });
   }
 });
+
+talkerRouter.post(
+  '/',
+  isValidToken, 
+  isValidName, 
+  isValidAge, 
+  isValidTalk, 
+  isValidWatchedAt, 
+  isValidRate,
+  (req, res) => {
+    const { body } = req;
+
+    try {
+      const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf-8'));
+
+      const newTalker = { id: talkers[talkers.length - 1].id + 1, ...body };
+
+      const updatedTalkers = [...talkers, newTalker];
+
+      fs.writeFileSync('./talker.json', JSON.stringify(updatedTalkers));
+
+      return res.status(201).json({ ...newTalker });
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  },
+);
 
 module.exports = talkerRouter;

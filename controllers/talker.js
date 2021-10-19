@@ -66,7 +66,6 @@ const deleteTalker = async (req, res) => {
 
 const searchTalker = async (req, res) => {
   const { q } = req.query;
-  try {
     const talkersList = await readFile(talkerJson);
 
     if (!q || q === '') return res.status(StatusCodes.OK).json(talkersList);
@@ -74,9 +73,6 @@ const searchTalker = async (req, res) => {
     const newTalkersList = talkersList.filter(({ name }) => name.includes(q));
     if (!newTalkersList) return res.status(StatusCodes.OK).json([]);
     return res.status(StatusCodes.OK).json(newTalkersList);
-  } catch (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: error });
-  }
 };
 
 const validateToken = (req, res, next) => {

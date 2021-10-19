@@ -18,16 +18,17 @@ const getById = async (id) => {
 };
 
 const create = async (talkerObj) => {
-  const db = JSON.parse(await fs.readFile(file, 'utf8'));
+  const db = await fs.readFile(file, 'utf8');
+  const parsedDb = JSON.parse(db);
 
-  const createTalkerId = db.length + 1;
+  const createTalkerId = parsedDb.length + 1;
   const fomatTalker = talkerObj;
 
   fomatTalker.id = createTalkerId;
 
-  db.push(fomatTalker);
+  parsedDb.push(fomatTalker);
 
-  fs.writeFile(file, JSON.stringify(db, undefined, 2), (err, result) => {
+  fs.writeFile(file, JSON.stringify(parsedDb, undefined, 2), (err, result) => {
     if (err) return console.log(err);
     console.log(result);
   });

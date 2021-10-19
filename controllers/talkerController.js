@@ -2,7 +2,13 @@ const bodyParser = require('body-parser');
 const router = require('express').Router();
 const TalkerModel = require('../models/talkerModel');
 
-const authTalker = require('../middleware/authTalkerMiddleware');
+const {
+  authName,
+  authAge,
+  authTalk,
+  validRate,
+  validWatchedAt,
+} = require('../middleware/authTalkerMiddleware');
 const authToken = require('../middleware/validTokenMiddleware');
 
 const HTTP_OK_STATUS = 200;
@@ -47,13 +53,27 @@ router.get('/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(response);
 });
 
-router.post('/', authToken, authTalker, async (req, res) => {
+router.post('/',
+  authToken,
+  authName,
+  authAge,
+  authTalk,
+  validRate,
+  validWatchedAt,
+  async (req, res) => {
   const talker = await TalkerModel.create(req.body);
 
   res.status(201).json(talker);
 });
 
-router.put('/:id', authToken, authTalker, async (req, res) => {
+router.put('/:id',
+  authToken,
+  authName,
+  authAge,
+  authTalk,
+  validRate,
+  validWatchedAt,
+  async (req, res) => {
   try {
     const { id } = req.params;
     const editedTalker = await TalkerModel.edit(req.body, id);

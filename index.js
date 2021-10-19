@@ -16,13 +16,15 @@ const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const PORT = '3000';
 
+const TALKER_JSON = 'talker.json';
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
 app.get('/talker', (_req, res) => {
-  fs.readFile('talker.json', 'utf8').then((fileContent) => {
+  fs.readFile(TALKER_JSON, 'utf8').then((fileContent) => {
     if (!fileContent) res.status(HTTP_OK_STATUS).json([]);
     res.status(HTTP_OK_STATUS).json(JSON.parse(fileContent));
   }).catch((error) => {
@@ -30,15 +32,33 @@ app.get('/talker', (_req, res) => {
   });
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  try {
+    const { q } = req.query;
+    const data = await fs.readFile(TALKER_JSON, 'utf8');
+    const fileContent = JSON.parse(data);
+    if (!q) {
+        if (!fileContent) res.status(HTTP_OK_STATUS).json([]);
+        return res.status(HTTP_OK_STATUS).json(fileContent);
+      }
+    const filteredTalkers = fileContent.filter((t) => t.name.includes(q));
+    res.status(HTTP_OK_STATUS).json(filteredTalkers);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  console.log(typeof id);
-  const fileContent = await fs.readFile('talker.json', 'utf8');
-  const fileContentParsed = JSON.parse(fileContent);
-  console.log(typeof fileContentParsed[0].id);
-  const talker = fileContentParsed.find((t) => t.id === parseInt(id, 2));
-  if (!talker) res.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(HTTP_OK_STATUS).json(talker);
+  try {
+    const { id } = req.params;
+    const fileContent = await fs.readFile('talker.json', 'utf8');
+    const fileContentParsed = JSON.parse(fileContent);
+    const talker = fileContentParsed.find((t) => t.id === parseInt(id, 2));
+    if (!talker) res.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
+    res.status(HTTP_OK_STATUS).json(talker);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.post('/login', (req, res) => {
@@ -59,13 +79,48 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/talker', validateToken, validateName, validateAge, validateTalk, async (req, res) => {
-  const data = await fs.readFile('talker.json', 'utf8');
-  const fileContent = JSON.parse(data);
-  const newId = fileContent.length + 1;
-  const newTalker = { ...req.body, id: newId };
-  fileContent.push(newTalker);
-  fs.writeFile('talker.json', JSON.stringify(fileContent));
-  res.status(CREATED).json(newTalker);
+  try {
+    const data = await fs.readFile('talker.json', 'utf8');
+    const fileContent = JSON.parse(data);
+    const newId = fileContent.length + 1;
+    const newTalker = { ...req.body, id: newId };
+    fileContent.push(newTalker);
+    fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
+    res.status(CREATED).json(newTalker);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.put('/talker/:id', validateToken, validateName, validateAge, validateTalk, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const idInt = parseInt(id, 10);
+    const data = await fs.readFile('talker.json', 'utf8');
+    const fileContent = JSON.parse(data);
+    const index = fileContent.findIndex((talker) => talker.id === idInt);
+    const newTalker = { ...req.body, id: idInt };
+    fileContent[index] = newTalker;
+    fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
+    res.status(HTTP_OK_STATUS).json(newTalker);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const idInt = parseInt(id, 10);
+    const data = await fs.readFile('talker.json', 'utf8');
+    const fileContent = JSON.parse(data);
+    const index = fileContent.findIndex((talker) => talker.id === idInt);
+    fileContent.splice(index, 1);
+    fs.writeFile(TALKER_JSON, JSON.stringify(fileContent));
+    res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (error) {
+    console.log(error); 
+  }
 });
 
 app.listen(PORT, () => {

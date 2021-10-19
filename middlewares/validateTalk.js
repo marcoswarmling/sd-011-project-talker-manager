@@ -10,7 +10,7 @@ const validateWatchedAt = (watchedAt, res) => {
 };
 
 const validateRate = (rate, res) => {
-  if (!(Number.isInteger(rate) && rate >= 1 && rate <= 5)) {
+  if (typeof rate !== 'number' || rate < 1 || rate > 5) {
     return res.status(BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -18,9 +18,8 @@ const validateRate = (rate, res) => {
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
-  console.log(req.body);
   // if (!talk) return res.status(BAD_REQUEST).json
-  if (!talk || !talk.watchedAt || !talk.rate) { 
+  if (!talk || !talk.watchedAt || typeof talk.rate !== 'number') { 
     return res.status(BAD_REQUEST)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }

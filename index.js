@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const { validateEmail, validatePassword,
   validateToken, validateName,
-  validateAge, validateTalk } = require('./middlewares/validations');
+  validateAge, validateTalk, validateTalkItems } = require('./middlewares/validations');
 
 const fileName = './talker.json';
 
@@ -57,6 +57,7 @@ app.post('/talker',
   validateName,
   validateAge,
   validateTalk,
+  validateTalkItems,
   (req, res) => { 
   const { name, age, talk } = req.body;
   const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
@@ -65,7 +66,21 @@ app.post('/talker',
   res.status(201).json(newPerson);
 });
 
-// app.put();
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkItems,
+  (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    console.log(req.headers.authorization);
+    const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
+    const person = file.filter((p) => p.id === parseInt(id, 10));
+    fs.writeFileSync(fileName, file[person] = { ...file[person], name, age, talk });
+    res.status(200).json(file[person]);
+  });
 
 app.delete('/talker/:id',
   validateToken,

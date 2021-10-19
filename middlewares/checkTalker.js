@@ -48,13 +48,12 @@ function checkDate(request, response, next) {
 }
 
 function checkRate(request, response, next) {
-  const { talk } = request.body;
-  const { rate } = talk;
+  const { talk: { rate } } = request.body;
 
   if (!Number.isInteger(parseInt(rate, 10))) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  if (parseInt(rate, 10) < 1 || parseInt(rate, 10) > 5) {
+  if (rate < 1 || rate > 5) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();

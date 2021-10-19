@@ -4,7 +4,7 @@ function validateEmail(email) {
 }
 
 function validatePassword(password, minLength) {
-  return (password >= minLength);
+  return (password.length >= minLength);
 }
 
 module.exports = { validateEmail, validatePassword };

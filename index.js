@@ -60,6 +60,7 @@ app.post('/login', validateLogin, (req, res) => {
   res.status(HTTP_OK_STATUS).json({ token });
 });
 
+// 4°
 const validateToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
@@ -101,7 +102,7 @@ const validateTalk = (req, res, next) => {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  if (!talk.watchedAt || !talk.rate) {
+  if (!talk.watchedAt || (!talk.rate && Number(talk.rate) !== 0)) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -125,11 +126,11 @@ const validateTalkKeys = (req, res, next) => {
 };
 
 app.post('/talker',
- validateToken,
- validateTalkerName,
- validateTalkerAge,
- validateTalk,
- validateTalkKeys, async (req, res) => {
+  validateToken,
+  validateTalkerName,
+  validateTalkerAge,
+  validateTalk,
+  validateTalkKeys, async (req, res) => {
   const { name, age, talk } = req.body;
   const talkersArr = JSON.parse(await fsAsync.readFile(listTalkers, 'utf8'));
   const availableId = talkersArr.length + 1;
@@ -138,6 +139,25 @@ app.post('/talker',
   res.status(201).json(newTalker);
   fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
 });
+
+// 5°
+app.put('/talker/:id',
+  validateToken,
+  validateTalkerName,
+  validateTalkerAge,
+  validateTalk,
+  validateTalkKeys, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const talkersArr = JSON.parse(await fsAsync.readFile(listTalkers, 'utf8'));
+  const onChangeProfileIndex = talkersArr.findIndex((talker) => Number(talker.id) === Number(id));
+  const changesOnDemand = { name, age, id: Number(id), talk };
+  talkersArr[onChangeProfileIndex] = changesOnDemand;
+  res.status(200).json(changesOnDemand);
+  fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
+});
+
+// 6°
 
 app.listen(PORT, () => {
   console.log('Online');

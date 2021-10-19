@@ -73,13 +73,12 @@ app.put('/talker/:id',
   (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;
-
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     console.log('Getting here');
     const person = file.filter((p) => p.id === parseInt(id, 10));
-    fs.writeFileSync(fileName, file[person] = { ...file[person], name, age, talk });
-    const file2 = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
-    console.log(file2);
+    const updatedTalker = { name, age, id: parseInt(id, 10), talk };
+    file[person] = updatedTalker;
+    fs.writeFileSync(fileName, JSON.stringify(file));
     res.status(200).json(file[person]);
   });
 
@@ -89,8 +88,9 @@ app.delete('/talker/:id',
     const { id } = req.params;
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     const person = file.findIndex((p) => p.id === parseInt(id, 10));
-    fs.writeFileSync(fileName, file.splice(person, 1));
+    file.splice(person, 1);
     res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
+    fs.writeFileSync(fileName, JSON.stringify(file));
 });
 
 app.get('/talker', (_req, res) => {

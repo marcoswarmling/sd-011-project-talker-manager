@@ -50,6 +50,23 @@ router.post('/talker',
     return res.status(201).json(talker);
   });
 
+router.put('/talker/:id',
+validateToken,
+validateName,
+validateAge,
+validateTalk,
+validateTalkKeys,
+async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const talkers = await getTalkers();
+  const result = talkers.findIndex((tlk) => Number(tlk.id) === Number(id));
+  const newDataTalker = { id: Number(id), name, age, talk };
+  talkers[result] = newDataTalker;
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return res.status(200).json(newDataTalker);
+});
+
 /*  ||
 app.put('/talker/:id', () => {});
 app.delete('/talker/:id', () => {});

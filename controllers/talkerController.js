@@ -37,18 +37,14 @@ router.get('/search', authToken, async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const response = await TalkerModel.getById(id);
+  const { id } = req.params;
+  const response = await TalkerModel.getById(id);
 
-    if (!response) {
-      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-    }
-
-    res.status(HTTP_OK_STATUS).json(response);
-  } catch (err) {
-    res.status(500).json(err);
+  if (!response) {
+    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
+
+  res.status(HTTP_OK_STATUS).json(response);
 });
 
 router.post('/', authToken, authTalker, async (req, res) => {

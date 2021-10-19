@@ -33,7 +33,6 @@ app.get('/talker', (_req, res) => {
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   console.log(typeof id);
-  // if (!id) res.status(BAD_REQUEST).json({ message: 'ID não informado' });
   const fileContent = await fs.readFile('talker.json', 'utf8');
   const fileContentParsed = JSON.parse(fileContent);
   console.log(typeof fileContentParsed[0].id);

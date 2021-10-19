@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs').promises;
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,8 +13,13 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// Requisito 1
+app.get('/talker', async (req, res) => {
+  const content = await fs.readFile('/talker.json', 'utf-8');
+  if (!content) return res.status(200).json([]);
+  res.status(200).json(JSON.parse(content));
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
-
-// Iniciando Projeto

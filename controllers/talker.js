@@ -5,7 +5,7 @@ const writeFile = require('../services/writeFile');
 
 const talkerJson = 'talker.json';
 
-const getAllTalkers = async (req, res) => {
+const getAllTalkers = async (_req, res) => {
   const talkers = await readFile(talkerJson);
   return res.status(StatusCodes.OK).json(talkers);
 };

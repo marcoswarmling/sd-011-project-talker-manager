@@ -18,11 +18,11 @@ const getIdTalkers = async (req, res) => {
 
   if (!talkerId) {
     return res
-      .status(StatusCodes.NOT_FOUND)
+      .status(404)
       .json({ message: 'Pessoa palestrante não encontrada' });
   }
 
-  return res.status(StatusCodes.OK).json(talkerId);
+  return res.status(200).json(talkerId);
 };
 
 const addTalker = async (req, res) => {

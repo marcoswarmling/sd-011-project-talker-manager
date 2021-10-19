@@ -20,7 +20,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker/search',
-  validateToken,
+  // validateToken,
   (req, res) => {
     const { q } = req.query;
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));

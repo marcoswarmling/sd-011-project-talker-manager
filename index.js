@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const loginRoute = require('./routes/loginRoute');
 const otherTalker = require('./routes/otherTalker');
+const editTalker = require('./routes/talkerId');
 
 const app = express();
 app.use(bodyParser.json());
@@ -38,6 +39,9 @@ app.use('/login', loginRoute);
 
 // Requisito 4 pt1
 app.use('/talker', otherTalker);
+
+// Requisito 5 pt1
+app.use('/talker', editTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

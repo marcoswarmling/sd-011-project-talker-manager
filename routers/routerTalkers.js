@@ -6,6 +6,22 @@ const { checkTalker, checkTalk, checkDate, checkRate } = require('../middlewares
 
 const database = 'talker.json';
 
+router.get('/search', checkToken, async (request, response) => {
+  const { q } = request.query;
+  const talkers = await getTalkers(database);
+  if (!q) {
+    return response.status(200).json(talkers);
+  }
+
+  const filteredTalkers = talkers.filter((target) => target.name.includes(q));
+
+  if (!filteredTalkers) {
+    return response.status(200).json([]);
+  }
+  
+  response.status(200).json(filteredTalkers);
+});
+
 router.get('/', async (_request, response) => {
   const talkers = await getTalkers(database);
   if (!talkers) response.status(200).json([]);

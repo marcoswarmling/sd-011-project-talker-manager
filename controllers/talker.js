@@ -71,8 +71,9 @@ const searchTalker = async (req, res) => {
   if (!q) {
     return res.status(StatusCodes.OK).json(talkersList);
   }
+  const regex = new RegExp(`${q}`);
 
-  const newTalkersList = talkersList.filter(({ name }) => name.includes(q));
+  const newTalkersList = talkersList.filter(({ name }) => regex.test(name));
   return res.status(StatusCodes.OK).json(newTalkersList);
 };
 

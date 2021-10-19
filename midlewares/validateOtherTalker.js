@@ -89,4 +89,5 @@ module.exports = {
     ageIsValid,
     talkIsValid,
     watchedAtIsValid,
-    rateIsValid };
+    rateIsValid,
+};

@@ -6,8 +6,9 @@ const talkers = './talker.json';
 const {
     validateName,
     validateAge,
-    validateTalk,
-    validateTalkKeys } = require('../middlewares/talker.js');
+    validateTalkBody,
+    validateTalkKeys,
+     } = require('../middlewares/talker.js');
 
        const validateToken = async (req, res, next) => {
         const { authorization } = req.headers;
@@ -26,6 +27,17 @@ router.get('/', async (_req, res) => {
      return res.status(200).json(results);
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const data = await fs.readFile(talkers);
+  const results = JSON.parse(data);
+  if (q === '' || !q) {
+    return res.status(200).json(results);
+  }
+  const TalkerswithFilter = results.filter((t) => t.name.toUpperCase().includes(q.toUpperCase()));
+  res.status(200).json(TalkerswithFilter);
+});
+
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const data = await fs.readFile(talkers);
@@ -36,7 +48,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router
-.post('/', validateToken, validateName, validateAge, validateTalk, validateTalkKeys,
+.post('/', validateToken, validateName, validateAge, validateTalkBody, validateTalkKeys,
 async (req, res) => {
         const { name, age, talk } = req.body;
         const data = await fs.readFile(talkers);
@@ -48,7 +60,7 @@ async (req, res) => {
 });
 
 router.put('/:id', validateToken, 
-validateName, validateAge, validateTalk, validateTalkKeys, async (req, res) => {
+validateName, validateAge, validateTalkBody, validateTalkKeys, async (req, res) => {
     const { id } = req.params;
     const { name, age, talk } = req.body;
     const data = await fs.readFile(talkers, 'utf-8');
@@ -56,8 +68,17 @@ validateName, validateAge, validateTalk, validateTalkKeys, async (req, res) => {
     const matchTalker = results.map((talker) => talker.id === +id);
     const newTalker = { name, age, talk: { ...talk }, id: +id };
     matchTalker.push(newTalker);
-    fs.writeFile(talkers, JSON.stringify(matchTalker));
-    res.status(200).json(newTalker);
+   await fs.writeFileSync(talkers, JSON.stringify(matchTalker));
+     res.status(200).json(newTalker);
 });
+
+router.delete('/:id', validateToken, async (req, res) => {
+    const { id } = req.params;
+    const data = await fs.readFile(talkers);
+    const results = JSON.parse(data);
+    const findtalker = results.filter((talker) => talker.id !== Number(id));
+   await fs.writeFile(talkers, JSON.stringify(findtalker));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  });
 
 module.exports = router;

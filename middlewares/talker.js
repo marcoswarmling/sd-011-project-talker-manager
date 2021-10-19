@@ -18,18 +18,7 @@ const validateName = (req, res, next) => {
   next();
 };
 
-const validateAge = (req, res, next) => {
-  const { age } = req.body;
-  if (!age || age === '') {
-   return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
-  next();
-};
-
-const validateTalk = (req, res, next) => {
+const validateTalkBody = (req, res, next) => {
   const { talk } = req.body;
   if (!talk || !talk.watchedAt || !talk.rate) {
      return res.status(400)
@@ -37,7 +26,6 @@ const validateTalk = (req, res, next) => {
   }
   next();
 };
-
 const validateTalkKeys = (req, res, next) => {
   const regexData = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
   const { talk } = req.body;
@@ -51,9 +39,20 @@ const validateTalkKeys = (req, res, next) => {
   next();
 };
 
+const validateAge = (req, res, next) => {
+  const { age } = req.body;
+  if (!age || age === '') {
+   return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  next();
+};
+
 module.exports = {
   validateName,
   validateAge,
-  validateTalk,
+  validateTalkBody,
   validateTalkKeys,
 };

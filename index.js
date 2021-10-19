@@ -31,6 +31,7 @@ app.get('/talker/search',
 });
 
 app.get('/talker/:id', (req, res) => {
+  console.log('Rota delete');
   const { id } = req.params;
   const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
   const person = file.filter((p) => p.id === parseInt(id, 10));
@@ -66,14 +67,14 @@ app.post('/talker',
 
 // app.put();
 
-app.delete('talker/:id',
+app.delete('/talker/:id',
   validateToken,
   (req, res) => {
     const { id } = req.params;
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     const person = file.findIndex((p) => p.id === parseInt(id, 10));
     fs.writeFileSync(fileName, file.splice(person, 1));
-    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
 });
 
 app.get('/talker', (_req, res) => {

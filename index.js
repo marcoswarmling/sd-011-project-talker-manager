@@ -67,7 +67,7 @@ app.post('/talker',
   const newTalker = { name, age, id: availableId, talk };
   talkersArr.push(newTalker);
   res.status(201).json(newTalker);
-  fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
+ await fsAsync.writeFile(listTalkers, JSON.stringify(talkersArr));
 });
 
 // 5°

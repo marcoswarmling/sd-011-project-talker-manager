@@ -5,15 +5,6 @@ const { validateToken } = require('../helpers/validateToken');
 
 const talkerRouter = express.Router();
 
-talkerRouter.get('/', async (_req, res) => {
-  const data = await fs.readFileSync('./talker.json', 'utf-8');
-  const talkers = JSON.parse(data);
-
-  if (!talkers.length) return res.status(200).send([]);
-
-  return res.status(200).send(talkers);
-});
-
 talkerRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -24,6 +15,15 @@ talkerRouter.get('/:id', async (req, res) => {
   if (!talker) return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
 
   return res.status(200).send(talker);
+});
+
+talkerRouter.get('/', async (_req, res) => {
+  const data = await fs.readFileSync('./talker.json', 'utf-8');
+  const talkers = JSON.parse(data);
+
+  if (!talkers.length) return res.status(200).send([]);
+
+  return res.status(200).send(talkers);
 });
 
 talkerRouter.post('/',

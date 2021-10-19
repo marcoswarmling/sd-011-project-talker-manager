@@ -12,5 +12,14 @@ router.post('/',
   talkerCrontroller.validateWatchedAt,
   talkerCrontroller.validateRate,
   talkerCrontroller.addTalker);
+router.put('/:id',
+talkerCrontroller.validateToken,
+talkerCrontroller.validateName,
+talkerCrontroller.validateAge,
+talkerCrontroller.validateTalk,
+talkerCrontroller.validateWatchedAt,
+talkerCrontroller.validateRate,
+talkerCrontroller.addTalker,
+talkerCrontroller.editTalker);
 
 module.exports = router;

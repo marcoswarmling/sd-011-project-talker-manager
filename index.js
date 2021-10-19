@@ -26,7 +26,7 @@ app.get('/talker/search',
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     const filteredNamesByQuery = file
       .filter((p) => p.name.toLocaleLowerCase().includes(q.toLocaleLowerCase()));
-    if (!q || q === '') res.status(200).json(file);
+    if (!q || q === '') return res.status(200).json(file);
     res.status(200).json(filteredNamesByQuery);
 });
 
@@ -35,7 +35,7 @@ app.get('/talker/:id', (req, res) => {
   const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
   const person = file.filter((p) => p.id === parseInt(id, 10));
   if (person.length === 0) {
-    res.status(404).json({ 
+    return res.status(404).json({ 
       message: 'Pessoa palestrante não encontrada',
   });
 }
@@ -61,8 +61,9 @@ app.post('/talker',
   const { name, age, talk } = req.body;
   const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
   const newPerson = { id: file.length + 1, name, age, talk };
-  fs.writeFileSync(fileName, file.push(newPerson));
-  res.status(201).json(newPerson);
+  file.push(newPerson);
+  fs.writeFileSync(fileName, JSON.stringify(file));
+  return res.status(201).json(newPerson);
 });
 
 app.put('/talker/:id',
@@ -80,7 +81,7 @@ app.put('/talker/:id',
     const updatedTalker = { name, age, id: parseInt(id, 10), talk };
     file[person] = updatedTalker;
     fs.writeFileSync(fileName, JSON.stringify(file));
-    res.status(200).json(file[person]);
+    return res.status(200).json(file[person]);
   });
 
 app.delete('/talker/:id',
@@ -90,8 +91,8 @@ app.delete('/talker/:id',
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     const person = file.findIndex((p) => p.id === parseInt(id, 10));
     file.splice(person, 1);
-    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
     fs.writeFileSync(fileName, JSON.stringify(file));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
 });
 
 app.get('/talker', (_req, res) => {

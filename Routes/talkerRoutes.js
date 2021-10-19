@@ -67,9 +67,18 @@ async (req, res) => {
   return res.status(200).json(newDataTalker);
 });
 
+router.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getTalkers();
+  const result = talkers.findIndex((tlk) => Number(tlk.id) === Number(id));
+  talkers.splice(result, 1);
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return res.status(200).json({
+    message: 'Pessoa palestrante deletada com sucesso',
+    });
+});
+
 /*  ||
-app.put('/talker/:id', () => {});
-app.delete('/talker/:id', () => {});
 app.get('/talker/search?q=searchTerm', () => {}); */
 
 module.exports = router;
